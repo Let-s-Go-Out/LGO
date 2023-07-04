@@ -15,6 +15,9 @@ allprojects {
     repositories {
         google()
         mavenCentral()
+        manven{
+            url 'https://naver.jfrog.io/artifactory/maven/'
+        }
     }
 }
 
