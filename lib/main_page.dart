@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:developer' show log;
 import 'package:flutter/material.dart';
-import 'package:flutter_naver_map/flutter_naver_map.dart' as NaverMap;
 
 class MainPage extends StatefulWidget {
   @override
@@ -15,28 +14,25 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    final Size screenSize = MediaQuery.of(context).size;
-    final double screenHeight = screenSize.height;
-    final double screenWidth = screenSize.width;
-    final double verticalSpacing = screenHeight * 0.016; // Adjust the percentage as needed
-    final double horizontalSpacing = screenWidth * 0.02; // 2% of screen width
-
     return Scaffold(
-      appBar: null,
-      body: Padding(
-        padding: EdgeInsets.all(horizontalSpacing),
+        appBar: null,
+        body: LayoutBuilder(
+        builder: (BuildContext context, BoxConstraints constraints) {
+      final double availableHeight = constraints.maxHeight;
+      final double verticalSpacing = availableHeight * 0.02; // 2% of available height
+
+      return Padding(
+        padding: EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Padding(
-              padding: EdgeInsets.symmetric(vertical: verticalSpacing * 2),
+              padding: EdgeInsets.symmetric(vertical: verticalSpacing),
               child: Text(
-                'AI 추천',
+                'AI Recommendation',
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontSize: screenHeight * 0.04,
-                    fontWeight: FontWeight.bold), // 4% of screen height
+                style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
               ),
             ),
             SizedBox(height: verticalSpacing),
@@ -47,7 +43,7 @@ class _MainPageState extends State<MainPage> {
                 textAlign: TextAlign.center,
               ),
             ),
-            SizedBox(height: verticalSpacing),
+            SizedBox(height: verticalSpacing * 2),
             Text('출발지'),
             SizedBox(height: verticalSpacing),
             TextField(
@@ -56,7 +52,7 @@ class _MainPageState extends State<MainPage> {
                 hintText: '출발지를 입력하세요',
               ),
             ),
-            SizedBox(height: verticalSpacing),
+            SizedBox(height: verticalSpacing * 2),
             Text('나들이 컨셉'),
             SizedBox(height: verticalSpacing),
             Wrap(
@@ -69,7 +65,7 @@ class _MainPageState extends State<MainPage> {
                 conceptButton('체험'),
               ],
             ),
-            SizedBox(height: verticalSpacing),
+            SizedBox(height: verticalSpacing * 2),
             Text('희망 출발 시간'),
             SizedBox(height: verticalSpacing),
             ElevatedButton(
@@ -78,7 +74,7 @@ class _MainPageState extends State<MainPage> {
               },
               child: Text('시간 설정'),
             ),
-            SizedBox(height: verticalSpacing),
+            SizedBox(height: verticalSpacing * 2),
             Text('희망 소요 시간'),
             SizedBox(height: verticalSpacing),
             Row(
@@ -102,21 +98,20 @@ class _MainPageState extends State<MainPage> {
                 ),
               ],
             ),
-            SizedBox(height: verticalSpacing),
+            SizedBox(height: verticalSpacing * 2),
             ElevatedButton(
               onPressed: () {
                 // Add code to handle the "Let's Go out" button
               },
               child: Text('Let\'s Go out'),
             ),
-            SizedBox(height: verticalSpacing),
-            Flexible(
-              child: Container(),
-            ),
-            // Add a flexible widget to occupy the remaining space
+            SizedBox(height: verticalSpacing * 2),
+            Spacer(), // Add a spacer to push the bottom navigation bar to the bottom
           ],
         ),
-      ),
+      );
+        },
+        ),
       bottomNavigationBar: BottomNavigationBar(
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
@@ -135,6 +130,8 @@ class _MainPageState extends State<MainPage> {
       ),
     );
   }
+
+
 
   Widget conceptButton(String concept) {
     return ElevatedButton(
