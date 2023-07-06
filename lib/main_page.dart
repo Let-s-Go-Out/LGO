@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer' show log;
 import 'package:flutter/material.dart';
+import 'package:nagaja_app/map_browse_screen.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -35,9 +36,9 @@ class _MainPageState extends State<MainPage> {
                 style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
               ),
             ),
-            SizedBox(height: verticalSpacing),
+            SizedBox(height: verticalSpacing*0.05),
             Padding(
-              padding: EdgeInsets.symmetric(vertical: verticalSpacing),
+              padding: EdgeInsets.symmetric(vertical: verticalSpacing*0.05),
               child: Text(
                 'Please enter all the information',
                 textAlign: TextAlign.center,
@@ -46,10 +47,25 @@ class _MainPageState extends State<MainPage> {
             SizedBox(height: verticalSpacing * 2),
             Text('출발지'),
             SizedBox(height: verticalSpacing),
-            TextField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                hintText: '출발지를 입력하세요',
+            InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => MapBrowseScreen()),
+                );
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(),
+                  borderRadius: BorderRadius.circular(4.0),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Text(
+                    '검색어를 입력하세요.',
+                    style: TextStyle(fontSize:16.0),
+                  ),
+                ),
               ),
             ),
             SizedBox(height: verticalSpacing * 2),
@@ -98,14 +114,14 @@ class _MainPageState extends State<MainPage> {
                 ),
               ],
             ),
-            SizedBox(height: verticalSpacing * 2),
+            SizedBox(height: verticalSpacing),
             ElevatedButton(
               onPressed: () {
                 // Add code to handle the "Let's Go out" button
               },
               child: Text('Let\'s Go out'),
             ),
-            SizedBox(height: verticalSpacing * 2),
+            SizedBox(height: verticalSpacing),
             Spacer(), // Add a spacer to push the bottom navigation bar to the bottom
           ],
         ),
@@ -132,7 +148,6 @@ class _MainPageState extends State<MainPage> {
   }
 
 
-
   Widget conceptButton(String concept) {
     return ElevatedButton(
       onPressed: () {
@@ -146,50 +161,4 @@ class _MainPageState extends State<MainPage> {
       child: Text(concept),
     );
   }
-}
-
-class TestPage extends StatefulWidget {
-  const TestPage({Key? key}) : super(key: key);
-
-  @override
-  State<TestPage> createState() => TestPageState();
-}
-
-class TestPageState extends State<TestPage> {
-  late NaverMapController _mapController;
-  final Completer<NaverMapController> mapControllerCompleter = Completer();
-
-  @override
-  Widget build(BuildContext context) {
-    final mediaQuery = MediaQuery.of(context);
-    final pixelRatio = mediaQuery.devicePixelRatio;
-    final mapSize =
-    Size(mediaQuery.size.width - 32, mediaQuery.size.height - 72);
-    final physicalSize =
-    Size(mapSize.width * pixelRatio, mapSize.height * pixelRatio);
-
-    print("physicalSize: $physicalSize");
-
-    return Scaffold(
-      backgroundColor: const Color(0xFF343945),
-      body: Center(
-          child: SizedBox(
-              width: mapSize.width,
-              height: mapSize.height,
-              // color: Colors.greenAccent,
-              child: _naverMapSection())),
-    );
-  }
-
-  Widget _naverMapSection() => NaverMap(
-    options: const NaverMapViewOptions(
-        indoorEnable: true,
-        locationButtonEnable: false,
-        consumeSymbolTapEvents: false),
-    onMapReady: (controller) async {
-      _mapController = controller;
-      mapControllerCompleter.complete(controller);
-      log("onMapReady", name: "onMapReady");
-    },
-  );
 }

@@ -1,4 +1,6 @@
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:tools="http://schemas.android.com/tools">
+    <uses-sdk tools:overrideLibrary="android.support.v7.appcompat"/>
     <application
         android:label="nagaja_app"
         android:name="${applicationName}"
@@ -16,8 +18,8 @@
                  while the Flutter UI initializes. After that, this theme continues
                  to determine the Window background behind the Flutter UI. -->
             <meta-data
-              android:name="io.flutter.embedding.android.NormalTheme"
-              android:resource="@style/NormalTheme"
+                android:name="com.naver.maps.map.CLIENT_ID"
+                android:value="msgguntztp"
               />
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
