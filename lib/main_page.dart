@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer' show log;
 import 'package:flutter/material.dart';
 import 'package:nagaja_app/map_browse_screen.dart';
+import 'package:http/http.dart' as http;
 
 class MainPage extends StatefulWidget {
   @override
