@@ -1,1 +1,1 @@
-# LGO_Client
+# LGO
