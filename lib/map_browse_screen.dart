@@ -2,13 +2,16 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
+import 'package:location/location.dart';
 
 class MapBrowseScreen extends StatefulWidget {
+  const MapBrowseScreen({super.key});
   @override
   _MapBrowseScreenState createState() => _MapBrowseScreenState();
 }
 
 class _MapBrowseScreenState extends State<MapBrowseScreen> {
+  LocationData? _currentLocation;
   late NaverMapController _mapController;
   late TextEditingController _searchController;
 
@@ -16,6 +19,43 @@ class _MapBrowseScreenState extends State<MapBrowseScreen> {
   void initState() {
     super.initState();
     _searchController = TextEditingController();
+    _getCurrentLocation();
+  }
+
+  Future<void> _getCurrentLocation() async {
+    Location location = Location();
+
+    bool serviceEnabled;
+    PermissionStatus permissionGranted;
+
+    serviceEnabled = await location.serviceEnabled();
+    if (!serviceEnabled) {
+      serviceEnabled = await location.requestService();
+      if (!serviceEnabled) {
+        // Location services are still not enabled, handle the error
+        return;
+      }
+    }
+
+    permissionGranted = await location.hasPermission();
+    if (permissionGranted == PermissionStatus.denied) {
+      permissionGranted = await location.requestPermission();
+      if (permissionGranted != PermissionStatus.granted) {
+        // Location permission is still not granted, handle the error
+        return;
+      }
+    }
+
+    _currentLocation = await location.getLocation();
+
+    if (_currentLocation != null) {
+      _mapController.updateCamera(NCameraUpdate.fromCameraPosition(
+        NCameraPosition(
+          target: NLatLng(_currentLocation!.latitude!, _currentLocation!.longitude!),
+          zoom: 15.0,
+        ),
+      ));
+    }
   }
 
   @override
@@ -65,6 +105,7 @@ class _MapBrowseScreenState extends State<MapBrowseScreen> {
     _mapController.addOverlay(marker);
   }
 
+
   @override
   Widget build(BuildContext context) {
     //여기다가 맵 서칭 ui 추가하기
@@ -90,7 +131,8 @@ class _MapBrowseScreenState extends State<MapBrowseScreen> {
           ),
           Expanded(
             child: NaverMap(
-              options: const NaverMapViewOptions(),
+              options: const NaverMapViewOptions(initialCameraPosition: NCameraPosition(target: NLatLng(37.5665, 126.9780), zoom: 12.0)
+    ),
               onMapReady: (controller) {
                 setState(() {
                   _mapController = controller;
