@@ -1,8 +1,8 @@
-import 'dart:async';
-import 'dart:developer' show log;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:nagaja_app/map_browse_screen.dart';
-import 'package:http/http.dart' as http;
+import 'package:permission_handler/permission_handler.dart';
 
 class MainPage extends StatefulWidget {
   @override

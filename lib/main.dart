@@ -1,7 +1,9 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:nagaja_app/main_page.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 void main() async {
   await _initialize();
