@@ -21,7 +21,7 @@ class _MapBrowseScreenState extends State<MapBrowseScreen> {
   @override
   void initState() {
     super.initState();
-    _permission();
+    _getPosition();
     _searchController = TextEditingController();
   }
 
@@ -31,11 +31,18 @@ class _MapBrowseScreenState extends State<MapBrowseScreen> {
     super.dispose();
   }
 
-  Future<void> _getPosition() async{
-    Position position = await Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-    setState(() {
-      _position = position; // 위치 정보 업데이트
-    });
+  void _getPosition() async{
+    try {
+      LocationPermission permission = await Geolocator.requestPermission();
+      Position position = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
+      setState(() {
+        _position = position; // 위치 정보 업데이트
+      });
+      print(position);
+    }catch(e){
+      print('There was a problem with the internet connection.');
+    }
   }
 
   @override
@@ -68,15 +75,13 @@ class _MapBrowseScreenState extends State<MapBrowseScreen> {
         ),
         Expanded(
           child: NaverMap(
-               options: const NaverMapViewOptions(),
+               options: const NaverMapViewOptions(
+                   locationButtonEnable: true,
+                 consumeSymbolTapEvents: true
+               ),
             onMapReady: (controller) {
-              setState(() {
-                _mapController = controller;
-                _getPosition();
-                controller.updateCamera(NCameraUpdate.scrollAndZoomTo(
-                ));
-              });
-              print("네이버 맵 로딩됨!");
+                 _mapController = controller;
+                 print("네이버 맵 로딩됨!");
             },
             onMapTapped: (point, latLng) {},
             onSymbolTapped: (symbol) {},
@@ -88,35 +93,4 @@ class _MapBrowseScreenState extends State<MapBrowseScreen> {
       ]),
     );
   }
-}
-
-void _permission() async {
-  var requestStatus = await Permission.location.request();
-  var status = await Permission.location.status;
-  if (requestStatus.isGranted && status.isLimited) {
-    // isLimited - 제한적 동의 (ios 14 < )
-    // 요청 동의됨
-    print("isGranted");
-    if (await Permission.locationWhenInUse.serviceStatus.isEnabled) {
-      // 요청 동의 + gps 켜짐
-      var position = await Geolocator.getCurrentPosition();
-      print("serviceStatusIsEnabled position = ${position.toString()}");
-    } else {
-      // 요청 동의 + gps 꺼짐
-      print("serviceStatusIsDisabled");
-    }
-  } else if (requestStatus.isPermanentlyDenied || status.isPermanentlyDenied) {
-    // 권한 요청 거부, 해당 권한에 대한 요청에 대해 다시 묻지 않음 선택하여 설정화면에서 변경해야함. android
-    print("isPermanentlyDenied");
-    openAppSettings();
-  } else if (status.isRestricted) {
-    // 권한 요청 거부, 해당 권한에 대한 요청을 표시하지 않도록 선택하여 설정화면에서 변경해야함. ios
-    print("isRestricted");
-    openAppSettings();
-  } else if (status.isDenied) {
-    // 권한 요청 거절
-    print("isDenied");
-  }
-  print("requestStatus ${requestStatus.name}");
-  print("status ${status.name}");
 }

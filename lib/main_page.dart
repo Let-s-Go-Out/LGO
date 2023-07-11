@@ -50,6 +50,7 @@ class _MainPageState extends State<MainPage> {
             SizedBox(height: verticalSpacing),
             InkWell(
               onTap: () {
+
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => MapBrowseScreen()),
@@ -163,3 +164,4 @@ class _MainPageState extends State<MainPage> {
     );
   }
 }
+
