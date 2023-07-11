@@ -131,8 +131,9 @@ class _MapBrowseScreenState extends State<MapBrowseScreen> {
           ),
           Expanded(
             child: NaverMap(
-              options: const NaverMapViewOptions(initialCameraPosition: NCameraPosition(target: NLatLng(37.5665, 126.9780), zoom: 12.0)
-    ),
+              options: const NaverMapViewOptions(initialCameraPosition: NCameraPosition(target: NLatLng(37.5665, 126.9780), zoom: 12.0),
+                locationButtonEnable: true,
+                 ),
               onMapReady: (controller) {
                 setState(() {
                   _mapController = controller;
