@@ -14,6 +14,22 @@ class _MainPageState extends State<MainPage> {
   String selectedStartTime = '';
   String selectedDuration = '';
 
+  // create TimeOfDay variable
+  TimeOfDay _timeOfDay = TimeOfDay(hour: 8, minute: 30);
+
+  // show time picker method
+  void _showTimePicker() {
+    showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    ).then((value) {
+      setState(() {
+        _timeOfDay = value!;
+      });
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -83,15 +99,35 @@ class _MainPageState extends State<MainPage> {
               ],
             ),
             SizedBox(height: verticalSpacing * 2),
-            Text('희망 출발 시간'),
-            SizedBox(height: verticalSpacing),
-            ElevatedButton(
-              onPressed: () {
-                // Add code to handle selecting the start time
-              },
-              child: Text('시간 설정'),
+
+            // 희망 출발 시간 수정
+
+            Row(
+                children: [
+                  Expanded(
+                      child: Text('희망 출발 시간')),
+                  Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          // button
+                          MaterialButton(
+                            onPressed: _showTimePicker,
+                            child: Padding(
+                              padding: EdgeInsets.all(10.0),
+                              child: Text(
+                                  '${_timeOfDay.format(context)}',
+                                  style: TextStyle(color: Colors.white, fontSize: 13)),
+                            ),
+                            color: Colors.blue,
+                          ),
+                        ],
+                      )
+                  )
+                ]
             ),
-            SizedBox(height: verticalSpacing * 2),
+
+
             Text('희망 소요 시간'),
             SizedBox(height: verticalSpacing),
             Row(

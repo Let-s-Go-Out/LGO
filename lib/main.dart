@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:nagaja_app/main_page.dart';
 
+
 void main() async {
   await _initialize();
   runApp(MyApp());
