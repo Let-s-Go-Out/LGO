@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -33,7 +34,7 @@ class _MapBrowseScreenState extends State<MapBrowseScreen> {
     controller.getPosition().then((position) {
       setState(() {
         controller.model.nowPosition = position;
-        _updateCameraPosition();
+        _updateCameraPosition(controller.model.nowPosition!);
       });
       controller.getMyAddress().then((myAddress) {
         setState(() {
@@ -41,10 +42,14 @@ class _MapBrowseScreenState extends State<MapBrowseScreen> {
           textController.text = controller.model.address ?? '';
         });
       }).catchError((error) {
-        print('Error retrieving address: $error');
+        if (kDebugMode) {
+          print('Error retrieving address: $error');
+        }
       });
     }).catchError((error) {
-      print('Error retrieving position: $error');
+      if (kDebugMode) {
+        print('Error retrieving position: $error');
+      }
     });
   }
 
@@ -68,18 +73,23 @@ class _MapBrowseScreenState extends State<MapBrowseScreen> {
     });
   }
 
-  void _updateCameraPosition() {
-    if (controller.model.nowPosition != null) {
-      mapController.animateCamera(CameraUpdate.newLatLng(
-        LatLng(controller.model.nowPosition!.latitude, controller.model.nowPosition!.longitude),
-      ));
-    }
+  void _updateCameraPosition(dynamic latlng) {
+    mapController.animateCamera(CameraUpdate.newLatLng(
+      LatLng(latlng.latitude, latlng.longitude),
+    ));
   }
 
-  void _selectPlace(String placeName, String placeAddress){
-    setState((){
+  Future<void> _selectPlace(String placeName, String placeAddress) async {
+
       controller.model.selectedPlaceName = placeName;
       controller.model.selectedPlaceAddress = placeAddress;
+      textController.text = placeName;
+      Map<String, dynamic> latLng = await MapController.getLatLngFromAddress(placeAddress);
+      double latitude = latLng['latitude'];
+      double longitude = latLng['longitude'];
+      setState(() {
+      _clearSearchResults();
+      _updateCameraPosition(LatLng(latitude, longitude));
     });
   }
 
@@ -127,7 +137,7 @@ class _MapBrowseScreenState extends State<MapBrowseScreen> {
                   subtitle: Text(address),
                   onTap: () {
                     _selectPlace(name, address);
-                    Navigator.pop(context,name);
+                    // Navigator.pop(context,name);
                   },
                 );
               },

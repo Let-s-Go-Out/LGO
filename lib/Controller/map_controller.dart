@@ -1,10 +1,13 @@
 import 'dart:convert';
 
 import 'package:geolocator/geolocator.dart';
+import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:nagaja_app/Model/map_model.dart';
 
 class MapController{
+  static const String apiKey = 'AIzaSyAIeZMzg3xE5dYXgiWNoIjDE34R0SzTAzE';
+
   MapModel model = MapModel();
   Position? get nowPosition => model.nowPosition;
   String? get address => model.address;
@@ -25,7 +28,7 @@ class MapController{
       String lat = model.nowPosition!.latitude.toString();
       String lon = model.nowPosition!.longitude.toString();
       Response response = await get(Uri.parse(
-          'https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyAIeZMzg3xE5dYXgiWNoIjDE34R0SzTAzE&language=ko&latlng=${lat},${lon}'));
+          'https://maps.googleapis.com/maps/api/geocode/json?key=$apiKey&language=ko&latlng=$lat,$lon'));
       if (response.statusCode == 200) {
         Map<String, dynamic> data = jsonDecode(response.body);
         if (data['results'] != null && data['results'].isNotEmpty) {
@@ -59,5 +62,24 @@ class MapController{
     } else {
       throw Exception('Failed to search places');
     }
+  }
+
+  static Future<Map<String, dynamic>> getLatLngFromAddress(String address) async {
+    String formattedAddress = Uri.encodeComponent(address);
+    String url = 'https://maps.googleapis.com/maps/api/geocode/json?address=$formattedAddress&key=$apiKey';
+
+    http.Response response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> data = jsonDecode(response.body);
+
+      if (data['results'] != null && data['results'].isNotEmpty) {
+        double lat = data['results'][0]['geometry']['location']['lat'];
+        double lng = data['results'][0]['geometry']['location']['lng'];
+
+        return {'latitude': lat, 'longitude': lng};
+      }
+    }
+    return {'latitude': null, 'longitude': null};
   }
 }
