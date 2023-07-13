@@ -1,0 +1,63 @@
+import 'dart:convert';
+
+import 'package:geolocator/geolocator.dart';
+import 'package:http/http.dart';
+import 'package:nagaja_app/Model/map_model.dart';
+
+class MapController{
+  MapModel model = MapModel();
+  Position? get nowPosition => model.nowPosition;
+  String? get address => model.address;
+  List<dynamic> get searchResults => model.searchResults;
+  bool get showSearchResults => model.showSearchResults;
+  String? get selectedPlaceName => model.selectedPlaceName;
+  String? get selectedPlaceAddress => model.selectedPlaceAddress;
+
+  Future<Position> getPosition() async {
+    LocationPermission permission = await Geolocator.requestPermission();
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    return position;
+  }
+
+  Future<String?> getMyAddress() async {
+    if (model.nowPosition != null) {
+      String lat = model.nowPosition!.latitude.toString();
+      String lon = model.nowPosition!.longitude.toString();
+      Response response = await get(Uri.parse(
+          'https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyAIeZMzg3xE5dYXgiWNoIjDE34R0SzTAzE&language=ko&latlng=${lat},${lon}'));
+      if (response.statusCode == 200) {
+        Map<String, dynamic> data = jsonDecode(response.body);
+        if (data['results'] != null && data['results'].isNotEmpty) {
+          String? myAddress =
+          data['results'][0]['formatted_address'] as String?;
+          print("myAddress: $myAddress");
+          return myAddress;
+        }
+      }
+    }
+    return null;
+  }
+
+  Future<void> searchPlaces(String keyword) async {
+    String apiKey = 'AIzaSyAIeZMzg3xE5dYXgiWNoIjDE34R0SzTAzE';
+    String baseUrl =
+        'https://maps.googleapis.com/maps/api/place/textsearch/json';
+
+    // 검색 요청 URL 생성
+    String url = '$baseUrl?key=$apiKey&language=ko&query=$keyword';
+
+    // HTTP 요청 보내기
+    Response response = await get(Uri.parse(url));
+
+    // 결과 파싱
+    if (response.statusCode == 200) {
+      dynamic jsonData = jsonDecode(response.body);
+      List<dynamic> results = jsonData['results'];
+      model.searchResults = results;
+      model.showSearchResults = true;
+    } else {
+      throw Exception('Failed to search places');
+    }
+  }
+}

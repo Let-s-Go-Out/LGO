@@ -4,6 +4,9 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart';
 
+import 'package:nagaja_app/Model/map_model.dart';
+import 'package:nagaja_app/Controller/map_controller.dart';
+
 class MapBrowseScreen extends StatefulWidget {
   const MapBrowseScreen({Key? key}) : super(key: key);
 
@@ -14,11 +17,10 @@ class MapBrowseScreen extends StatefulWidget {
 class _MapBrowseScreenState extends State<MapBrowseScreen> {
   late GoogleMapController mapController;
   late TextEditingController textController;
+  MapController controller = MapController();
+
   final LatLng _center = const LatLng(37.58638333, 127.0203333);
-  Position? _position;
-  String? address;
-  List<dynamic> searchResults = [];
-  bool showSearchResults = false;
+
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
@@ -28,15 +30,15 @@ class _MapBrowseScreenState extends State<MapBrowseScreen> {
   void initState() {
     super.initState();
     textController = TextEditingController();
-    _getPosition().then((position) {
+    controller.getPosition().then((position) {
       setState(() {
-        _position = position;
+        controller.model.nowPosition = position;
         _updateCameraPosition();
       });
-      _getMyAddress().then((myAddress) {
+      controller.getMyAddress().then((myAddress) {
         setState(() {
-          address = myAddress;
-          textController.text = address ?? '';
+          controller.model.address = myAddress;
+          textController.text = controller.model.address ?? '';
         });
       }).catchError((error) {
         print('Error retrieving address: $error');
@@ -52,84 +54,40 @@ class _MapBrowseScreenState extends State<MapBrowseScreen> {
   }
 
   Future<void> initText() async {
-    String? myAddress = await _getMyAddress();
+    String? myAddress = await controller.getMyAddress();
     setState(() {
-      address = myAddress;
-      textController.text = address ?? '';
+      controller.model.address = myAddress;
+      textController.text = controller.model.address ?? '';
     });
-  }
-
-  Future<Position> _getPosition() async {
-    LocationPermission permission = await Geolocator.requestPermission();
-    Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.high);
-    return position;
-  }
-
-  Future<String?> _getMyAddress() async {
-    if (_position != null) {
-      String lat = _position!.latitude.toString();
-      String lon = _position!.longitude.toString();
-      Response response = await get(Uri.parse(
-          'https://maps.googleapis.com/maps/api/geocode/json?key=AIzaSyAIeZMzg3xE5dYXgiWNoIjDE34R0SzTAzE&language=ko&latlng=${lat},${lon}'));
-      if (response.statusCode == 200) {
-        Map<String, dynamic> data = jsonDecode(response.body);
-        if (data['results'] != null && data['results'].isNotEmpty) {
-          String? myAddress =
-              data['results'][0]['formatted_address'] as String?;
-          print("myAddress: $myAddress");
-          return myAddress;
-        }
-      }
-    }
-    return null;
-  }
-
-  Future<void> searchPlaces(String keyword) async {
-    String apiKey = 'AIzaSyAIeZMzg3xE5dYXgiWNoIjDE34R0SzTAzE';
-    String baseUrl =
-        'https://maps.googleapis.com/maps/api/place/textsearch/json';
-
-    // 검색 요청 URL 생성
-    String url = '$baseUrl?key=$apiKey&language=ko&query=$keyword';
-
-    // HTTP 요청 보내기
-    Response response = await get(Uri.parse(url));
-
-    // 결과 파싱
-    if (response.statusCode == 200) {
-      dynamic jsonData = jsonDecode(response.body);
-      List<dynamic> results = jsonData['results'];
-      setState(() {
-        searchResults = results;
-        showSearchResults = true;
-      });
-    } else {
-      throw Exception('Failed to search places');
-    }
-  }
-
-  Future<void> _performSearch() async {
-    String searchText = textController.text.trim();
-    if (searchText.isNotEmpty) {
-      setState(() {
-        showSearchResults = true;
-      });
-    }
   }
 
   void _clearSearchResults() {
     setState(() {
-      showSearchResults = false;
-      searchResults.clear();
+      controller.model.showSearchResults = false;
+      controller.model.searchResults.clear();
     });
   }
 
   void _updateCameraPosition() {
-    if (_position != null) {
+    if (controller.model.nowPosition != null) {
       mapController.animateCamera(CameraUpdate.newLatLng(
-        LatLng(_position!.latitude, _position!.longitude),
+        LatLng(controller.model.nowPosition!.latitude, controller.model.nowPosition!.longitude),
       ));
+    }
+  }
+
+  void _selectPlace(String placeName, String placeAddress){
+    setState((){
+      controller.model.selectedPlaceName = placeName;
+      controller.model.selectedPlaceAddress = placeAddress;
+    });
+  }
+
+  Future<void> _onSearchPressed() async {
+    String searchText = textController.text.trim();
+    if(searchText.isNotEmpty){
+      await controller.searchPlaces(searchText);
+      setState(() {});
     }
   }
 
@@ -148,38 +106,34 @@ class _MapBrowseScreenState extends State<MapBrowseScreen> {
                 hintText: '장소를 검색하세요.',
                 suffixIcon: IconButton(
                   icon: const Icon(Icons.search),
-                  onPressed: () {
-                    String searchText = textController.text.trim();
-                    if (searchText.isNotEmpty) {
-                      searchPlaces(searchText);
-                    }
-                  },
+                  onPressed: _onSearchPressed,
                 ),
               ),
               onSubmitted: (_) {
-                String searchText = textController.text.trim();
-                if (searchText.isNotEmpty) {
-                  searchPlaces(searchText);
-                }
-              }),
+               _onSearchPressed();
+                },
+              ),
         ),
-        if (showSearchResults && searchResults.isNotEmpty)
+        if (controller.model.showSearchResults && controller.model.searchResults.isNotEmpty)
           Expanded(
             child: ListView.builder(
-              itemCount: searchResults.length,
+              itemCount: controller.model.searchResults.length,
               itemBuilder: (context, index) {
-                dynamic result = searchResults[index];
+                dynamic result = controller.model.searchResults[index];
                 String name = result['name'];
                 String address = result['formatted_address'];
                 return ListTile(
                   title: Text(name),
                   subtitle: Text(address),
-                  onTap: () {},
+                  onTap: () {
+                    _selectPlace(name, address);
+                    Navigator.pop(context,name);
+                  },
                 );
               },
             ),
           ),
-        if (!showSearchResults || searchResults.isEmpty)
+        if (!controller.model.showSearchResults || controller.model.searchResults.isEmpty)
           Expanded(
             child: Stack(children: [
               GoogleMap(
@@ -192,17 +146,17 @@ class _MapBrowseScreenState extends State<MapBrowseScreen> {
                 ),
               ),
               Align(
-                alignment: Alignment.bottomLeft,
+                alignment: Alignment.bottomCenter,
                 child: Padding(
                   padding: const EdgeInsets.only(left: 10.0, bottom: 10.0),
                   child: FloatingActionButton(
                     onPressed: () async {
-                      if (showSearchResults) {
+                      if (controller.model.showSearchResults) {
                         _clearSearchResults();
                       } else {
-                        var gps = await _getPosition();
+                        var gps = await controller.getPosition();
                         mapController.animateCamera(CameraUpdate.newLatLng(
-                            LatLng(_position!.latitude, _position!.longitude)));
+                            LatLng(controller.model.nowPosition!.latitude, controller.model.nowPosition!.longitude)));
                       }
                     },
                     backgroundColor: Colors.white,

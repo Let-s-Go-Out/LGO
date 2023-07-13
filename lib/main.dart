@@ -1,7 +1,7 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:nagaja_app/main_page.dart';
+import 'package:nagaja_app/View/main_page.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 void main() async {
