@@ -3,6 +3,7 @@ import 'dart:developer' show log;
 import 'package:flutter/material.dart';
 import 'package:nagaja_app/map_browse_screen.dart';
 import 'package:http/http.dart' as http;
+import 'package:syncfusion_flutter_sliders/sliders.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -29,6 +30,7 @@ class _MainPageState extends State<MainPage> {
     });
   }
 
+  double _value = 4.0;
 
   @override
   Widget build(BuildContext context) {
@@ -127,31 +129,40 @@ class _MainPageState extends State<MainPage> {
                 ]
             ),
 
-
-            Text('희망 소요 시간'),
             SizedBox(height: verticalSpacing),
-            Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: '최소 시간',
-                    ),
-                  ),
-                ),
-                SizedBox(width: 8.0),
-                Expanded(
-                  child: TextField(
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: '최대 시간',
-                    ),
-                  ),
-                ),
-              ],
+
+            // 희망 소요 시간 Slide Bar ver.
+
+            Container(
+              padding: EdgeInsets.fromLTRB(0, 0, 30, 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('희망 소요 시간'),
+                  Text('${_value.toStringAsFixed(0)}시간'),
+                ],
+              ),
             ),
             SizedBox(height: verticalSpacing),
+            Center(
+              child: SfSlider(
+                min: 0.0,
+                max: 12.0,
+                value: _value,
+                interval: 2,
+                showTicks: true,
+                showLabels: true,
+                minorTicksPerInterval: 1,
+                onChanged: (dynamic value) {
+                 setState(() {
+                   _value = value;
+                 });
+                },
+              ),
+            ),
+
+            SizedBox(height: verticalSpacing),
+
             ElevatedButton(
               onPressed: () {
                 // Add code to handle the "Let's Go out" button
