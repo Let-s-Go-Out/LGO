@@ -3,10 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:nagaja_app/View/main_page.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 
 void main() async {
   await _initialize();
   _permission();
+  SharedPreferences.setMockInitialValues({});
   runApp(MyApp());
 }
 

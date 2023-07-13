@@ -1,4 +1,5 @@
 import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class MapModel {
   Position? nowPosition;
@@ -7,6 +8,9 @@ class MapModel {
   bool showSearchResults = false;
   String? selectedPlaceName;
   String? selectedPlaceAddress;
+  Set<Marker> markers = {};
+  double latitudeP = 0;
+  double longitudeP= 0;
 
   void updateSearchResults(List<dynamic> results){
     searchResults.clear();

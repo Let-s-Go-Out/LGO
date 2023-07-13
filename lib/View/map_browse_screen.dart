@@ -20,11 +20,14 @@ class _MapBrowseScreenState extends State<MapBrowseScreen> {
   late TextEditingController textController;
   MapController controller = MapController();
 
+
   final LatLng _center = const LatLng(37.58638333, 127.0203333);
 
 
   void _onMapCreated(GoogleMapController controller) {
-    mapController = controller;
+    setState(() {
+      mapController = controller;
+    });
   }
 
   @override
@@ -73,9 +76,9 @@ class _MapBrowseScreenState extends State<MapBrowseScreen> {
     });
   }
 
-  void _updateCameraPosition(dynamic latlng) {
-    mapController.animateCamera(CameraUpdate.newLatLng(
-      LatLng(latlng.latitude, latlng.longitude),
+  Future<void> _updateCameraPosition(dynamic latlng) async {
+    await mapController.animateCamera(CameraUpdate.newLatLng(
+  LatLng(latlng.latitude, latlng.longitude),
     ));
   }
 
@@ -85,12 +88,18 @@ class _MapBrowseScreenState extends State<MapBrowseScreen> {
       controller.model.selectedPlaceAddress = placeAddress;
       textController.text = placeName;
       Map<String, dynamic> latLng = await MapController.getLatLngFromAddress(placeAddress);
-      double latitude = latLng['latitude'];
-      double longitude = latLng['longitude'];
+      controller.model.latitudeP = latLng['latitude'];
+      controller.model.longitudeP = latLng['longitude'];
+
       setState(() {
-      _clearSearchResults();
-      _updateCameraPosition(LatLng(latitude, longitude));
-    });
+        controller.model.markers.clear();
+        controller.model.markers.add(
+          Marker(markerId: const MarkerId('선택된 장소'),
+            position: LatLng(controller.model.latitudeP, controller.model.longitudeP),
+            infoWindow: InfoWindow(title: placeName, snippet: placeAddress),
+          ),
+        );
+      });
   }
 
   Future<void> _onSearchPressed() async {
@@ -135,8 +144,10 @@ class _MapBrowseScreenState extends State<MapBrowseScreen> {
                 return ListTile(
                   title: Text(name),
                   subtitle: Text(address),
-                  onTap: () {
-                    _selectPlace(name, address);
+                  onTap: () async {
+                    await _selectPlace(name, address);
+                    _clearSearchResults();
+                    _updateCameraPosition(LatLng(controller.model.latitudeP, controller.model.longitudeP));
                     // Navigator.pop(context,name);
                   },
                 );
@@ -154,6 +165,7 @@ class _MapBrowseScreenState extends State<MapBrowseScreen> {
                   target: _center,
                   zoom: 15.0,
                 ),
+                markers: controller.model.markers,
               ),
               Align(
                 alignment: Alignment.bottomCenter,
@@ -164,7 +176,6 @@ class _MapBrowseScreenState extends State<MapBrowseScreen> {
                       if (controller.model.showSearchResults) {
                         _clearSearchResults();
                       } else {
-                        var gps = await controller.getPosition();
                         mapController.animateCamera(CameraUpdate.newLatLng(
                             LatLng(controller.model.nowPosition!.latitude, controller.model.nowPosition!.longitude)));
                       }
