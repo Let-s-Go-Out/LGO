@@ -1,9 +1,10 @@
 import 'dart:async';
 import 'dart:developer' show log;
 import 'package:flutter/material.dart';
-import 'package:nagaja_app/map_browse_screen.dart';
+import 'package:nagaja_app/View/map_browse_screen.dart';
 import 'package:http/http.dart' as http;
 import 'package:syncfusion_flutter_sliders/sliders.dart';
+import 'package:nagaja_app/View/main_page_loading.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -166,6 +167,10 @@ class _MainPageState extends State<MainPage> {
             ElevatedButton(
               onPressed: () {
                 // Add code to handle the "Let's Go out" button
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const MainLoadingPage()),
+                );
               },
               child: Text('Let\'s Go out'),
             ),
