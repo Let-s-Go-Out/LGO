@@ -8,6 +8,7 @@ class MapModel {
   bool showSearchResults = false;
   String? selectedPlaceName;
   String? selectedPlaceAddress;
+  late LatLng selectedPlaceLatLng;
   Set<Marker> markers = {};
   double latitudeP = 0;
   double longitudeP= 0;

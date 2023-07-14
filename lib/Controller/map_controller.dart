@@ -4,6 +4,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/http.dart';
 import 'package:nagaja_app/Model/map_model.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class MapController{
   static const String apiKey = 'AIzaSyAIeZMzg3xE5dYXgiWNoIjDE34R0SzTAzE';
@@ -15,11 +16,13 @@ class MapController{
   bool get showSearchResults => model.showSearchResults;
   String? get selectedPlaceName => model.selectedPlaceName;
   String? get selectedPlaceAddress => model.selectedPlaceAddress;
+  LatLng get selectedPlaceLatLng => model.selectedPlaceLatLng;
 
   Future<Position> getPosition() async {
     LocationPermission permission = await Geolocator.requestPermission();
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
+    model.nowPosition = position;
     return position;
   }
 
@@ -35,7 +38,34 @@ class MapController{
           String? myAddress =
           data['results'][0]['formatted_address'] as String?;
           print("myAddress: $myAddress");
+
+          model.selectedPlaceAddress = myAddress;
+          model.selectedPlaceName = "현재 위치";
+
           return myAddress;
+        }
+      }
+    }
+    return null;
+  }
+
+  Future<String?> getLatLngToAddress() async {
+    if (model.selectedPlaceLatLng != null) {
+      String lat = model.selectedPlaceLatLng.latitude.toString();
+      String lon = model.selectedPlaceLatLng.longitude.toString();
+      Response response = await get(Uri.parse(
+          'https://maps.googleapis.com/maps/api/geocode/json?key=$apiKey&language=ko&latlng=$lat,$lon'));
+      if (response.statusCode == 200) {
+        Map<String, dynamic> data = jsonDecode(response.body);
+        if (data['results'] != null && data['results'].isNotEmpty) {
+          String? LatLngAddress = data['results'][0]['formatted_address'] as String?;
+          String? LatLngName = data['results'][0]['address_components'][0]['long_name'] as String?;
+          print("LatLngAddress: $LatLngAddress");
+
+          model.selectedPlaceAddress = LatLngAddress;
+          model.selectedPlaceName = LatLngName;
+
+          return LatLngAddress;
         }
       }
     }
@@ -76,7 +106,6 @@ class MapController{
       if (data['results'] != null && data['results'].isNotEmpty) {
         double lat = data['results'][0]['geometry']['location']['lat'];
         double lng = data['results'][0]['geometry']['location']['lng'];
-
         return {'latitude': lat, 'longitude': lng};
       }
     }
