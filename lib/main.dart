@@ -1,6 +1,5 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
-import 'package:flutter_naver_map/flutter_naver_map.dart';
 import 'package:nagaja_app/View/main_page.dart';
 import 'package:nagaja_app/View/main_page_loading.dart';
 
@@ -25,7 +24,4 @@ class MyApp extends StatelessWidget {
 
 Future<void> _initialize() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await NaverMapSdk.instance.initialize(
-      clientId: 'msgguntztp',
-      onAuthFailed: (ex) => log("********* 네이버맵 인증오류 : $ex *********"));
 }

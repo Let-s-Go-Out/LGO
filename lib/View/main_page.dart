@@ -15,6 +15,7 @@ class _MainPageState extends State<MainPage> {
   String selectedConcept = '';
   String selectedStartTime = '';
   String selectedDuration = '';
+  String text = '검색어를 입력하세요.';
 
   // create TimeOfDay variable
   TimeOfDay _timeOfDay = TimeOfDay(hour: 8, minute: 30);
@@ -68,11 +69,16 @@ class _MainPageState extends State<MainPage> {
             Text('출발지'),
             SizedBox(height: verticalSpacing),
             InkWell(
-              onTap: () {
-                Navigator.push(
+              onTap: () async {
+                final returnData = await Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => MapBrowseScreen()),
                 );
+                if(returnData != null){
+                  setState(() {
+                    text = returnData;
+                  });
+                }
               },
               child: Container(
                 decoration: BoxDecoration(
@@ -82,7 +88,7 @@ class _MainPageState extends State<MainPage> {
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    '검색어를 입력하세요.',
+                    text,
                     style: TextStyle(fontSize:16.0),
                   ),
                 ),
