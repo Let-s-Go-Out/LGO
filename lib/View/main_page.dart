@@ -1,8 +1,10 @@
-import 'package:flutter/foundation.dart';
+import 'dart:async';
+import 'dart:developer' show log;
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:nagaja_app/View/map_browse_screen.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:http/http.dart' as http;
+import 'package:syncfusion_flutter_sliders/sliders.dart';
+import 'package:nagaja_app/View/main_page_loading.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -13,7 +15,23 @@ class _MainPageState extends State<MainPage> {
   String selectedConcept = '';
   String selectedStartTime = '';
   String selectedDuration = '';
-  String text = '검색어를 입력하세요.';
+
+  // create TimeOfDay variable
+  TimeOfDay _timeOfDay = TimeOfDay(hour: 8, minute: 30);
+
+  // show time picker method
+  void _showTimePicker() {
+    showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    ).then((value) {
+      setState(() {
+        _timeOfDay = value!;
+      });
+    });
+  }
+
+  double _value = 4.0;
 
   @override
   Widget build(BuildContext context) {
@@ -50,16 +68,11 @@ class _MainPageState extends State<MainPage> {
             Text('출발지'),
             SizedBox(height: verticalSpacing),
             InkWell(
-              onTap: () async {
-                final returnData = await Navigator.push(
+              onTap: () {
+                Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => MapBrowseScreen()),
                 );
-                if(returnData != null){
-                    setState(() {
-                      text = returnData;
-                    });
-                }
               },
               child: Container(
                 decoration: BoxDecoration(
@@ -67,9 +80,9 @@ class _MainPageState extends State<MainPage> {
                   borderRadius: BorderRadius.circular(4.0),
                 ),
                 child: Padding(
-                  padding: EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.all(8.0),
                   child: Text(
-                    text,
+                    '검색어를 입력하세요.',
                     style: TextStyle(fontSize:16.0),
                   ),
                 ),
@@ -89,42 +102,75 @@ class _MainPageState extends State<MainPage> {
               ],
             ),
             SizedBox(height: verticalSpacing * 2),
-            Text('희망 출발 시간'),
-            SizedBox(height: verticalSpacing),
-            ElevatedButton(
-              onPressed: () {
-                // Add code to handle selecting the start time
-              },
-              child: Text('시간 설정'),
-            ),
-            SizedBox(height: verticalSpacing * 2),
-            Text('희망 소요 시간'),
-            SizedBox(height: verticalSpacing),
+
+            // 희망 출발 시간 수정
+
             Row(
-              children: [
-                Expanded(
-                  child: TextField(
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: '최소 시간',
-                    ),
-                  ),
-                ),
-                SizedBox(width: 8.0),
-                Expanded(
-                  child: TextField(
-                    decoration: InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: '최대 시간',
-                    ),
-                  ),
-                ),
-              ],
+                children: [
+                  Expanded(
+                      child: Text('희망 출발 시간')),
+                  Expanded(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          // button
+                          MaterialButton(
+                            onPressed: _showTimePicker,
+                            child: Padding(
+                              padding: EdgeInsets.all(10.0),
+                              child: Text(
+                                  '${_timeOfDay.format(context)}',
+                                  style: TextStyle(color: Colors.white, fontSize: 13)),
+                            ),
+                            color: Colors.blue,
+                          ),
+                        ],
+                      )
+                  )
+                ]
+            ),
+
+            SizedBox(height: verticalSpacing),
+
+            // 희망 소요 시간 Slide Bar ver.
+
+            Container(
+              padding: EdgeInsets.fromLTRB(0, 0, 30, 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text('희망 소요 시간'),
+                  Text('${_value.toStringAsFixed(0)}시간'),
+                ],
+              ),
             ),
             SizedBox(height: verticalSpacing),
+            Center(
+              child: SfSlider(
+                min: 0.0,
+                max: 12.0,
+                value: _value,
+                interval: 2,
+                showTicks: true,
+                showLabels: true,
+                minorTicksPerInterval: 1,
+                onChanged: (dynamic value) {
+                 setState(() {
+                   _value = value;
+                 });
+                },
+              ),
+            ),
+
+            SizedBox(height: verticalSpacing),
+
             ElevatedButton(
               onPressed: () {
                 // Add code to handle the "Let's Go out" button
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const MainLoadingPage()),
+                );
               },
               child: Text('Let\'s Go out'),
             ),
@@ -169,4 +215,3 @@ class _MainPageState extends State<MainPage> {
     );
   }
 }
-
