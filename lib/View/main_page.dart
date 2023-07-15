@@ -1,8 +1,8 @@
-import 'dart:async';
-import 'dart:developer' show log;
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:nagaja_app/map_browse_screen.dart';
-import 'package:http/http.dart' as http;
+import 'package:geolocator/geolocator.dart';
+import 'package:nagaja_app/View/map_browse_screen.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class MainPage extends StatefulWidget {
   @override
@@ -13,6 +13,7 @@ class _MainPageState extends State<MainPage> {
   String selectedConcept = '';
   String selectedStartTime = '';
   String selectedDuration = '';
+  String text = '검색어를 입력하세요.';
 
   @override
   Widget build(BuildContext context) {
@@ -49,11 +50,16 @@ class _MainPageState extends State<MainPage> {
             Text('출발지'),
             SizedBox(height: verticalSpacing),
             InkWell(
-              onTap: () {
-                Navigator.push(
+              onTap: () async {
+                final returnData = await Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => MapBrowseScreen()),
                 );
+                if(returnData != null){
+                    setState(() {
+                      text = returnData;
+                    });
+                }
               },
               child: Container(
                 decoration: BoxDecoration(
@@ -61,9 +67,9 @@ class _MainPageState extends State<MainPage> {
                   borderRadius: BorderRadius.circular(4.0),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: EdgeInsets.all(8.0),
                   child: Text(
-                    '검색어를 입력하세요.',
+                    text,
                     style: TextStyle(fontSize:16.0),
                   ),
                 ),
@@ -163,3 +169,4 @@ class _MainPageState extends State<MainPage> {
     );
   }
 }
+
