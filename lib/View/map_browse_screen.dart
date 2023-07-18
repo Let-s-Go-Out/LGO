@@ -178,7 +178,6 @@ class _MapBrowseScreenState extends State<MapBrowseScreen> {
               child: Text('Error: ${snapshot.error}'),
             );
           } else {
-            LatLng initialPosition = snapshot.data!;
             return Column(
               children: [
                 Container(
