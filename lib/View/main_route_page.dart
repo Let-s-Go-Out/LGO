@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:nagaja_app/Controller/map_controller.dart';
+import 'package:snapping_sheet_2/snapping_sheet.dart';
 
 class MainRoutePage extends StatefulWidget {
   const MainRoutePage({Key? key}) : super(key: key);
@@ -13,6 +14,8 @@ class _MainRoutePageState extends State<MainRoutePage> {
   late GoogleMapController mapController;
   final LatLng _center = const LatLng(37.58638333, 127.0203333);
   MapController controller = MapController();
+  bool isExpanded = false;
+  ScrollController scrollcontroller = ScrollController();
 
   @override
   void initState() {
@@ -34,95 +37,78 @@ class _MainRoutePageState extends State<MainRoutePage> {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
-        body: CustomScrollView(
-          slivers: <Widget>[
-            _buildAppBar(), // 상단 바
-            _buildTabBarView(), // 탭 바 아래 내용
+        appBar: AppBar(
+          title: Text('Your App Title'),
+          bottom: TabBar(
+            tabs: const [
+              Tab(text: 'AI Recommendation'),
+              Tab(text: 'Tour'),
+            ],
+          ),
+        ),
+        body: TabBarView(
+          children: [
+            _buildAIRecommendationTab(),
+            _buildTourTab(),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildAppBar() {
-    return SliverAppBar(
-      expandedHeight: MediaQuery.of(context).size.height / 3,
-      pinned: true,
-      flexibleSpace: FlexibleSpaceBar(
-        background: Container(
-          padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 24.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                '출발지에서',
-                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold, color: Colors.white),
-              ),
-              Text(
-                'PM 6시 30분에 출발하여',
-                style: TextStyle(fontSize: 20, color: Colors.white),
-              ),
-              Text(
-                '1시간 소요되는',
-                style: TextStyle(fontSize: 20, color: Colors.white),
-              ),
-              Text(
-                '나들이 컨셉의 코스는',
-                style: TextStyle(fontSize: 20, color: Colors.white),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildTabBarView() {
-    return SliverFillRemaining(
-      child: TabBarView(
-        physics: NeverScrollableScrollPhysics(),
-        children: [
-          _buildAIRecommendationTab(),
-          _buildTourTab(),
-        ],
-      ),
-    );
-  }
-
   Widget _buildAIRecommendationTab() {
     return Scaffold(
-        body: FutureBuilder<LatLng>(
-            future: _getInitialCameraPosition(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData == false) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              } else if (snapshot.hasError) {
-                return Center(
-                  child: Text('Error: ${snapshot.error}'),
-                );
-              } else {
-                return GoogleMap(
-                  onMapCreated: _onMapCreated,
-                  initialCameraPosition: CameraPosition(
-                    target: snapshot.data!,
-                    zoom: 15.0,
-                  ),
-                  markers: {
-                    Marker(
-                      markerId: MarkerId('marker_id'),
-                      position: snapshot.data!,
-                      infoWindow: InfoWindow(
-                        title: '현재 위치',
-                        snippet: '',
-                      ),
-                    ),
-                  },
-                );
-              }
-            }));
+      body: SnappingSheet(
+        lockOverflowDrag: true,
+        child: _buildAIRecommendationContent(),
+        grabbingHeight: 75,
+        grabbing: GrabbingWidget(),
+        sheetBelow: SnappingSheetContent(
+          draggable: (details) => true,
+          child: ListView(
+            controller: scrollcontroller,
+            reverse: false,
+          ),
+        )
+      ),
+    );
   }
+
+  Widget _buildAIRecommendationContent() {
+    return FutureBuilder<LatLng>(
+      future: _getInitialCameraPosition(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        } else if (snapshot.hasError) {
+          return Center(
+            child: Text('Error: ${snapshot.error}'),
+          );
+        } else {
+          return GoogleMap(
+            onMapCreated: _onMapCreated,
+            initialCameraPosition: CameraPosition(
+              target: snapshot.data!,
+              zoom: 15.0,
+            ),
+            markers: {
+              Marker(
+                markerId: MarkerId('marker_id'),
+                position: snapshot.data!,
+                infoWindow: InfoWindow(
+                  title: '현재 위치',
+                  snippet: '',
+                ),
+              ),
+            },
+          );
+        }
+      },
+    );
+  }
+
 
   Widget _buildTourTab() {
     return Center(
