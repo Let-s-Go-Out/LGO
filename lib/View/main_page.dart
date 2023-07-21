@@ -1,14 +1,17 @@
 import 'dart:async';
 import 'dart:developer' show log;
 import 'package:flutter/material.dart';
+import 'package:nagaja_app/View/diary_page.dart';
 import 'package:nagaja_app/View/map_browse_screen.dart';
 import 'package:http/http.dart' as http;
 import 'package:syncfusion_flutter_sliders/sliders.dart';
 import 'package:nagaja_app/View/main_page_loading.dart';
 
 class MainPage extends StatefulWidget {
+  const MainPage({super.key});
+
   @override
-  _MainPageState createState() => _MainPageState();
+  State<MainPage> createState() => _MainPageState();
 }
 
 class _MainPageState extends State<MainPage> {
@@ -136,26 +139,6 @@ class _MainPageState extends State<MainPage> {
                         ],
                       )
                   ),
-                  /*Expanded(
-                      child: Text('희망 출발 시간')),
-                  Expanded(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
-                          // button
-                          MaterialButton(
-                            onPressed: _showTimePicker,
-                            child: Padding(
-                              padding: EdgeInsets.all(10.0),
-                              child: Text(
-                                  '${_timeOfDay.format(context)}',
-                                  style: TextStyle(color: Colors.white, fontSize: 13)),
-                            ),
-                            color: Colors.blue,
-                          ),
-                        ],
-                      )
-                  )*/
                 ]
             ),
             Spacer(flex: 2),
@@ -206,22 +189,6 @@ class _MainPageState extends State<MainPage> {
       );
         },
         ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.book),
-            label: 'Diary',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Mypage',
-          ),
-        ],
-      ),
     );
   }
 
