@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:nagaja_app/View/home.dart';
 import 'package:nagaja_app/View/main_page.dart';
 import 'package:nagaja_app/View/main_page_loading.dart';
 
@@ -17,7 +18,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MainPage(), // Set the main page as the home screen
+      home: MyAppHomePage(), // Set the main page as the home screen
     );
   }
 }
