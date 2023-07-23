@@ -9,14 +9,13 @@ class DiaryPage extends StatefulWidget {
 }
 
 class _DiaryPageState extends State<DiaryPage> {
+  DateTime focusedDay = DateTime.now();
 
   DateTime selectedDay = DateTime(
     DateTime.now().year,
     DateTime.now().month,
     DateTime.now().day,
   );
-
-  DateTime focusedDay = DateTime.now();
 
   Map<DateTime, List<Event>> events = {
     DateTime.utc(2023,7,10) : [ Event('route1')],
@@ -32,7 +31,7 @@ class _DiaryPageState extends State<DiaryPage> {
     return Scaffold(
       appBar: AppBar(),
       body: TableCalendar(
-        firstDay: DateTime.utc(2021, 10, 16),
+          firstDay: DateTime.utc(2021, 10, 16),
         lastDay: DateTime.utc(2030, 3, 14),
         focusedDay: focusedDay,
         onDaySelected: (DateTime selectedDay, DateTime focusedDay) {
@@ -46,15 +45,54 @@ class _DiaryPageState extends State<DiaryPage> {
           // selectedDay 와 동일한 날짜의 모양 바꿔줌
           return isSameDay(selectedDay, day);
         },
-        calendarStyle: CalendarStyle(
-          markerSize: 36.9,
-          markersAnchor: 1.02,
-          markerDecoration: BoxDecoration(
-            color: Color.fromRGBO(255, 75, 75, 0.5),
-            shape: BoxShape.circle
-          ),
+        headerStyle: const HeaderStyle(
+          titleCentered: true,
+          formatButtonVisible: false,
+          titleTextStyle: TextStyle(fontSize: 17.0)
         ),
         eventLoader: _getEventsForDay,
+        calendarBuilders: CalendarBuilders(
+          selectedBuilder: (context, date, events) => Container(
+            margin: const EdgeInsets.all(4.0),
+            alignment: Alignment.center,
+            decoration: BoxDecoration(
+              color: Color.fromRGBO(33, 149, 242, 1.0),
+              shape: BoxShape.circle,
+            ),
+            child: Text(
+              date.day.toString(),
+              style: const TextStyle(color: Colors.white),
+            )
+          ),
+          todayBuilder: (context, date, events) => Container(
+              margin: const EdgeInsets.all(4.0),
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: Color.fromRGBO(38, 38, 38, 0.5),
+                shape: BoxShape.circle,
+              ),
+              child: Text(
+                date.day.toString(),
+                style: const TextStyle(color: Colors.white),
+              )
+          ),
+          markerBuilder: (context, date, event) {
+            if (event.isNotEmpty) {
+              return Container(
+                  margin: const EdgeInsets.all(4.0),
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                    color: Color.fromRGBO(33, 149, 242, 0.5),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Text(
+                    date.day.toString(),
+                    style: const TextStyle(color: Colors.white),
+                  )
+              );
+            }
+            }
+            )
       ),
     );
   }
