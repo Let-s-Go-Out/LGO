@@ -1,3 +1,4 @@
+import 'dart:collection';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -17,6 +18,7 @@ class _DiaryPageState extends State<DiaryPage> {
     DateTime.now().day,
   );
 
+  // key -> DateTime / value -> List<Event>
   Map<DateTime, List<Event>> events = {
     DateTime.utc(2023,7,10) : [ Event('route1')],
     DateTime.utc(2023,7,11) : [ Event('route2')],
@@ -50,7 +52,9 @@ class _DiaryPageState extends State<DiaryPage> {
           formatButtonVisible: false,
           titleTextStyle: TextStyle(fontSize: 17.0)
         ),
-        eventLoader: _getEventsForDay,
+        eventLoader: (day) {
+            return _getEventsForDay(day);
+        },
         calendarBuilders: CalendarBuilders(
           selectedBuilder: (context, date, events) => Container(
             margin: const EdgeInsets.all(4.0),
