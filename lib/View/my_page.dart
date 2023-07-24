@@ -5,8 +5,9 @@ class MyPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Text('This is My Page.'),
+    return Text(
+        "This is My Page"
     );
   }
 }
+
