@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:nagaja_app/View/home.dart';
 import 'package:nagaja_app/View/main_page.dart';
 import 'package:nagaja_app/View/main_page_loading.dart';
@@ -13,7 +14,7 @@ void main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       title: 'Outing Routes App',
       theme: ThemeData(
         primarySwatch: Colors.blue,
