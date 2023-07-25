@@ -1,9 +1,11 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
-import 'package:nagaja_app/View/widgets/button.dart';
 import 'package:nagaja_app/View/widgets/input_field.dart';
 import 'package:nagaja_app/View/widgets/theme.dart';
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 
  class AddRoutePage extends StatefulWidget {
   const AddRoutePage({super.key});
@@ -18,6 +20,50 @@ class _AddRoutePageState extends State<AddRoutePage> {
    DateTime _selectedDate = DateTime.now();
    String _startTime = DateFormat("hh:mm a").format(DateTime.now()).toString();
    String _endTime="9:30 PM";
+   File? image;
+   PlatformFile? pickedFile;
+   UploadTask? uploadTask;
+
+   Future pickImage() async {
+     final result = await FilePicker.platform.pickFiles();
+     if (result == null) return;
+
+     setState(() {
+       pickedFile = result.files.first;
+     });
+   }
+
+   Future uploadFile() async {
+     final path = 'files/${pickedFile!.name}';
+     final file = File(pickedFile!.path!);
+
+     final ref = FirebaseStorage.instance.ref().child(path);
+     setState(() {
+       uploadTask = ref.putFile(file);
+     });
+
+     final snapshot = await uploadTask!.whenComplete(() {});
+
+     final urlDownload = await snapshot.ref.getDownloadURL();
+     print('Download Link: $urlDownload');
+
+     setState(() {
+       uploadTask = null;
+     });
+   }
+
+   /*Future pickImage() async {
+     try {
+       final image = await ImagePicker().pickImage(source: ImageSource.gallery);
+       if (image == null) return;
+
+       final imageTemporary = File(image.path);
+       setState(() => this.image = imageTemporary);
+     } on PlatformException catch (e) {
+       print('Failed to pick image: $e');
+     }
+   }*/
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -83,16 +129,62 @@ class _AddRoutePageState extends State<AddRoutePage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  MyButton(label: "Create Route", onTap: ()=>_validateDate())
+                  // 사진 업로드 버튼
+                  ElevatedButton(
+                    child: Row(
+                      children: [
+                        Icon(Icons.image_outlined),
+                        Text("Pick Gallery")
+                      ],
+                    ),
+                    onPressed: ()=>pickImage(),
+                  ),
+                  ElevatedButton(
+                    child: Row(
+                      children: [
+                        Icon(Icons.check),
+                        Text("Upload File")
+                      ],
+                    ),
+                    onPressed: ()=>uploadFile(),
+                  ),
+                  buildProgress(),
+                  ElevatedButton(
+                      child: Row(
+                        children: [
+                          Icon(Icons.add),
+                          Text("Create Route"),
+                        ],
+                      ),
+                      onPressed: ()=>_validateDate(),
+                  ),
+                ],
+              ),
+              SizedBox(height: 18),
+              Row(
+                children: [
+                  if (pickedFile != null)
+                    Expanded(
+                      child: Container(
+                        color: Colors.blue[100],
+                        child: Center(
+                          child: Image.file(
+                            File(pickedFile!.path!),
+                            width: double.infinity,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    )
                 ],
               )
-
             ],
           ),
         ),
       ),
     );
   }
+
   _validateDate(){
     if(_titleController.text.isNotEmpty&&_noteController.text.isNotEmpty){
       //add to database
@@ -151,4 +243,35 @@ class _AddRoutePageState extends State<AddRoutePage> {
       )
     );
   }
+
+  Widget buildProgress() => StreamBuilder<TaskSnapshot>(
+    stream: uploadTask?.snapshotEvents,
+    builder: (context, snapshot) {
+      if (snapshot.hasData) {
+        final data = snapshot.data!;
+        double progress = data.bytesTransferred / data.totalBytes;
+
+        return SizedBox(
+          height: 50,
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              LinearProgressIndicator(
+                value: progress,
+                backgroundColor: Colors.grey,
+                color: Colors.lightGreen,
+              ),
+              Center(
+                child: Text(
+                  '${(100 * progress).roundToDouble()}%',
+                  style: const TextStyle(color: Colors.white),
+                ),
+              )
+            ],
+          ),
+        );
+      } else {
+        return const SizedBox(height: 50);
+      }
+    });
 }
