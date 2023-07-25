@@ -1,8 +1,10 @@
 import 'package:date_picker_timeline/date_picker_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:nagaja_app/Model/add_route_bar.dart';
 import 'package:nagaja_app/View/widgets/button.dart';
 import 'package:nagaja_app/View/widgets/theme.dart';
+import 'package:get/get.dart';
 
 class SecondDiaryPage extends StatefulWidget {
   const SecondDiaryPage({super.key});
@@ -75,7 +77,7 @@ class _SecondDiaryPageState extends State<SecondDiaryPage> {
               ],
             ),
           ),
-          MyButton(label: "+Add Route", onTap: ()=>null)
+          MyButton(label: "+Add Route", onTap: ()=>Get.to(AddRoutePage()))
         ],
       ),
     );

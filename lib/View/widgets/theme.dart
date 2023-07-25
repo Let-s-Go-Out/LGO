@@ -6,6 +6,7 @@ TextStyle get subHeadingStyle{
     fontSize: 20,
     fontWeight: FontWeight.w600,
     fontFamily: 'Roboto',
+    color: Colors.grey,
   );
 }
 
@@ -14,5 +15,22 @@ TextStyle get headingStyle{
     fontSize: 28,
     fontWeight: FontWeight.w700,
     fontFamily: 'Roboto',
+  );
+}
+
+TextStyle get titleStyle{
+  return TextStyle(
+    fontSize: 16,
+    fontWeight: FontWeight.w400,
+    fontFamily: 'Roboto',
+  );
+}
+
+TextStyle get subTitleStyle{
+  return TextStyle(
+    fontSize: 14,
+    fontWeight: FontWeight.w400,
+    fontFamily: 'Roboto',
+    color: Colors.grey,
   );
 }
