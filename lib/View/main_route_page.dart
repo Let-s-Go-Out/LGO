@@ -21,33 +21,15 @@ class _MainRoutePageState extends State<MainRoutePage> {
   MapController controller = MapController();
   bool isExpanded = false;
   ScrollController scrollcontroller = ScrollController();
-  List<LatLng> pathPoints = [];
-  Location location = Location();
-  LocationData? currentUserPosition;
-  final Set<Polyline> _polyline = {};
-  Timer? timer;
-  bool _isMounted = false;
 
   @override
   void initState() {
     super.initState();
-    pathPoints.clear();
-    // controller.getPosition().then((position) {
-    //   setState(() {
-    //     _updatePath(LatLng(controller.model.nowPosition!.latitude,controller.model.nowPosition!.longitude));
-    //     _updateCameraPosition(controller.model.nowPosition!);
-    //   });
-    // });
-    _isMounted = true;
-    startTimer();
   }
 
   @override
   void dispose() {
     super.dispose();
-    // Cancel the timer to release resources
-    _isMounted = false;
-    timer?.cancel();
   }
 
   void _onMapCreated(GoogleMapController controller) {
@@ -64,31 +46,6 @@ class _MainRoutePageState extends State<MainRoutePage> {
     await mapController.animateCamera(CameraUpdate.newLatLng(
       LatLng(latlng.latitude, latlng.longitude),
     ));
-  }
-
-  void _updatePath(LatLng newPosition){
-    if (_isMounted) {
-        pathPoints.add(newPosition);
-        Polyline newPolyline = Polyline(
-          polylineId: PolylineId('path'),
-          color: Colors.purpleAccent,
-          points: pathPoints,
-        );
-        mapController.clearPolylines();
-        mapController.addPolyline(newPolyline);
-        print("polyline:$newPosition");
-    }
-  }
-
-  void startTimer() {
-    // Duration specifying the interval of 1 seconds
-    const duration = Duration(milliseconds: 5000);
-    // Create a periodic timer that executes myFunction every 0.5 seconds
-    timer = Timer.periodic(duration, (timer) async {
-      await controller.getPosition().then((position) {
-        _updatePath(LatLng(position.latitude, position.longitude));
-      });
-    });
   }
 
   @override
@@ -214,7 +171,6 @@ class _MainRoutePageState extends State<MainRoutePage> {
                 ),
               ),
             },
-            polylines: _polyline,
           );
         }
       },
