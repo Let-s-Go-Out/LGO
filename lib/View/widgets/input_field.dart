@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:nagaja_app/View/widgets/theme.dart';
 
 class MyInputField extends StatelessWidget {
@@ -27,7 +26,7 @@ class MyInputField extends StatelessWidget {
           ),
           Container(
             height: 50,
-            margin: EdgeInsets.only(top: 8.0),
+            margin: EdgeInsets.only(top: 5.0),
             padding: EdgeInsets.only(left: 10),
             decoration: BoxDecoration(
               border: Border.all(
