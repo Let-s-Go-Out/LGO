@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:nagaja_app/View/widgets/input_field.dart';
+import 'package:nagaja_app/View/widgets/input_field_message.dart';
 import 'package:nagaja_app/View/widgets/theme.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -15,7 +16,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 }
 
 class _AddRoutePageState extends State<AddRoutePage> {
-   final TextEditingController _titleController = TextEditingController();
    final TextEditingController _noteController = TextEditingController();
    DateTime _selectedDate = DateTime.now();
    String _startTime = DateFormat("hh:mm a").format(DateTime.now()).toString();
@@ -77,9 +77,8 @@ class _AddRoutePageState extends State<AddRoutePage> {
                 "Add Route",
                 style: headingStyle,
               ),
-              MyInputField(title: "Title", hint: "Enter your title", controller: _titleController,),
-              MyInputField(title: "Note", hint: "Enter your note", controller: _noteController,),
-              MyInputField(title: "Date", hint: DateFormat.yMd().format(_selectedDate),
+              MyInputFieldMessage(title: "한 줄 일기", hint: "한 줄 일기를 작성해주세요.\n오늘의 나들이는 어땠나요?", controller: _noteController,),
+              MyInputField(title: "날짜", hint: DateFormat.yMd().format(_selectedDate),
               widget: IconButton(
                 icon: Icon(Icons.calendar_today_outlined,
                   color: Colors.grey
@@ -93,7 +92,7 @@ class _AddRoutePageState extends State<AddRoutePage> {
                 children: [
                   Expanded(
                       child: MyInputField(
-                        title: "Start Time",
+                        title: "시작 시간",
                         hint: _startTime,
                         widget: IconButton(
                           onPressed: (){
@@ -109,7 +108,7 @@ class _AddRoutePageState extends State<AddRoutePage> {
                   SizedBox(width: 12,),
                   Expanded(
                       child: MyInputField(
-                        title: "End Time",
+                        title: "끝난 시간",
                         hint: _endTime,
                         widget: IconButton(
                           onPressed: (){
@@ -186,10 +185,10 @@ class _AddRoutePageState extends State<AddRoutePage> {
   }
 
   _validateDate(){
-    if(_titleController.text.isNotEmpty&&_noteController.text.isNotEmpty){
+    if(_noteController.text.isNotEmpty){
       //add to database
       Get.back();
-    }else if(_titleController.text.isEmpty ||_noteController.text.isEmpty){
+    }else if(_noteController.text.isEmpty){
       Get.snackbar("Required", "All fields are required !",
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.white,
