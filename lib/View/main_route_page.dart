@@ -19,7 +19,7 @@ class MainRoutePage extends StatefulWidget {
 class _MainRoutePageState extends State<MainRoutePage> {
   late GoogleMapController mapController;
   late GoogleMapController mapController2;
-  final LatLng _center = const LatLng(37.58638333, 127.0203333);
+  // final LatLng _center = const LatLng(37.58638333, 127.0203333);
   MapController controller = MapController();
   bool isExpanded = false;
   ScrollController scrollcontroller = ScrollController();
@@ -54,7 +54,7 @@ class _MainRoutePageState extends State<MainRoutePage> {
   Future<LatLng> _getInitialCameraPosition2() async {
     try {
       locationData = await location.getLocation();
-      PlacesApi.searchPlaces(locationData!.latitude!, locationData!.longitude!);
+      // await PlacesApi.searchPlaces(locationData!.latitude!, locationData!.longitude!);
       //print (locationData.toString());
       return LatLng(locationData!.latitude!, locationData!.longitude!);
     } catch (e) {
@@ -63,11 +63,11 @@ class _MainRoutePageState extends State<MainRoutePage> {
     }
   }
 
-  Future<void> _updateCameraPosition(dynamic latlng) async {
-    await mapController.animateCamera(CameraUpdate.newLatLng(
-      LatLng(latlng.latitude, latlng.longitude),
-    ));
-  }
+  // Future<void> _updateCameraPosition(dynamic latlng) async {
+  //   await mapController.animateCamera(CameraUpdate.newLatLng(
+  //     LatLng(latlng.latitude, latlng.longitude),
+  //   ));
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -86,13 +86,13 @@ class _MainRoutePageState extends State<MainRoutePage> {
               tabs: [
                 Tab(
                   child: Text(
-                    'AI 추천',
+                    '장소 추천',
                     style: TextStyle(fontSize: 28),
                   ),
                 ),
                 Tab(
                   child: Text(
-                    '둘러보기',
+                    '경로 추천',
                     style: TextStyle(fontSize: 28),
                   ),
                 ),
@@ -108,8 +108,8 @@ class _MainRoutePageState extends State<MainRoutePage> {
           body: TabBarView(
             physics: NeverScrollableScrollPhysics(),
             children: [
-              _buildAIRecommendationTab(),
               _buildTourTab(),
+              _buildAIRecommendationTab(),
             ],
           ),
         ),
@@ -208,7 +208,7 @@ class _MainRoutePageState extends State<MainRoutePage> {
 
   Widget _buildTourTab() {
             return FutureBuilder<List<Place>>(
-                future: PlacesApi.searchPlaces(locationData!.latitude!,locationData!.longitude!),
+                future: PlacesApi.searchPlaces(37.58638333, 127.0203333),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return Center(

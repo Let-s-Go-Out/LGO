@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:http/http.dart';
+
 class Place {
   final String name;
   final String placeId;
@@ -21,7 +23,7 @@ class PlacesApi {
 
     final Uri uri = Uri.parse('$_baseUrl?key=$_apiKey&location=$location&radius=$radius&type=$type');
 
-    final response = await http.get(uri);
+    final response = await get(uri);
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
       final List<Place> places = [];
