@@ -86,13 +86,13 @@ class _MainRoutePageState extends State<MainRoutePage> {
               tabs: [
                 Tab(
                   child: Text(
-                    '장소 추천',
+                    '경로 추천',
                     style: TextStyle(fontSize: 28),
                   ),
                 ),
                 Tab(
                   child: Text(
-                    '경로 추천',
+                    '둘러보기',
                     style: TextStyle(fontSize: 28),
                   ),
                 ),
@@ -108,8 +108,8 @@ class _MainRoutePageState extends State<MainRoutePage> {
           body: TabBarView(
             physics: NeverScrollableScrollPhysics(),
             children: [
-              _buildTourTab(),
               _buildAIRecommendationTab(),
+              _buildTourTab(),
             ],
           ),
         ),
