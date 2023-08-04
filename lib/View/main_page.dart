@@ -1,14 +1,17 @@
 import 'dart:async';
 import 'dart:developer' show log;
 import 'package:flutter/material.dart';
+import 'package:nagaja_app/View/diary_page.dart';
 import 'package:nagaja_app/View/map_browse_screen.dart';
 import 'package:http/http.dart' as http;
 import 'package:syncfusion_flutter_sliders/sliders.dart';
 import 'package:nagaja_app/View/main_page_loading.dart';
 
 class MainPage extends StatefulWidget {
+  const MainPage({super.key});
+
   @override
-  _MainPageState createState() => _MainPageState();
+  State<MainPage> createState() => _MainPageState();
 }
 
 class _MainPageState extends State<MainPage> {
@@ -65,9 +68,9 @@ class _MainPageState extends State<MainPage> {
                 textAlign: TextAlign.center,
               ),
             ),
-            SizedBox(height: verticalSpacing * 2),
+            Spacer(flex: 2),
             Text('출발지'),
-            SizedBox(height: verticalSpacing),
+            Spacer(flex: 1),
             InkWell(
               onTap: () async {
                 final returnData = await Navigator.push(
@@ -94,9 +97,10 @@ class _MainPageState extends State<MainPage> {
                 ),
               ),
             ),
-            SizedBox(height: verticalSpacing * 2),
+            Spacer(flex: 2),
+            // 나들이 컨셉
             Text('나들이 컨셉'),
-            SizedBox(height: verticalSpacing),
+            Spacer(flex: 1),
             Wrap(
               spacing: 8.0,
               children: [
@@ -107,15 +111,17 @@ class _MainPageState extends State<MainPage> {
                 conceptButton('체험'),
               ],
             ),
-            SizedBox(height: verticalSpacing * 2),
-
-            // 희망 출발 시간 수정
-
+            Spacer(flex: 2),
+            // 희망 출발 시간
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Expanded(
-                      child: Text('희망 출발 시간')),
-                  Expanded(
+                  Flexible(
+                    flex: 2,
+                    child: Text('희망 출발 시간'),
+                  ),
+                  Flexible(
+                    flex: 1,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
@@ -132,14 +138,11 @@ class _MainPageState extends State<MainPage> {
                           ),
                         ],
                       )
-                  )
+                  ),
                 ]
             ),
-
-            SizedBox(height: verticalSpacing),
-
+            Spacer(flex: 2),
             // 희망 소요 시간 Slide Bar ver.
-
             Container(
               padding: EdgeInsets.fromLTRB(0, 0, 30, 0),
               child: Row(
@@ -150,7 +153,8 @@ class _MainPageState extends State<MainPage> {
                 ],
               ),
             ),
-            SizedBox(height: verticalSpacing),
+            Spacer(flex: 1),
+            // Slide Bar
             Center(
               child: SfSlider(
                 min: 0.0,
@@ -167,9 +171,8 @@ class _MainPageState extends State<MainPage> {
                 },
               ),
             ),
-
-            SizedBox(height: verticalSpacing),
-
+            // 버튼
+            Spacer(flex: 2),
             ElevatedButton(
               onPressed: () {
                 // Add code to handle the "Let's Go out" button
@@ -180,29 +183,12 @@ class _MainPageState extends State<MainPage> {
               },
               child: Text('Let\'s Go out'),
             ),
-            SizedBox(height: verticalSpacing),
-            Spacer(), // Add a spacer to push the bottom navigation bar to the bottom
+            Spacer(flex: 1), // Add a spacer to push the bottom navigation bar to the bottom
           ],
         ),
       );
         },
         ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: const <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.book),
-            label: 'Diary',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Mypage',
-          ),
-        ],
-      ),
     );
   }
 
