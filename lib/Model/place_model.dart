@@ -5,8 +5,10 @@ import 'package:http/http.dart';
 class Place {
   final String name;
   final String placeId;
+  final double placeLat;
+  final double placeLng;
 
-  Place({required this.name, required this.placeId});
+  Place({required this.name, required this.placeId, required this.placeLat, required this.placeLng});
 }
 
 class PlacesApi {
@@ -32,7 +34,9 @@ class PlacesApi {
         for (var placeData in data['results']) {
           final placeName = placeData['name'];
           final placeId = placeData['place_id'];
-          places.add(Place(name: placeName, placeId: placeId));
+          final placeLat = placeData['geometry']['location']['lat'];
+          final placeLng = placeData['geometry']['location']['lng'];
+          places.add(Place(name: placeName, placeId: placeId, placeLat: placeLat, placeLng: placeLng));
         }
       }
       return places;

@@ -1,9 +1,13 @@
 buildscript {
 <<<<<<< HEAD
+<<<<<<< HEAD
     ext.kotlin_version = '1.8.0'
 =======
     ext.kotlin_version = '1.9.0'
 >>>>>>> LeeGaEun
+=======
+    ext.kotlin_version = '1.9.0'
+>>>>>>> 10421ae13335b1936bbd189868ed174786028c42
     repositories {
         gradlePluginPortal()
         google()

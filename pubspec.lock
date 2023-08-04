@@ -252,10 +252,17 @@ packages:
     dependency: transitive
     description:
       name: geolocator_android
+<<<<<<< HEAD
       sha256: b06c72853c993ae533f482d81a12805d7a441f5231d9668718bc7131d7464082
       url: "https://pub.dev"
     source: hosted
     version: "4.2.0"
+=======
+      sha256: "835ff5b4888a2f8eba128996494faf9c5d422785322a81dc0565b99e0f6c379d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.2.2"
+>>>>>>> 10421ae13335b1936bbd189868ed174786028c42
   geolocator_apple:
     dependency: transitive
     description:
@@ -340,10 +347,17 @@ packages:
     dependency: transitive
     description:
       name: google_maps_flutter_web
+<<<<<<< HEAD
       sha256: "15303a2ddd04e21ace41c823de8396a61857a61fed4c145f25ca1fc76628c40c"
       url: "https://pub.dev"
     source: hosted
     version: "0.5.2"
+=======
+      sha256: "229391997f216d37c76bfc10d9b5837a1dfeb98c4b4063c605016382e5bcd910"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.5.3"
+>>>>>>> 10421ae13335b1936bbd189868ed174786028c42
   html:
     dependency: transitive
     description:
@@ -540,26 +554,47 @@ packages:
     dependency: transitive
     description:
       name: path_provider_linux
+<<<<<<< HEAD
       sha256: ffbb8cc9ed2c9ec0e4b7a541e56fd79b138e8f47d2fb86815f15358a349b3b57
       url: "https://pub.dev"
     source: hosted
     version: "2.1.11"
+=======
+      sha256: ba2b77f0c52a33db09fc8caf85b12df691bf28d983e84cf87ff6d693cfa007b3
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.0"
+>>>>>>> 10421ae13335b1936bbd189868ed174786028c42
   path_provider_platform_interface:
     dependency: transitive
     description:
       name: path_provider_platform_interface
+<<<<<<< HEAD
       sha256: "57585299a729335f1298b43245842678cb9f43a6310351b18fb577d6e33165ec"
       url: "https://pub.dev"
     source: hosted
     version: "2.0.6"
+=======
+      sha256: bced5679c7df11190e1ddc35f3222c858f328fff85c3942e46e7f5589bf9eb84
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.0"
+>>>>>>> 10421ae13335b1936bbd189868ed174786028c42
   path_provider_windows:
     dependency: transitive
     description:
       name: path_provider_windows
+<<<<<<< HEAD
       sha256: "1cb68ba4cd3a795033de62ba1b7b4564dace301f952de6bfb3cd91b202b6ee96"
       url: "https://pub.dev"
     source: hosted
     version: "2.1.7"
+=======
+      sha256: ee0e0d164516b90ae1f970bdf29f726f1aa730d7cfc449ecc74c495378b705da
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.2.0"
+>>>>>>> 10421ae13335b1936bbd189868ed174786028c42
   permission_handler:
     dependency: "direct main"
     description:
@@ -701,6 +736,17 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.99"
+<<<<<<< HEAD
+=======
+  snapping_sheet_2:
+    dependency: "direct main"
+    description:
+      name: snapping_sheet_2
+      sha256: "8e7c7b746a226673cd5d2680b23dfa315e5ac75f551e8c05aa37eba24fb5487d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.1.5"
+>>>>>>> 10421ae13335b1936bbd189868ed174786028c42
   source_span:
     dependency: transitive
     description:
@@ -745,18 +791,32 @@ packages:
     dependency: transitive
     description:
       name: syncfusion_flutter_core
+<<<<<<< HEAD
       sha256: "83e0937c1d747003e7d2514d093a28101953737a155ad7a1465006a95aa78cd4"
       url: "https://pub.dev"
     source: hosted
     version: "22.1.39"
+=======
+      sha256: ee86a4531180216d0229ac83db2b3b8428ad4e2fd5f4aff28b89a5aed149bb55
+      url: "https://pub.dev"
+    source: hosted
+    version: "22.2.7"
+>>>>>>> 10421ae13335b1936bbd189868ed174786028c42
   syncfusion_flutter_sliders:
     dependency: "direct main"
     description:
       name: syncfusion_flutter_sliders
+<<<<<<< HEAD
       sha256: "2d8dcb257492a3296c50534f3c2e5a4db33ab00f1e837097a7dfa0695b617a1d"
       url: "https://pub.dev"
     source: hosted
     version: "22.1.39"
+=======
+      sha256: "678ecaf186d1aaeabc5cbb6a3239ef125fadb4045fe09952ef216677d1a551f7"
+      url: "https://pub.dev"
+    source: hosted
+    version: "22.2.7"
+>>>>>>> 10421ae13335b1936bbd189868ed174786028c42
   table_calendar:
     dependency: "direct main"
     description:

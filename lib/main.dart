@@ -15,14 +15,6 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(MyApp());
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-    statusBarColor: Colors.transparent, // Set status bar color to transparent
-    statusBarIconBrightness: Brightness.dark, // Set status bar icons to dark color
-  ));
-  SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual, overlays: [
-    SystemUiOverlay.top, // Enable manual control of the status bar
-    SystemUiOverlay.bottom, // Enable manual control of the navigation bar (if present)
-  ]);
 }
 
 class MyApp extends StatelessWidget {

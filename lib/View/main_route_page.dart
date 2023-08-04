@@ -345,6 +345,11 @@ class PlaceCard extends StatelessWidget {
             'Place ID: ${place.placeId}', // Display the placeId
             style: TextStyle(fontSize: 16, color: Colors.grey),
           ),
+          SizedBox(height: 5),
+          Text(
+            'Place LatLng: ${place.placeLat},${place.placeLng}', // Display the placeId
+            style: TextStyle(fontSize: 16, color: Colors.grey),
+          ),
         ],
       ),
     );
