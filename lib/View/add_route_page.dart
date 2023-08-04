@@ -84,42 +84,40 @@ class _AddRoutePageState extends State<AddRoutePage> {
                   color: Colors.grey
                 ),
                 onPressed: () {
-                  print("Hi");
                   _getDataFromUser();
                 },
               ),),
+              SizedBox(height: 18,),
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Expanded(
-                      child: MyInputField(
-                        title: "시작 시간",
-                        hint: _startTime,
-                        widget: IconButton(
-                          onPressed: (){
-                            _getTimeFromUser(isStartTime: true);
-                          },
-                          icon: Icon(
-                            Icons.access_time_rounded,
-                            color: Colors.grey,
-                          ),
-                        ),
-                      )
+                  Container(
+                    width: 180,
+                    height: 180,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                        width: 2,
+                      ),
+                      borderRadius: BorderRadius.all(Radius.circular(16))
+                    ),
+                    child: Center(
+                      child: Text('Upload from gallery'),
+                    ),
                   ),
-                  SizedBox(width: 12,),
-                  Expanded(
-                      child: MyInputField(
-                        title: "끝난 시간",
-                        hint: _endTime,
-                        widget: IconButton(
-                          onPressed: (){
-                            _getTimeFromUser(isStartTime: false);
-                          },
-                          icon: Icon(
-                            Icons.access_time_rounded,
-                            color: Colors.grey,
-                          ),
+                  Container(
+                    width: 180,
+                    height: 180,
+                    decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey,
+                          width: 2,
                         ),
-                      )
+                        borderRadius: BorderRadius.all(Radius.circular(16))
+                    ),
+                    child: Center(
+                      child: Text('Upload from gallery'),
+                    ),
                   ),
                 ],
               ),
@@ -152,7 +150,7 @@ class _AddRoutePageState extends State<AddRoutePage> {
                       child: Row(
                         children: [
                           Icon(Icons.add),
-                          Text("Create Route"),
+                          Text("Create"),
                         ],
                       ),
                       onPressed: ()=>_validateDate(),
