@@ -330,8 +330,9 @@ class PlaceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("출력완료");
     return Container(
-      padding: EdgeInsets.all(16),
+      padding: EdgeInsets.all(21),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

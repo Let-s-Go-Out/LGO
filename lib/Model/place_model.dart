@@ -37,6 +37,7 @@ class PlacesApi {
           final placeLat = placeData['geometry']['location']['lat'];
           final placeLng = placeData['geometry']['location']['lng'];
           places.add(Place(name: placeName, placeId: placeId, placeLat: placeLat, placeLng: placeLng));
+          print(placeName);
         }
       }
       return places;
