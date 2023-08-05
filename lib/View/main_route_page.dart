@@ -5,6 +5,7 @@ import 'package:nagaja_app/Controller/map_controller.dart';
 import 'package:snapping_sheet_2/snapping_sheet.dart';
 
 import '../Model/place_model.dart';
+import '../Model/catagory.dart';
 
 class MainRoutePage extends StatefulWidget {
   const MainRoutePage({Key? key}) : super(key: key);
