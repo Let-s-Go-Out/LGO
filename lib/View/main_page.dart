@@ -142,14 +142,14 @@ class _MainPageState extends State<MainPage> {
                 ]
             ),
             Spacer(flex: 2),
-            // 희망 소요 시간 Slide Bar ver.
+            // 희망 장소 개수 Slide Bar ver.
             Container(
               padding: EdgeInsets.fromLTRB(0, 0, 30, 0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('희망 소요 시간'),
-                  Text('${_value.toStringAsFixed(0)}시간'),
+                  Text('희망 장소 개수'),
+                  Text('${_value.toStringAsFixed(0)}개'),
                 ],
               ),
             ),
