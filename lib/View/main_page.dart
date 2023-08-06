@@ -129,7 +129,7 @@ class _MainPageState extends State<MainPage> {
                           MaterialButton(
                             onPressed: _showTimePicker,
                             child: Padding(
-                              padding: EdgeInsets.all(10.0),
+                              padding: EdgeInsets.all(6.0),
                               child: Text(
                                   '${_timeOfDay.format(context)}',
                                   style: TextStyle(color: Colors.white, fontSize: 13)),
@@ -158,12 +158,12 @@ class _MainPageState extends State<MainPage> {
             Center(
               child: SfSlider(
                 min: 0.0,
-                max: 12.0,
+                max: 5.0,
                 value: _value,
-                interval: 2,
+                interval: 1,
                 showTicks: true,
                 showLabels: true,
-                minorTicksPerInterval: 1,
+                minorTicksPerInterval: 0,
                 onChanged: (dynamic value) {
                  setState(() {
                    _value = value;
