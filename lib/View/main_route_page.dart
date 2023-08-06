@@ -52,7 +52,14 @@ class _MainRoutePageState extends State<MainRoutePage> {
   }
 
   Future<void> addMarkersFromPlacesApi() async {
-        markers.addAll(newMarkers);
+    markers.addAll(newMarkers);
+  }
+
+  Future<void> _updateCameraPosition(dynamic latlng, double zoom) async {
+    await mapController.animateCamera(CameraUpdate.newLatLngZoom(
+      LatLng(latlng.latitude, latlng.longitude),
+      zoom,
+    ));
   }
 
   @override
@@ -119,7 +126,7 @@ class _MainRoutePageState extends State<MainRoutePage> {
             positionFactor: 0.9,
           )
         ],
-        initialSnappingPosition: SnappingPosition.factor(positionFactor: 0.5),
+        initialSnappingPosition: SnappingPosition.factor(positionFactor: 0.4),
         child: _buildAIRecommendationContent(),
         grabbingHeight: 50,
         grabbing: GrabbingWidget(),
@@ -232,7 +239,7 @@ class _MainRoutePageState extends State<MainRoutePage> {
                   )
                 ],
                 initialSnappingPosition:
-                    SnappingPosition.factor(positionFactor: 0.5),
+                    SnappingPosition.factor(positionFactor: 0.4),
                 child: _buildTourTabContent(),
                 grabbingHeight: 50,
                 grabbing: GrabbingWidget(),
@@ -243,7 +250,13 @@ class _MainRoutePageState extends State<MainRoutePage> {
                     child: ListView.builder(
                       itemCount: places.length,
                       itemBuilder: (context, index) {
-                        return PlaceCard(place: places[index]);
+                        return Container(
+                        child:PlaceCard(
+                            place: places[index],
+                            onTap: () {
+                              _updateCameraPosition(LatLng(places[index].placeLat, places[index].placeLng), 16.0);
+                              print('PlaceCard tapped: ${places[index].name}');
+                            }));
                       },
                     ),
                   ),
@@ -305,7 +318,7 @@ class _MainRoutePageState extends State<MainRoutePage> {
                         zoom: 15.0,
                       ),
                       markers: markers,
-                        );
+                    );
                   }
                 });
           }
@@ -349,34 +362,42 @@ class GrabbingWidget extends StatelessWidget {
 
 class PlaceCard extends StatelessWidget {
   final Place place;
+  final VoidCallback onTap;
 
-  PlaceCard({required this.place});
+  PlaceCard({required this.place, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(21),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(height: 10),
-          Text(
-            place.name,
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+    return InkWell(
+        onTap: onTap,
+        // Call the provided onTap callback when tapped
+        child: Ink(
+          color: Colors.grey[100],
+          child: Container(
+          padding: EdgeInsets.all(21),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SizedBox(height: 10),
+              Text(
+                place.name,
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+              ),
+              SizedBox(height: 5),
+              Text(
+                'Place ID: ${place.placeId}', // Display the placeId
+                style: TextStyle(fontSize: 16, color: Colors.grey),
+              ),
+              SizedBox(height: 5),
+              Text(
+                'Place LatLng: ${place.placeLat},${place.placeLng}',
+                // Display the placeId
+                style: TextStyle(fontSize: 16, color: Colors.grey),
+              ),
+              Divider(),
+            ],
           ),
-          SizedBox(height: 5),
-          Text(
-            'Place ID: ${place.placeId}', // Display the placeId
-            style: TextStyle(fontSize: 16, color: Colors.grey),
           ),
-          SizedBox(height: 5),
-          Text(
-            'Place LatLng: ${place.placeLat},${place.placeLng}',
-            // Display the placeId
-            style: TextStyle(fontSize: 16, color: Colors.grey),
-          ),
-        ],
-      ),
-    );
+        ));
   }
 }
