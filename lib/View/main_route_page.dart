@@ -214,9 +214,11 @@ class _MainRoutePageState extends State<MainRoutePage> {
           } else {
             List<Place> places = snapshot.data ?? [];
             markers.clear();
-
+            int hue = 0;
             for (var place in places) {
+              hue ++;
               var newMarker = Marker(
+                icon: BitmapDescriptor.defaultMarkerWithHue(360-hue*16),
                 markerId: MarkerId(place.placeId),
                 position: LatLng(place.placeLat, place.placeLng),
                 infoWindow: InfoWindow(title: place.name),
@@ -246,11 +248,14 @@ class _MainRoutePageState extends State<MainRoutePage> {
                 sheetBelow: SnappingSheetContent(
                   draggable: (details) => true,
                   child: Container(
-                    color: Colors.white,
-                    child: ListView.builder(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                    ),
+                    child: ListView.separated(
                       itemCount: places.length,
                       itemBuilder: (context, index) {
-                        return Container(
+                        return Material(
+                          color: Colors.transparent,
                         child:PlaceCard(
                             place: places[index],
                             onTap: () {
@@ -258,6 +263,10 @@ class _MainRoutePageState extends State<MainRoutePage> {
                               print('PlaceCard tapped: ${places[index].name}');
                             }));
                       },
+                      separatorBuilder: (context, index) => const Divider(
+                        height: 11.0,
+                      color: Colors.grey,
+                    ),
                     ),
                   ),
                 ),
@@ -371,14 +380,12 @@ class PlaceCard extends StatelessWidget {
     return InkWell(
         onTap: onTap,
         // Call the provided onTap callback when tapped
-        child: Ink(
-          color: Colors.grey[100],
           child: Container(
-          padding: EdgeInsets.all(21),
+            color: Colors.transparent,
+          padding: EdgeInsets.all(10),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(height: 10),
               Text(
                 place.name,
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
@@ -394,10 +401,9 @@ class PlaceCard extends StatelessWidget {
                 // Display the placeId
                 style: TextStyle(fontSize: 16, color: Colors.grey),
               ),
-              Divider(),
             ],
           ),
           ),
-        ));
+        );
   }
 }
