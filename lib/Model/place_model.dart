@@ -24,10 +24,10 @@ class PlacesApi {
 
   static get http => null;
 
-  static Future<List<Place>> searchPlaces(double latitude, double longitude) async {
+  static Future<List<Place>> searchPlaces(double latitude, double longitude, String type) async {
     final String location = '$latitude,$longitude';
     final String radius = '500'; // Search radius in meters (adjust as needed)
-    final String type = 'restaurant'; // You can change the type to fit your needs
+    // final String type = 'restaurant'; // You can change the type to fit your needs
 
     final Uri uri = Uri.parse('$_baseUrl?key=$_apiKey&location=$location&radius=$radius&type=$type');
 

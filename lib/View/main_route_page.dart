@@ -26,7 +26,7 @@ class _MainRoutePageState extends State<MainRoutePage> {
   Set<Marker> markers = Set<Marker>();
   List<String> placeTypes = ['restaurant', 'cafe', 'park', 'museum'];
 
-  String selectedPlaceType = 'restaurant';
+  String selectedPlaceType = 'restaurant'; // 초기값을 'restaurant'로 설정
 
   @override
   void initState() {
@@ -197,7 +197,7 @@ class _MainRoutePageState extends State<MainRoutePage> {
 
   Widget _buildTourTab() {
     return FutureBuilder<List<Place>>(
-        future: PlacesApi.searchPlaces(nowP.latitude, nowP.longitude),
+        future: PlacesApi.searchPlaces(nowP.latitude, nowP.longitude, selectedPlaceType),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
@@ -254,7 +254,7 @@ class _MainRoutePageState extends State<MainRoutePage> {
                           SizedBox(height: 10),
                           // 장소 카테고리 버튼
                           SizedBox(
-                            height: 30.0,
+                            height: 50.0,
                             child: ListView.builder(
                               physics: ClampingScrollPhysics(),
                               scrollDirection: Axis.horizontal,
@@ -274,6 +274,10 @@ class _MainRoutePageState extends State<MainRoutePage> {
                                           color: Colors.white,
                                         ),
                                         padding: EdgeInsets.all(10),
+                                        // 선택한 타입에 따라 버튼 스타일 변경
+                                        backgroundColor: selectedPlaceType == placeTypes[index]
+                                            ? Colors.blue
+                                            : Colors.blueGrey,
                                       ),
                                       onPressed: () {
                                         setState(() {
