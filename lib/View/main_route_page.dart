@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:nagaja_app/Controller/map_controller.dart';
 import 'package:snapping_sheet_2/snapping_sheet.dart';
-
+import 'package:provider/provider.dart';
 import '../Model/place_model.dart';
 
 class MainRoutePage extends StatefulWidget {
-  const MainRoutePage({Key? key}) : super(key: key);
+  final LatLng initialLatLng;
+  const MainRoutePage({Key? key, required this.initialLatLng}) : super(key: key);
 
   @override
   _MainRoutePageState createState() => _MainRoutePageState();
@@ -15,8 +16,6 @@ class MainRoutePage extends StatefulWidget {
 
 class _MainRoutePageState extends State<MainRoutePage> {
   late GoogleMapController mapController;
-
-  // final LatLng _center = const LatLng(37.58638333, 127.0203333);
   MapController controller = MapController();
   bool isExpanded = false;
   ScrollController scrollcontroller = ScrollController();
@@ -28,11 +27,7 @@ class _MainRoutePageState extends State<MainRoutePage> {
   @override
   void initState() {
     super.initState();
-    controller.getPosition().then((position) {
-      setState(() {
-        controller.model.nowPosition = position;
-      });
-    });
+    nowP = widget.initialLatLng;
     markers = Set<Marker>();
   }
 
@@ -43,12 +38,6 @@ class _MainRoutePageState extends State<MainRoutePage> {
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
-  }
-
-  Future<LatLng> _getInitialCameraPosition() async {
-    nowP = LatLng(controller.model.nowPosition!.latitude,
-        controller.model.nowPosition!.longitude);
-    return nowP;
   }
 
   Future<void> addMarkersFromPlacesApi() async {
@@ -163,30 +152,18 @@ class _MainRoutePageState extends State<MainRoutePage> {
   }
 
   Widget _buildAIRecommendationContent() {
-    return FutureBuilder<LatLng>(
-      future: _getInitialCameraPosition(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        } else if (snapshot.hasError) {
-          return Center(
-            child: Text('Error: ${snapshot.error}'),
-          );
-        } else {
           return GoogleMap(
             myLocationEnabled: true,
             myLocationButtonEnabled: false,
             onMapCreated: _onMapCreated,
             initialCameraPosition: CameraPosition(
-              target: snapshot.data!,
+              target: nowP,
               zoom: 15.0,
             ),
             markers: {
               Marker(
                 markerId: MarkerId('marker_id'),
-                position: snapshot.data!,
+                position: nowP,
                 infoWindow: InfoWindow(
                   title: '현재 위치',
                   snippet: '',
@@ -194,9 +171,6 @@ class _MainRoutePageState extends State<MainRoutePage> {
               ),
             },
           );
-        }
-      },
-    );
   }
 
   Widget _buildTourTab() {
@@ -293,19 +267,7 @@ class _MainRoutePageState extends State<MainRoutePage> {
   }
 
   Widget _buildTourTabContent() {
-    return FutureBuilder<LatLng>(
-        future: _getInitialCameraPosition(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          } else if (snapshot.hasError) {
-            return Center(
-              child: Text('Error: ${snapshot.error}'),
-            );
-          } else {
-            LatLng target = snapshot.data!;
+            LatLng target = nowP;
             return FutureBuilder<void>(
                 future: addMarkersFromPlacesApi(),
                 builder: (context, snapshot) {
@@ -330,8 +292,6 @@ class _MainRoutePageState extends State<MainRoutePage> {
                     );
                   }
                 });
-          }
-        });
   }
 }
 
