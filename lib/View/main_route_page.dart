@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:geopoint/geopoint.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:nagaja_app/Controller/map_controller.dart';
 import 'package:snapping_sheet_2/snapping_sheet.dart';
@@ -25,6 +24,9 @@ class _MainRoutePageState extends State<MainRoutePage> {
   LatLng nowP = LatLng(37.58638333, 127.0203333);
   List<Marker> newMarkers = [];
   Set<Marker> markers = Set<Marker>();
+  List<String> placeTypes = ['restaurant', 'cafe', 'park', 'museum'];
+
+  String selectedPlaceType = 'restaurant';
 
   @override
   void initState() {
@@ -206,10 +208,14 @@ class _MainRoutePageState extends State<MainRoutePage> {
               child: Text('Error: ${snapshot.error}'),
             );
           } else {
-            List<Place> places = snapshot.data ?? [];
+            List<Place> allPlaces = snapshot.data ?? [];
             markers.clear();
 
-            for (var place in places) {
+            List<Place> filteredPlaces = allPlaces
+                .where((place) => place.types.contains(selectedPlaceType))
+                .toList();
+
+            for (var place in filteredPlaces) {
               var newMarker = Marker(
                 markerId: MarkerId(place.placeId),
                 position: LatLng(place.placeLat, place.placeLng),
@@ -241,11 +247,57 @@ class _MainRoutePageState extends State<MainRoutePage> {
                   draggable: (details) => true,
                   child: Container(
                     color: Colors.white,
-                    child: ListView.builder(
-                      itemCount: places.length,
-                      itemBuilder: (context, index) {
-                        return PlaceCard(place: places[index]);
-                      },
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SizedBox(height: 10),
+                          // 장소 카테고리 버튼
+                          SizedBox(
+                            height: 30.0,
+                            child: ListView.builder(
+                              physics: ClampingScrollPhysics(),
+                              scrollDirection: Axis.horizontal,
+                              shrinkWrap: true,
+                              itemCount: placeTypes.length,
+                              itemBuilder: (context, index) {
+                                return Center(
+                                  child: Container(
+                                    /*height: 30,
+                                    width: 50,*/
+                                    margin: EdgeInsets.only(left: 10),
+                                    child: ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        textStyle: const TextStyle(
+                                          fontSize: 10,
+                                          fontStyle: FontStyle.normal,
+                                          color: Colors.white,
+                                        ),
+                                        padding: EdgeInsets.all(10),
+                                      ),
+                                      onPressed: () {
+                                        setState(() {
+                                          selectedPlaceType = placeTypes[index];
+                                        });
+                                      },
+                                      child: Text(placeTypes[index].toUpperCase()),
+                                    ),
+                                  ),
+                                );
+                              },
+                            ),
+                          ),
+                          SizedBox(height: 10),
+                          // 카테고리 별 장소 리스트
+                          ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: filteredPlaces.length,
+                            itemBuilder: (context, index) {
+                              return PlaceCard(place: filteredPlaces[index]);
+                            },
+                          )
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -273,46 +325,47 @@ class _MainRoutePageState extends State<MainRoutePage> {
 
   Widget _buildTourTabContent() {
     return FutureBuilder<LatLng>(
-        future: _getInitialCameraPosition(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          } else if (snapshot.hasError) {
-            return Center(
-              child: Text('Error: ${snapshot.error}'),
-            );
-          } else {
-            LatLng target = snapshot.data!;
-            return FutureBuilder<void>(
-                future: addMarkersFromPlacesApi(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  } else if (snapshot.hasError) {
-                    return Center(
-                      child: Text('Error: ${snapshot.error}'),
-                    );
-                  } else {
-                    return GoogleMap(
-                      myLocationEnabled: true,
-                      myLocationButtonEnabled: false,
-                      onMapCreated: _onMapCreated,
-                      initialCameraPosition: CameraPosition(
-                        target: target,
-                        zoom: 15.0,
-                      ),
-                      markers: markers,
-                    );
-                  }
-                });
-          }
-        });
+        future: _getInitialCameraPosition(), builder: (context, snapshot) {
+      if (snapshot.connectionState == ConnectionState.waiting) {
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      } else if (snapshot.hasError) {
+        return Center(
+          child: Text('Error: ${snapshot.error}'),
+        );
+      } else {
+        LatLng target = snapshot.data!;
+        return FutureBuilder<void>(
+            future: addMarkersFromPlacesApi(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else if (snapshot.hasError) {
+                return Center(
+                  child: Text('Error: ${snapshot.error}'),
+                );
+              } else {
+                return GoogleMap(
+                  myLocationEnabled: true,
+                  myLocationButtonEnabled: false,
+                  onMapCreated: _onMapCreated,
+                  initialCameraPosition: CameraPosition(
+                    target: target,
+                    zoom: 15.0,
+                  ),
+                  markers: markers,
+                );
+              }
+            });
+      }
+    });
   }
 }
+
+
 
 class GrabbingWidget extends StatelessWidget {
   @override
@@ -358,7 +411,7 @@ class PlaceCard extends StatelessWidget {
     String firstPlaceType = place.types.isNotEmpty ? place.types[0] : 'Unknown';
 
     return Container(
-      padding: EdgeInsets.all(21),
+      padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -381,7 +434,7 @@ class PlaceCard extends StatelessWidget {
           SizedBox(height: 5),
           Text(
             'Place Type: $firstPlaceType',
-            // Display the placeId
+            // Display the type
             style: TextStyle(fontSize: 16, color: Colors.grey),
           ),
         ],
