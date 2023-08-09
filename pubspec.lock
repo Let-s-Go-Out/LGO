@@ -101,10 +101,10 @@ packages:
     dependency: transitive
     description:
       name: ffi
-      sha256: ed5337a5660c506388a9f012be0288fb38b49020ce2b45fe1f8b8323fe429f99
+      sha256: "7bf0adc28a23d395f19f3f1eb21dd7cfd1dd9f8e1c50051c069122e6853bc878"
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.2"
+    version: "2.1.0"
   file:
     dependency: transitive
     description:
@@ -288,6 +288,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.1.1"
+  geopoint:
+    dependency: "direct main"
+    description:
+      name: geopoint
+      sha256: "594afb50a689e6584b80b7de8332c83a78e50725dc4324b2c014d19c56de5e3f"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   get:
     dependency: "direct main"
     description:
@@ -372,10 +380,10 @@ packages:
     dependency: "direct main"
     description:
       name: image_picker
-      sha256: "6296e98782726d37f59663f0727d0e978eee1ced1ffed45ccaba591786a7f7b3"
+      sha256: "841837258e0b42c80946c43443054fc726f5e8aa84a97f363eb9ef0d45b33c14"
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.1"
+    version: "1.0.2"
   image_picker_android:
     dependency: transitive
     description:
@@ -388,10 +396,10 @@ packages:
     dependency: transitive
     description:
       name: image_picker_for_web
-      sha256: "869fe8a64771b7afbc99fc433a5f7be2fea4d1cb3d7c11a48b6b579eb9c797f0"
+      sha256: "8b6c160cdbe572199103a091c783685b236110e4a0fd7a4947f32ff5b7da8765"
       url: "https://pub.dev"
     source: hosted
-    version: "2.2.0"
+    version: "3.0.0"
   image_picker_ios:
     dependency: transitive
     description:
@@ -456,6 +464,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.7.4"
+  latlong2:
+    dependency: transitive
+    description:
+      name: latlong2
+      sha256: "08ef7282ba9f76e8495e49e2dc4d653015ac929dce5f92b375a415d30b407ea0"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.8.2"
   lints:
     dependency: transitive
     description:
@@ -468,26 +484,26 @@ packages:
     dependency: "direct main"
     description:
       name: location
-      sha256: "81eef746c121de69b9936ccad350707b2579a76f9d1a162e47db1fb7d2c9db9f"
+      sha256: c8e0c8cd92c6ce8b42760f9aafd6d80592459e2e0cd702bc336061c738ec4715
       url: "https://pub.dev"
     source: hosted
-    version: "5.0.1"
+    version: "5.0.2+1"
   location_platform_interface:
     dependency: transitive
     description:
       name: location_platform_interface
-      sha256: "069476ccddce7fa162d37522cb823fb0df1c43176b38fba7ee2d7712e233f8ba"
+      sha256: a211a41b1fdfaddaf02996750dd703abcc7ac1d4fd90e978c8773ccf2260af68
       url: "https://pub.dev"
     source: hosted
-    version: "3.1.0"
+    version: "3.1.1"
   location_web:
     dependency: transitive
     description:
       name: location_web
-      sha256: "3249dfd4a50732440a9d8b3791a05e33facde2d1902b1e8dbd222b30a8d0f7b4"
+      sha256: acde3e95c4dec2b82cbdc3490bf010eeaf66e793e20f62364887e072bd701d49
       url: "https://pub.dev"
     source: hosted
-    version: "4.1.0"
+    version: "4.1.1"
   matcher:
     dependency: transitive
     description:
@@ -701,6 +717,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.99"
+  slugify:
+    dependency: transitive
+    description:
+      name: slugify
+      sha256: b272501565cb28050cac2d96b7bf28a2d24c8dae359280361d124f3093d337c3
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.0"
   snapping_sheet_2:
     dependency: "direct main"
     description:
@@ -753,18 +777,18 @@ packages:
     dependency: transitive
     description:
       name: syncfusion_flutter_core
-      sha256: ee86a4531180216d0229ac83db2b3b8428ad4e2fd5f4aff28b89a5aed149bb55
+      sha256: "33a2e8a86ac013c7929ed2cffa83c44f45ff256e38122de97f3154cb04324a74"
       url: "https://pub.dev"
     source: hosted
-    version: "22.2.7"
+    version: "22.2.8"
   syncfusion_flutter_sliders:
     dependency: "direct main"
     description:
       name: syncfusion_flutter_sliders
-      sha256: "678ecaf186d1aaeabc5cbb6a3239ef125fadb4045fe09952ef216677d1a551f7"
+      sha256: "59e677363cb9fafcbd716a3f1bd4ca25f9ff5b7554110b2efa264e4a0e99e3db"
       url: "https://pub.dev"
     source: hosted
-    version: "22.2.7"
+    version: "22.2.8"
   table_calendar:
     dependency: "direct main"
     description:
@@ -825,10 +849,10 @@ packages:
     dependency: transitive
     description:
       name: xdg_directories
-      sha256: e0b1147eec179d3911f1f19b59206448f78195ca1d20514134e10641b7d7fbff
+      sha256: f0c26453a2d47aa4c2570c6a033246a3fc62da2fe23c7ffdd0a7495086dc0247
       url: "https://pub.dev"
     source: hosted
-    version: "1.0.1"
+    version: "1.0.2"
 sdks:
   dart: ">=3.0.5 <4.0.0"
   flutter: ">=3.10.0"

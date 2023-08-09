@@ -1,11 +1,11 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:geopoint/geopoint.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:nagaja_app/Controller/map_controller.dart';
 import 'package:snapping_sheet_2/snapping_sheet.dart';
 
 import '../Model/place_model.dart';
-import '../Model/catagory.dart';
 
 class MainRoutePage extends StatefulWidget {
   const MainRoutePage({Key? key}) : super(key: key);
@@ -16,12 +16,15 @@ class MainRoutePage extends StatefulWidget {
 
 class _MainRoutePageState extends State<MainRoutePage> {
   late GoogleMapController mapController;
+
   // final LatLng _center = const LatLng(37.58638333, 127.0203333);
   MapController controller = MapController();
   bool isExpanded = false;
   ScrollController scrollcontroller = ScrollController();
   List<Place> places = [];
   LatLng nowP = LatLng(37.58638333, 127.0203333);
+  List<Marker> newMarkers = [];
+  Set<Marker> markers = Set<Marker>();
 
   @override
   void initState() {
@@ -31,6 +34,7 @@ class _MainRoutePageState extends State<MainRoutePage> {
         controller.model.nowPosition = position;
       });
     });
+    markers = Set<Marker>();
   }
 
   @override
@@ -43,8 +47,13 @@ class _MainRoutePageState extends State<MainRoutePage> {
   }
 
   Future<LatLng> _getInitialCameraPosition() async {
-    nowP = LatLng(controller.model.nowPosition!.latitude, controller.model.nowPosition!.longitude);
+    nowP = LatLng(controller.model.nowPosition!.latitude,
+        controller.model.nowPosition!.longitude);
     return nowP;
+  }
+
+  Future<void> addMarkersFromPlacesApi() async {
+    markers.addAll(newMarkers);
   }
 
   @override
@@ -78,7 +87,7 @@ class _MainRoutePageState extends State<MainRoutePage> {
               indicatorColor: Colors.black,
               unselectedLabelColor: Colors.grey,
               unselectedLabelStyle:
-                  TextStyle(fontSize: 24, fontWeight: FontWeight.normal),
+              TextStyle(fontSize: 24, fontWeight: FontWeight.normal),
               labelColor: Colors.black,
               labelStyle: TextStyle(fontWeight: FontWeight.bold),
             ),
@@ -198,6 +207,16 @@ class _MainRoutePageState extends State<MainRoutePage> {
             );
           } else {
             List<Place> places = snapshot.data ?? [];
+            markers.clear();
+
+            for (var place in places) {
+              var newMarker = Marker(
+                markerId: MarkerId(place.placeId),
+                position: LatLng(place.placeLat, place.placeLng),
+                infoWindow: InfoWindow(title: place.name),
+              );
+              markers.add(newMarker);
+            }
             return Scaffold(
               body: SnappingSheet(
                 lockOverflowDrag: true,
@@ -214,7 +233,7 @@ class _MainRoutePageState extends State<MainRoutePage> {
                   )
                 ],
                 initialSnappingPosition:
-                    SnappingPosition.factor(positionFactor: 0.5),
+                SnappingPosition.factor(positionFactor: 0.5),
                 child: _buildTourTabContent(),
                 grabbingHeight: 50,
                 grabbing: GrabbingWidget(),
@@ -254,39 +273,44 @@ class _MainRoutePageState extends State<MainRoutePage> {
 
   Widget _buildTourTabContent() {
     return FutureBuilder<LatLng>(
-      future: _getInitialCameraPosition(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        } else if (snapshot.hasError) {
-          return Center(
-            child: Text('Error: ${snapshot.error}'),
-          );
-        } else {
-          return GoogleMap(
-            myLocationEnabled: true,
-            myLocationButtonEnabled: false,
-            onMapCreated: _onMapCreated,
-            initialCameraPosition: CameraPosition(
-              target: snapshot.data!,
-              zoom: 15.0,
-            ),
-            markers: {
-              Marker(
-                markerId: MarkerId('marker_id'),
-                position: snapshot.data!,
-                infoWindow: InfoWindow(
-                  title: '현재 위치',
-                  snippet: '',
-                ),
-              ),
-            },
-          );
-        }
-      },
-    );
+        future: _getInitialCameraPosition(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text('Error: ${snapshot.error}'),
+            );
+          } else {
+            LatLng target = snapshot.data!;
+            return FutureBuilder<void>(
+                future: addMarkersFromPlacesApi(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else if (snapshot.hasError) {
+                    return Center(
+                      child: Text('Error: ${snapshot.error}'),
+                    );
+                  } else {
+                    return GoogleMap(
+                      myLocationEnabled: true,
+                      myLocationButtonEnabled: false,
+                      onMapCreated: _onMapCreated,
+                      initialCameraPosition: CameraPosition(
+                        target: target,
+                        zoom: 15.0,
+                      ),
+                      markers: markers,
+                    );
+                  }
+                });
+          }
+        });
   }
 }
 
@@ -331,7 +355,8 @@ class PlaceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print("출력완료");
+    String firstPlaceType = place.types.isNotEmpty ? place.types[0] : 'Unknown';
+
     return Container(
       padding: EdgeInsets.all(21),
       child: Column(
@@ -349,7 +374,14 @@ class PlaceCard extends StatelessWidget {
           ),
           SizedBox(height: 5),
           Text(
-            'Place LatLng: ${place.placeLat},${place.placeLng}', // Display the placeId
+            'Place LatLng: ${place.placeLat},${place.placeLng}',
+            // Display the placeId
+            style: TextStyle(fontSize: 16, color: Colors.grey),
+          ),
+          SizedBox(height: 5),
+          Text(
+            'Place Type: $firstPlaceType',
+            // Display the placeId
             style: TextStyle(fontSize: 16, color: Colors.grey),
           ),
         ],

@@ -7,8 +7,14 @@ class Place {
   final String placeId;
   final double placeLat;
   final double placeLng;
+  final List<String> types;
 
-  Place({required this.name, required this.placeId, required this.placeLat, required this.placeLng});
+  Place({
+    required this.name,
+    required this.placeId,
+    required this.placeLat,
+    required this.placeLng,
+    required this.types});
 }
 
 class PlacesApi {
@@ -36,7 +42,17 @@ class PlacesApi {
           final placeId = placeData['place_id'];
           final placeLat = placeData['geometry']['location']['lat'];
           final placeLng = placeData['geometry']['location']['lng'];
-          places.add(Place(name: placeName, placeId: placeId, placeLat: placeLat, placeLng: placeLng));
+          final placeTypes = List<String>.from(placeData['types']); // 장소 타입 추출
+
+          places.add(
+              Place(
+                  name: placeName,
+                  placeId: placeId,
+                  placeLat: placeLat,
+                  placeLng: placeLng,
+                  types: placeTypes,
+              ),
+          );
           print(placeName);
         }
       }
