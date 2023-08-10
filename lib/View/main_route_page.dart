@@ -428,7 +428,7 @@ class PlaceCard extends StatelessWidget {
               itemCount: place.photos.length,
               itemBuilder: (context, index) {
                 return Image.network(
-                  place.photos[index],
+                  place.photosLink[index],
                   width: 200, // 사진 너비
                   fit: BoxFit.cover,
                 );
