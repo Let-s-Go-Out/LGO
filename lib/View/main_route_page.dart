@@ -420,6 +420,22 @@ class PlaceCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(height: 10),
+          // 장소 사진 표시
+          Container(
+            height: 150, // 사진 높이
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: place.photos.length,
+              itemBuilder: (context, index) {
+                return Image.network(
+                  place.photos[index],
+                  width: 200, // 사진 너비
+                  fit: BoxFit.cover,
+                );
+              },
+            ),
+          ),
+          SizedBox(height: 10),
           Text(
             place.name,
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
