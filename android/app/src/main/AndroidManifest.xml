@@ -1,8 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.nagaja_app">
     <application
-        android:label="NagajaApp"
-        android:icon="@mipmap/ic_launcher">
+        android:label="nagaja_app"
+        android:icon="@mipmap/ic_launcher"
+        android:name="${applicationName}">
         <activity
             android:name=".MainActivity"
             android:exported="true"
