@@ -22,8 +22,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       title: 'Outing Routes App',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+      theme: ThemeData( // Define the default brightness and colors.
+        primaryColor: Colors.black,
+        // Define the default font family.
+        fontFamily: 'Georgia',
       ),
       home: MyAppHomePage(), // Set the main page as the home screen
     );

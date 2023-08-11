@@ -39,7 +39,11 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return MaterialApp(
+      theme: ThemeData(
+        primaryColor: Colors.black,
+      ),
+    home: Scaffold(
         appBar: null,
         body: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
@@ -52,24 +56,26 @@ class _MainPageState extends State<MainPage> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            SizedBox(height: verticalSpacing*1.5),
             Padding(
               padding: EdgeInsets.symmetric(vertical: verticalSpacing),
               child: Text(
-                'AI Recommendation',
+                '나가자!(Let\'s Go Out!)',
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 24.0, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 26.0, fontWeight: FontWeight.bold),
               ),
             ),
             SizedBox(height: verticalSpacing*0.05),
             Padding(
               padding: EdgeInsets.symmetric(vertical: verticalSpacing*0.05),
               child: Text(
-                'Please enter all the information',
+                '아래 양식에 나들이 정보를 입력해주시길 바랍니다.',
                 textAlign: TextAlign.center,
               ),
             ),
             Spacer(flex: 2),
-            Text('출발지'),
+            Text('출발지',
+            style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),),
             Spacer(flex: 1),
             InkWell(
               onTap: () async {
@@ -99,9 +105,11 @@ class _MainPageState extends State<MainPage> {
             ),
             Spacer(flex: 2),
             // 나들이 컨셉
-            Text('나들이 컨셉'),
+            Text('나들이 컨셉',
+              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),),
             Spacer(flex: 1),
             Wrap(
+              alignment: WrapAlignment.center,
               spacing: 8.0,
               children: [
                 conceptButton('산책'),
@@ -118,7 +126,8 @@ class _MainPageState extends State<MainPage> {
                 children: [
                   Flexible(
                     flex: 2,
-                    child: Text('희망 출발 시간'),
+                    child: Text('희망 출발 시간',
+                      style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),),
                   ),
                   Flexible(
                     flex: 1,
@@ -134,7 +143,7 @@ class _MainPageState extends State<MainPage> {
                                   '${_timeOfDay.format(context)}',
                                   style: TextStyle(color: Colors.white, fontSize: 13)),
                             ),
-                            color: Colors.blue,
+                            color: Colors.black,
                           ),
                         ],
                       )
@@ -148,8 +157,10 @@ class _MainPageState extends State<MainPage> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('희망 장소 개수'),
-                  Text('${_value.toStringAsFixed(0)}개'),
+                  Text('희망 장소 개수',
+                    style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),),
+                  Text('${_value.toStringAsFixed(0)}개',
+                    style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),),
                 ],
               ),
             ),
@@ -157,6 +168,8 @@ class _MainPageState extends State<MainPage> {
             // Slide Bar
             Center(
               child: SfSlider(
+                activeColor: Colors.black,
+                inactiveColor: Colors.grey[200],
                 min: 0.0,
                 max: 5.0,
                 value: _value,
@@ -181,7 +194,11 @@ class _MainPageState extends State<MainPage> {
                   MaterialPageRoute(builder: (context) => const MainLoadingPage()),
                 );
               },
-              child: Text('Let\'s Go out'),
+              style: ElevatedButton.styleFrom(
+                primary: Colors.black,
+              ),
+              child: Text('Let\'s Go out',
+              style: TextStyle(color:Colors.white),),
             ),
             Spacer(flex: 1), // Add a spacer to push the bottom navigation bar to the bottom
           ],
@@ -189,6 +206,7 @@ class _MainPageState extends State<MainPage> {
       );
         },
         ),
+    ),
     );
   }
 
@@ -201,9 +219,9 @@ class _MainPageState extends State<MainPage> {
         });
       },
       style: ElevatedButton.styleFrom(
-        primary: selectedConcept == concept ? Colors.blue : null,
+        primary: selectedConcept == concept ? Colors.grey : Colors.black,
       ),
-      child: Text(concept),
+      child: Text(concept,style: TextStyle(color: Colors.white),),
     );
   }
 }

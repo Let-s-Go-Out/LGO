@@ -33,7 +33,7 @@ class _MyAppHomePageState extends State<MyAppHomePage> {
     return Scaffold(
       body: _navIndex.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
-        fixedColor: Colors.blue,
+        fixedColor: Colors.black,
         unselectedItemColor: Colors.blueGrey,
         showSelectedLabels: true,
         type: BottomNavigationBarType.fixed,
