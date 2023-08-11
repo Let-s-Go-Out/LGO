@@ -26,7 +26,14 @@ class DefaultFirebaseOptions {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
+<<<<<<< HEAD
+        throw UnsupportedError(
+          'DefaultFirebaseOptions have not been configured for ios - '
+          'you can reconfigure this by running the FlutterFire CLI again.',
+        );
+=======
         return ios;
+>>>>>>> 45f67e51b94ae5e6c9c23c1c75ba9a391866e52f
       case TargetPlatform.macOS:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for macos - '
@@ -56,6 +63,8 @@ class DefaultFirebaseOptions {
     projectId: 'nagaja-97f8a',
     storageBucket: 'nagaja-97f8a.appspot.com',
   );
+<<<<<<< HEAD
+=======
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyDJU_jCliPm6RJxyyJODXFXzUesCg1iqLo',
@@ -66,4 +75,5 @@ class DefaultFirebaseOptions {
     iosClientId: '92365383764-72usc39bdm958l63sdsrnblmmonecq2h.apps.googleusercontent.com',
     iosBundleId: 'com.example.nagajaApp',
   );
+>>>>>>> 45f67e51b94ae5e6c9c23c1c75ba9a391866e52f
 }
