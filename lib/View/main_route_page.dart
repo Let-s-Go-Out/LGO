@@ -293,12 +293,15 @@ class _MainRoutePageState extends State<MainRoutePage> {
                           ),
                           SizedBox(height: 10),
                           // 카테고리 별 장소 리스트
-                          ListView.builder(
-                            shrinkWrap: true,
-                            itemCount: filteredPlaces.length,
-                            itemBuilder: (context, index) {
-                              return PlaceCard(place: filteredPlaces[index]);
-                            },
+                          Container(
+                            height: MediaQuery.of(context).size.height * 0.5,
+                            child: ListView.builder(
+                              shrinkWrap: true,
+                              itemCount: filteredPlaces.length,
+                              itemBuilder: (context, index) {
+                                return PlaceCard(place: filteredPlaces[index]);
+                              },
+                            ),
                           )
                         ],
                       ),
