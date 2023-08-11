@@ -1,7 +1,7 @@
 import 'package:date_picker_timeline/date_picker_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:nagaja_app/Model/add_route_bar.dart';
+import 'package:nagaja_app/View/add_route_page.dart';
 import 'package:nagaja_app/View/widgets/theme.dart';
 import 'package:get/get.dart';
 
