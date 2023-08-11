@@ -2,10 +2,17 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+<<<<<<< HEAD
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
 	<string>Lets Go Out</string>
+=======
+	<key>NMFClientId</key>
+	<string>msgguntztp</string>
+	<key>CFBundleDisplayName</key>
+	<string>Nagaja App</string>
+>>>>>>> 45f67e51b94ae5e6c9c23c1c75ba9a391866e52f
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -13,7 +20,11 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
+<<<<<<< HEAD
 	<string>lets_go_out</string>
+=======
+	<string>nagaja_app</string>
+>>>>>>> 45f67e51b94ae5e6c9c23c1c75ba9a391866e52f
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>

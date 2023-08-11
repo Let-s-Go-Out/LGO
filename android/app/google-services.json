@@ -14,7 +14,11 @@
       },
       "oauth_client": [
         {
+<<<<<<< HEAD
           "client_id": "92365383764-0o7mkpnobkjru2prh9n6kolid2m0a4et.apps.googleusercontent.com",
+=======
+          "client_id": "92365383764-tlogijdk0ns6rf7j5f5l4hkb3clh84g7.apps.googleusercontent.com",
+>>>>>>> 45f67e51b94ae5e6c9c23c1c75ba9a391866e52f
           "client_type": 3
         }
       ],
@@ -27,6 +31,7 @@
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
+<<<<<<< HEAD
               "client_id": "92365383764-0o7mkpnobkjru2prh9n6kolid2m0a4et.apps.googleusercontent.com",
               "client_type": 3
             },
@@ -36,6 +41,10 @@
               "ios_info": {
                 "bundle_id": "com.example.nagajaApp"
               }
+=======
+              "client_id": "92365383764-tlogijdk0ns6rf7j5f5l4hkb3clh84g7.apps.googleusercontent.com",
+              "client_type": 3
+>>>>>>> 45f67e51b94ae5e6c9c23c1c75ba9a391866e52f
             }
           ]
         }

@@ -1,6 +1,12 @@
+<<<<<<< HEAD
 # lets_go_out
 
 2023 소웨경 [나가자!]_유진
+=======
+# nagaja_app
+
+A new Flutter project.
+>>>>>>> 45f67e51b94ae5e6c9c23c1c75ba9a391866e52f
 
 ## Getting Started
 
