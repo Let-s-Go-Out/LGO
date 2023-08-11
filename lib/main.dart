@@ -20,12 +20,6 @@ void main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-<<<<<<< HEAD
-    return MaterialApp(
-      title: "Let's Go Out",
-      theme: ThemeData(primarySwatch: Colors.blue),
-      home: HomePage(),
-=======
     return GetMaterialApp(
       title: 'Outing Routes App',
       theme: ThemeData( // Define the default brightness and colors.
@@ -34,7 +28,6 @@ class MyApp extends StatelessWidget {
         fontFamily: 'Georgia',
       ),
       home: MyAppHomePage(), // Set the main page as the home screen
->>>>>>> GaEun
     );
   }
 }

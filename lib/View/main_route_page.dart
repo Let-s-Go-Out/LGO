@@ -16,11 +16,7 @@ class MainRoutePage extends StatefulWidget {
 
 class _MainRoutePageState extends State<MainRoutePage> {
   late GoogleMapController mapController;
-<<<<<<< HEAD
-=======
 
-  // final LatLng _center = const LatLng(37.58638333, 127.0203333);
->>>>>>> GaEun
   MapController controller = MapController();
   bool isExpanded = false;
   ScrollController scrollcontroller = ScrollController();
@@ -28,25 +24,19 @@ class _MainRoutePageState extends State<MainRoutePage> {
   LatLng nowP = LatLng(37.58638333, 127.0203333);
   List<Marker> newMarkers = [];
   Set<Marker> markers = Set<Marker>();
-<<<<<<< HEAD
-=======
   List<String> placeTypes = ['restaurant', 'cafe', 'park', 'museum'];
 
   String selectedPlaceType = 'restaurant'; // 초기값을 'restaurant'로 설정
->>>>>>> GaEun
 
   @override
   void initState() {
     super.initState();
-<<<<<<< HEAD
-    nowP = widget.initialLatLng;
-=======
     controller.getPosition().then((position) {
       setState(() {
         controller.model.nowPosition = position;
       });
     });
->>>>>>> GaEun
+
     markers = Set<Marker>();
   }
 
@@ -59,22 +49,11 @@ class _MainRoutePageState extends State<MainRoutePage> {
     mapController = controller;
   }
 
-<<<<<<< HEAD
-  Future<void> addMarkersFromPlacesApi() async {
-    markers.addAll(newMarkers);
-  }
-
-  Future<void> _updateCameraPosition(dynamic latlng, double zoom) async {
-    await mapController.animateCamera(CameraUpdate.newLatLngZoom(
-      LatLng(latlng.latitude, latlng.longitude),
-      zoom,
-    ));
-=======
   Future<LatLng> _getInitialCameraPosition() async {
     nowP = LatLng(controller.model.nowPosition!.latitude,
         controller.model.nowPosition!.longitude);
     return nowP;
->>>>>>> GaEun
+
   }
 
   Future<void> addMarkersFromPlacesApi() async {
@@ -200,15 +179,6 @@ class _MainRoutePageState extends State<MainRoutePage> {
               child: Text('Error: ${snapshot.error}'),
             );
           } else {
-<<<<<<< HEAD
-            List<Place> places = snapshot.data ?? [];
-            markers.clear();
-            int hue = 0;
-            for (var place in places) {
-              hue ++;
-              var newMarker = Marker(
-                icon: BitmapDescriptor.defaultMarkerWithHue(360-hue*16),
-=======
             List<Place> allPlaces = snapshot.data ?? [];
             markers.clear();
 
@@ -218,7 +188,6 @@ class _MainRoutePageState extends State<MainRoutePage> {
 
             for (var place in filteredPlaces) {
               var newMarker = Marker(
->>>>>>> GaEun
                 markerId: MarkerId(place.placeId),
                 position: LatLng(place.placeLat, place.placeLng),
                 infoWindow: InfoWindow(title: place.name),
@@ -241,37 +210,13 @@ class _MainRoutePageState extends State<MainRoutePage> {
                   )
                 ],
                 initialSnappingPosition:
-<<<<<<< HEAD
-                SnappingPosition.factor(positionFactor: 0.4),
-=======
                 SnappingPosition.factor(positionFactor: 0.5),
->>>>>>> GaEun
                 child: _buildTourTabContent(),
                 grabbingHeight: 50,
                 grabbing: GrabbingWidget(),
                 sheetBelow: SnappingSheetContent(
                   draggable: (details) => true,
                   child: Container(
-<<<<<<< HEAD
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                    ),
-                    child: ListView.separated(
-                      itemCount: places.length,
-                      itemBuilder: (context, index) {
-                        return Material(
-                            color: Colors.transparent,
-                            child:PlaceCard(
-                                place: places[index],
-                                onTap: () {
-                                  _updateCameraPosition(LatLng(places[index].placeLat, places[index].placeLng), 16.0);
-                                  print('PlaceCard tapped: ${places[index].name}');
-                                }));
-                      },
-                      separatorBuilder: (context, index) => const Divider(
-                        height: 11.0,
-                        color: Colors.grey,
-=======
                     color: Colors.white,
                     child: SingleChildScrollView(
                       child: Column(
@@ -330,7 +275,6 @@ class _MainRoutePageState extends State<MainRoutePage> {
                             ),
                           )
                         ],
->>>>>>> GaEun
                       ),
                     ),
                   ),
@@ -342,33 +286,6 @@ class _MainRoutePageState extends State<MainRoutePage> {
   }
 
   Widget _buildTourTabContent() {
-<<<<<<< HEAD
-    LatLng target = nowP;
-    return FutureBuilder<void>(
-        future: addMarkersFromPlacesApi(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          } else if (snapshot.hasError) {
-            return Center(
-              child: Text('Error: ${snapshot.error}'),
-            );
-          } else {
-            return GoogleMap(
-              myLocationEnabled: true,
-              myLocationButtonEnabled: false,
-              onMapCreated: _onMapCreated,
-              initialCameraPosition: CameraPosition(
-                target: target,
-                zoom: 15.0,
-              ),
-              markers: markers,
-            );
-          }
-        });
-=======
     return FutureBuilder<LatLng>(
         future: _getInitialCameraPosition(), builder: (context, snapshot) {
       if (snapshot.connectionState == ConnectionState.waiting) {
@@ -407,11 +324,8 @@ class _MainRoutePageState extends State<MainRoutePage> {
             });
       }
     });
->>>>>>> GaEun
   }
 }
-
-
 
 class GrabbingWidget extends StatelessWidget {
   @override
@@ -449,40 +363,11 @@ class GrabbingWidget extends StatelessWidget {
 
 class PlaceCard extends StatelessWidget {
   final Place place;
-  final VoidCallback onTap;
 
-  PlaceCard({required this.place, required this.onTap});
+  PlaceCard({required this.place});
 
   @override
   Widget build(BuildContext context) {
-<<<<<<< HEAD
-    return InkWell(
-      onTap: onTap,
-      // Call the provided onTap callback when tapped
-      child: Container(
-        color: Colors.transparent,
-        padding: EdgeInsets.all(10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              place.name,
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-            ),
-            SizedBox(height: 5),
-            Text(
-              'Place ID: ${place.placeId}', // Display the placeId
-              style: TextStyle(fontSize: 16, color: Colors.grey),
-            ),
-            SizedBox(height: 5),
-            Text(
-              'Place LatLng: ${place.placeLat},${place.placeLng}',
-              // Display the placeId
-              style: TextStyle(fontSize: 16, color: Colors.grey),
-            ),
-          ],
-        ),
-=======
     String firstPlaceType = place.types.isNotEmpty ? place.types[0] : 'Unknown';
 
     return Container(
@@ -530,7 +415,6 @@ class PlaceCard extends StatelessWidget {
             style: TextStyle(fontSize: 16, color: Colors.grey),
           ),
         ],
->>>>>>> GaEun
       ),
     );
   }

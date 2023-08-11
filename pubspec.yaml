@@ -59,11 +59,7 @@ dependencies:
   path:
   image_picker: ^1.0.1
   file_picker: ^5.3.3
-<<<<<<< HEAD
   flutter_spinkit: ^5.2.0
-=======
-  geopoint: ^1.0.0
->>>>>>> GaEun
 
 dev_dependencies:
   flutter_test:
