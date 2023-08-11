@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lets_go_out/Controller/auth_controller.dart';
-import 'package:lets_go_out/Model/user.dart';
+import 'package:nagaja_app/Controller/auth_controller.dart';
+import 'package:nagaja_app/Model/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class SignUpPage extends StatefulWidget {
