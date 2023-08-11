@@ -2,6 +2,7 @@
 <<<<<<< HEAD
     package="com.example.nagaja_app">
     <application
+<<<<<<< HEAD
         android:label="NagajaApp"
         android:icon="@mipmap/ic_launcher">
 =======
@@ -28,6 +29,11 @@
             android:value="@integer/google_play_services_version" />
 
 >>>>>>> 45f67e51b94ae5e6c9c23c1c75ba9a391866e52f
+=======
+        android:label="nagaja_app"
+        android:icon="@mipmap/ic_launcher"
+        android:name="${applicationName}">
+>>>>>>> 9c02c5e06749a0ae18e6e0348d0a050ec983aa02
         <activity
             android:name=".MainActivity"
             android:exported="true"

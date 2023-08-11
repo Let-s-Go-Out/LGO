@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer' show log;
 import 'package:flutter/material.dart';
+<<<<<<< HEAD
 import 'package:nagaja_app/View/diary_page.dart';
 import 'package:nagaja_app/View/map_browse_screen.dart';
 import 'package:http/http.dart' as http;
@@ -10,6 +11,14 @@ import 'package:nagaja_app/View/main_page_loading.dart';
 import 'package:nagaja_app/Controller/user_route_data.dart'; // 사용자에게 입력받는 경로 정보 (출발지, 희망소요시간, 나들이 컨셉 등)
 =======
 >>>>>>> 45f67e51b94ae5e6c9c23c1c75ba9a391866e52f
+=======
+// import 'package:nagaja_app/View/diary_page.dart';
+// import 'package:nagaja_app/View/map_browse_screen.dart';
+// import 'package:http/http.dart' as http;
+// import 'package:syncfusion_flutter_sliders/sliders.dart';
+// import 'package:nagaja_app/View/main_page_loading.dart';
+// import 'package:nagaja_app/Controller/user_route_data.dart'; // 사용자에게 입력받는 경로 정보 (출발지, 희망소요시간, 나들이 컨셉 등)
+>>>>>>> 9c02c5e06749a0ae18e6e0348d0a050ec983aa02
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -43,7 +52,7 @@ class _MainPageState extends State<MainPage> {
 
 <<<<<<< HEAD
   // 사용자 경로 정보 controller 인스턴스 생성
-  final UserRouteInfoController _userRouteInfoController = UserRouteInfoController();
+  // final UserRouteInfoController _userRouteInfoController = UserRouteInfoController();
 
   @override
   Widget build(BuildContext context) {
@@ -81,15 +90,15 @@ class _MainPageState extends State<MainPage> {
                 Spacer(flex: 1),
                 InkWell(
                   onTap: () async {
-                    final returnData = await Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => MapBrowseScreen()),
-                    );
-                    if(returnData != null){
-                      setState(() {
-                        text = returnData;
-                      });
-                    }
+                    // final returnData = await Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(builder: (context) => MapBrowseScreen()),
+                    // );
+                    // if(returnData != null){
+                    //   setState(() {
+                    //     text = returnData;
+                    //   });
+                    // }
                   },
                   child: Container(
                     decoration: BoxDecoration(
@@ -164,20 +173,20 @@ class _MainPageState extends State<MainPage> {
                 Spacer(flex: 1),
                 // Slide Bar
                 Center(
-                  child: SfSlider(
-                    min: 0.0,
-                    max: 12.0,
-                    value: _value,
-                    interval: 2,
-                    showTicks: true,
-                    showLabels: true,
-                    minorTicksPerInterval: 1,
-                    onChanged: (dynamic value) {
-                      setState(() {
-                        _value = value;
-                      });
-                    },
-                  ),
+                  // child: SfSlider(
+                  //   min: 0.0,
+                  //   max: 12.0,
+                  //   value: _value,
+                  //   interval: 2,
+                  //   showTicks: true,
+                  //   showLabels: true,
+                  //   minorTicksPerInterval: 1,
+                  //   onChanged: (dynamic value) {
+                  //     setState(() {
+                  //       _value = value;
+                  //     });
+                  //   },
+                  // ),
                 ),
                 // 버튼
                 Spacer(flex: 2),
@@ -186,15 +195,15 @@ class _MainPageState extends State<MainPage> {
                     // Add code to handle the "Let's Go out" button
 
                     // Firestore(db)에 사용자 경로 정보 저장
-                    await _userRouteInfoController.saveUserRouteData(
-                      //출발지, 희망소요시간, 나들이 컨셉, 희망 출발 시간
-                    );
+                    // await _userRouteInfoController.saveUserRouteData(
+                    //   //출발지, 희망소요시간, 나들이 컨셉, 희망 출발 시간
+                    // );
 
                     // 페이지 이동
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => const MainLoadingPage()),
-                    );
+                    // Navigator.push(
+                    //   context,
+                    //   MaterialPageRoute(builder: (context) => const MainLoadingPage()),
+                    // );
                   },
                   child: Text('Let\'s Go out'),
                 ),
