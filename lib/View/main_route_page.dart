@@ -415,22 +415,25 @@ class PlaceCard extends StatelessWidget {
     String firstPlaceType = place.types.isNotEmpty ? place.types[0] : 'Unknown';
 
     return Container(
-      padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
+      padding: EdgeInsets.fromLTRB(15, 5, 15, 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 10),
-          // 장소 사진 표시
+          // 사진 표시
           Container(
-            height: 150, // 사진 높이
+            height: 100,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
-              itemCount: place.photos.length,
+              itemCount: place.photoUrls.length,
               itemBuilder: (context, index) {
-                return Image.network(
-                  place.photosLink[index],
-                  width: 200, // 사진 너비
-                  fit: BoxFit.cover,
+                return Container(
+                  margin: EdgeInsets.only(right: 10),
+                  child: Image.network(
+                    place.photoUrls[index],
+                    width: 120,
+                    height: 100,
+                    fit: BoxFit.cover,
+                  ),
                 );
               },
             ),
@@ -442,19 +445,17 @@ class PlaceCard extends StatelessWidget {
           ),
           SizedBox(height: 5),
           Text(
-            'Place ID: ${place.placeId}', // Display the placeId
+            'Place ID: ${place.placeId}',
             style: TextStyle(fontSize: 16, color: Colors.grey),
           ),
           SizedBox(height: 5),
           Text(
             'Place LatLng: ${place.placeLat},${place.placeLng}',
-            // Display the placeId
             style: TextStyle(fontSize: 16, color: Colors.grey),
           ),
           SizedBox(height: 5),
           Text(
             'Place Type: $firstPlaceType',
-            // Display the type
             style: TextStyle(fontSize: 16, color: Colors.grey),
           ),
         ],
