@@ -2,6 +2,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class MapModel {
+  LatLng nowPLatLng = LatLng(37.58638333, 127.0203333);
   Position? nowPosition;
   String? address;
   List<dynamic> searchResults = [];
