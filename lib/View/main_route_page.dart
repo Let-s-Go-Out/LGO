@@ -24,9 +24,36 @@ class _MainRoutePageState extends State<MainRoutePage> {
   LatLng nowP = LatLng(37.58638333, 127.0203333);
   List<Marker> newMarkers = [];
   Set<Marker> markers = Set<Marker>();
-  List<String> placeTypes = ['restaurant', 'cafe', 'park', 'museum'];
+  List<String> placeTypes = [
+    'restaurant',
+    'cafe',
+    'bakery',
+    'clothing_store',
+    'department_store',
+    'shopping_mall',
+    'jewelry_store',
+    'shoe_store',
+    'store',
+    'museum',
+    'movie_theater',
+    'library',
+    'bar',
+    'tourist_attraction',
+    'amusement_park',
+    'bowling_alley'
+  ];
 
-  String selectedPlaceType = 'restaurant'; // 초기값을 'restaurant'로 설정
+  String selectedPlaceType = 'restaurant';// 초기값을 'restaurant'로 설정
+
+  // 카테고리 그룹명을 변수로 설정
+  Map<String, List<String>> categoryGroups = {
+    '음식점': ['restaurant'],
+    '카페': ['cafe', 'bakery'],
+    '쇼핑': ['department_store', 'clothing_store', 'shopping_mall', 'jewelry_store', 'shoe_store', 'store'],
+    '문화': ['museum', 'movie_theater', 'library'],
+    '바': ['bar'],
+    '어트랙션': ['tourist_attraction', 'amusement_park', 'bowling_alley']
+  };
 
   @override
   void initState() {
@@ -230,8 +257,11 @@ class _MainRoutePageState extends State<MainRoutePage> {
                               physics: ClampingScrollPhysics(),
                               scrollDirection: Axis.horizontal,
                               shrinkWrap: true,
-                              itemCount: placeTypes.length,
+                              itemCount: categoryGroups.length,
                               itemBuilder: (context, index) {
+                                String groupName = categoryGroups.keys.toList()[index];
+                                List<String> groupCategories = categoryGroups[groupName]!;
+                                bool isSelectedGroup = groupCategories.contains(selectedPlaceType);
                                 return Center(
                                   child: Container(
                                     /*height: 30,
@@ -239,23 +269,30 @@ class _MainRoutePageState extends State<MainRoutePage> {
                                     margin: EdgeInsets.only(left: 10),
                                     child: ElevatedButton(
                                       style: ElevatedButton.styleFrom(
+                                        primary: Colors.white,
+                                        onPrimary: Colors.black,
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(50),
+                                            side: BorderSide(
+                                              width: 2,
+                                              // 버튼 선택 유무에 따른 버튼 스타일 변경
+                                              color: isSelectedGroup ? Colors.black : Colors.white10,
+                                            )
+                                        ),
                                         textStyle: const TextStyle(
                                           fontSize: 10,
-                                          fontStyle: FontStyle.normal,
-                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          //color: Colors.black,
                                         ),
                                         padding: EdgeInsets.all(10),
-                                        // 선택한 타입에 따라 버튼 스타일 변경
-                                        backgroundColor: selectedPlaceType == placeTypes[index]
-                                            ? Colors.blue
-                                            : Colors.blueGrey,
+                                        backgroundColor: Colors.white,
                                       ),
                                       onPressed: () {
                                         setState(() {
-                                          selectedPlaceType = placeTypes[index];
+                                          selectedPlaceType = groupCategories.first;
                                         });
                                       },
-                                      child: Text(placeTypes[index].toUpperCase()),
+                                      child: Text(groupName),
                                     ),
                                   ),
                                 );
@@ -375,19 +412,29 @@ class PlaceCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Text(
+            place.name,
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: 4),
+          Text(
+            '$firstPlaceType',
+            style: TextStyle(fontSize: 13, color: Colors.grey),
+          ),
+          SizedBox(height: 8),
           // 사진 표시
           Container(
-            height: 100,
+            height: 150,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               itemCount: place.photoUrls.length,
               itemBuilder: (context, index) {
                 return Container(
-                  margin: EdgeInsets.only(right: 10),
+                  margin: EdgeInsets.only(right: 5),
                   child: Image.network(
                     place.photoUrls[index],
-                    width: 120,
-                    height: 100,
+                    width: 100,
+                    height: 150,
                     fit: BoxFit.cover,
                   ),
                 );
@@ -395,25 +442,6 @@ class PlaceCard extends StatelessWidget {
             ),
           ),
           SizedBox(height: 10),
-          Text(
-            place.name,
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-          ),
-          SizedBox(height: 5),
-          Text(
-            'Place ID: ${place.placeId}',
-            style: TextStyle(fontSize: 16, color: Colors.grey),
-          ),
-          SizedBox(height: 5),
-          Text(
-            'Place LatLng: ${place.placeLat},${place.placeLng}',
-            style: TextStyle(fontSize: 16, color: Colors.grey),
-          ),
-          SizedBox(height: 5),
-          Text(
-            'Place Type: $firstPlaceType',
-            style: TextStyle(fontSize: 16, color: Colors.grey),
-          ),
         ],
       ),
     );
