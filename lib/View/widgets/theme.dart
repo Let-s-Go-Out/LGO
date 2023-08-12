@@ -34,3 +34,15 @@ TextStyle get subTitleStyle{
     color: Colors.grey,
   );
 }
+
+TextStyle get mainPageTitleStyle{
+  return TextStyle(
+      fontSize: 26.0,
+      fontWeight: FontWeight.bold);
+}
+
+TextStyle get mainPageSubTitleStyle{
+  return TextStyle(
+      fontSize: 20.0,
+      fontWeight: FontWeight.w500);
+}
