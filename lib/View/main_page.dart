@@ -1,12 +1,12 @@
-import 'dart:async';
+//import 'dart:async';
 import 'dart:developer' show log;
 import 'package:flutter/material.dart';
-import 'package:nagaja_app/View/diary_page.dart';
+//import 'package:nagaja_app/View/diary_page.dart';
 import 'package:nagaja_app/View/map_browse_screen.dart';
-import 'package:http/http.dart' as http;
+//import 'package:http/http.dart' as http;
 import 'package:syncfusion_flutter_sliders/sliders.dart';
 import 'package:nagaja_app/View/main_page_loading.dart';
-import 'package:nagaja_app/Controller/user_route_data.dart'; // 사용자에게 입력받는 경로 정보 (출발지, 희망소요시간, 나들이 컨셉 등)
+//import 'package:nagaja_app/Controller/user_route_data.dart'; // 사용자에게 입력받는 경로 정보 (출발지, 희망소요시간, 나들이 컨셉 등)
 import 'package:nagaja_app/View/widgets/theme.dart';
 
 class MainPage extends StatefulWidget {
@@ -31,13 +31,69 @@ class _MainPageState extends State<MainPage> {
     showTimePicker(
       context: context,
       initialTime: TimeOfDay.now(),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            // This uses the _timePickerTheme defined above
+            timePickerTheme: _timePickerTheme,
+            textButtonTheme: TextButtonThemeData(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateColor.resolveWith((states) => Colors.white),
+                foregroundColor: MaterialStateColor.resolveWith((states) => Colors.black),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                    side: BorderSide(color: Colors.black, width: 2)
+                  )
+                )
+              ),
+            ),
+          ),
+          child: child!,
+        );
+      }
     ).then((value) {
       setState(() {
         _timeOfDay = value!;
       });
     });
   }
-  
+
+  final _timePickerTheme = TimePickerThemeData(
+    backgroundColor: Colors.white,
+    hourMinuteShape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.all(Radius.circular(20)),
+    ),
+    //dayPeriodBorderSide: const BorderSide(color: Colors.orange, width: 4),
+    dayPeriodColor: Colors.white, // AM | PM
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.all(Radius.circular(10)),
+    ),
+    dayPeriodTextColor: MaterialStateColor.resolveWith(
+            (states) => states.contains(MaterialState.selected) ? Colors.black : Color.fromARGB(255, 198, 198, 198)),
+    dayPeriodShape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.all(Radius.circular(10)),
+      side: BorderSide(color: Colors.black, width: 8),
+    ),
+    hourMinuteColor: MaterialStateColor.resolveWith((states) =>
+    states.contains(MaterialState.selected) ? Colors.black : Color.fromARGB(255, 216, 216, 216),),
+    hourMinuteTextColor: MaterialStateColor.resolveWith(
+            (states) => states.contains(MaterialState.selected) ? Colors.white : Colors.black), // 색 통일?
+    dialHandColor: Colors.white,
+    dialBackgroundColor: Color.fromARGB(255, 216, 216, 216),
+    hourMinuteTextStyle: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+    dayPeriodTextStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+    helpTextStyle:
+    const TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black),
+    inputDecorationTheme: const InputDecorationTheme(
+      border: InputBorder.none,
+      contentPadding: EdgeInsets.all(0),
+    ),
+    dialTextColor: MaterialStateColor.resolveWith(
+            (states) => states.contains(MaterialState.selected) ? Colors.black : Colors.black),
+    entryModeIconColor: Colors.black,
+  );
+
   double _value = 4.0;
 
   @override
@@ -271,4 +327,5 @@ class _MainPageState extends State<MainPage> {
       child: Text(concept),
     );
   }
+
 }
