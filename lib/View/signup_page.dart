@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:nagaja_app/Controller/auth_controller.dart';
 import 'package:nagaja_app/Model/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:nagaja_app/View/signup_completed_page.dart';
 
 class SignUpPage extends StatefulWidget {
   final String? initialEmail;
@@ -91,6 +92,12 @@ class _SignUpPageState extends State<SignUpPage> {
                 if (user != null) {
                   UserModel userModel = UserModel.fromUser(user);
                   print('회원가입 성공: ${userModel.email}');
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => SignUpCompletePage(userModel.email, userModel.nickname),
+                    ),
+                  );
                 } else {
                   print('회원가입 실패');
                 }

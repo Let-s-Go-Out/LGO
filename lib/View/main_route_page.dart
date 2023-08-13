@@ -31,12 +31,7 @@ class _MainRoutePageState extends State<MainRoutePage> {
   @override
   void initState() {
     super.initState();
-    controller.getPosition().then((position) {
-      setState(() {
-        controller.model.nowPosition = position;
-      });
-    });
-
+    nowP = widget.initialLatLng;
     markers = Set<Marker>();
   }
 
@@ -49,15 +44,15 @@ class _MainRoutePageState extends State<MainRoutePage> {
     mapController = controller;
   }
 
-  Future<LatLng> _getInitialCameraPosition() async {
-    nowP = LatLng(controller.model.nowPosition!.latitude,
-        controller.model.nowPosition!.longitude);
-    return nowP;
-
-  }
-
   Future<void> addMarkersFromPlacesApi() async {
     markers.addAll(newMarkers);
+  }
+
+  Future<void> _updateCameraPosition(dynamic latlng, double zoom) async {
+    await mapController.animateCamera(CameraUpdate.newLatLngZoom(
+      LatLng(latlng.latitude, latlng.longitude),
+      zoom,
+    ));
   }
 
   @override
@@ -185,9 +180,11 @@ class _MainRoutePageState extends State<MainRoutePage> {
             List<Place> filteredPlaces = allPlaces
                 .where((place) => place.types.contains(selectedPlaceType))
                 .toList();
-
+            int hue = 0;
             for (var place in filteredPlaces) {
+              hue ++;
               var newMarker = Marker(
+                icon: BitmapDescriptor.defaultMarkerWithHue(360-hue*16),
                 markerId: MarkerId(place.placeId),
                 position: LatLng(place.placeLat, place.placeLng),
                 infoWindow: InfoWindow(title: place.name),
@@ -210,7 +207,7 @@ class _MainRoutePageState extends State<MainRoutePage> {
                   )
                 ],
                 initialSnappingPosition:
-                SnappingPosition.factor(positionFactor: 0.5),
+                SnappingPosition.factor(positionFactor: 0.4),
                 child: _buildTourTabContent(),
                 grabbingHeight: 50,
                 grabbing: GrabbingWidget(),
@@ -270,7 +267,11 @@ class _MainRoutePageState extends State<MainRoutePage> {
                               shrinkWrap: true,
                               itemCount: filteredPlaces.length,
                               itemBuilder: (context, index) {
-                                return PlaceCard(place: filteredPlaces[index]);
+                                return PlaceCard(place: filteredPlaces[index],
+                                    onTap: () {
+                                      _updateCameraPosition(LatLng(filteredPlaces[index].placeLat, filteredPlaces[index].placeLng), 16.0);
+                                      print('PlaceCard tapped: ${filteredPlaces[index].name}');
+                                    });
                               },
                             ),
                           )
@@ -286,18 +287,7 @@ class _MainRoutePageState extends State<MainRoutePage> {
   }
 
   Widget _buildTourTabContent() {
-    return FutureBuilder<LatLng>(
-        future: _getInitialCameraPosition(), builder: (context, snapshot) {
-      if (snapshot.connectionState == ConnectionState.waiting) {
-        return Center(
-          child: CircularProgressIndicator(),
-        );
-      } else if (snapshot.hasError) {
-        return Center(
-          child: Text('Error: ${snapshot.error}'),
-        );
-      } else {
-        LatLng target = snapshot.data!;
+    LatLng target = nowP;
         return FutureBuilder<void>(
             future: addMarkersFromPlacesApi(),
             builder: (context, snapshot) {
@@ -322,8 +312,6 @@ class _MainRoutePageState extends State<MainRoutePage> {
                 );
               }
             });
-      }
-    });
   }
 }
 
@@ -363,14 +351,16 @@ class GrabbingWidget extends StatelessWidget {
 
 class PlaceCard extends StatelessWidget {
   final Place place;
+  final VoidCallback onTap;
 
-  PlaceCard({required this.place});
+  PlaceCard({required this.place, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     String firstPlaceType = place.types.isNotEmpty ? place.types[0] : 'Unknown';
-
-    return Container(
+    return InkWell(
+        onTap: onTap,
+        child: Container(
       padding: EdgeInsets.fromLTRB(15, 5, 15, 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -416,6 +406,7 @@ class PlaceCard extends StatelessWidget {
           ),
         ],
       ),
+    ),
     );
   }
 }
