@@ -62,6 +62,7 @@ class _MainLoadingPageState extends State<MainLoadingPage> {
   Widget build(BuildContext context) {
     if (isLoading) {
       getLocation();
+      Future.delayed(Duration(milliseconds: 1000));
       getPlaceInfo();
       return Scaffold(
         backgroundColor: Colors.white,

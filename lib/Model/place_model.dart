@@ -53,11 +53,16 @@ class PlacesApi {
             if (detailsData['status'] == 'OK') {
               List<String> photoUrls = [];
 
+              int i =3;
               if (detailsData['result']['photos'] != null) {
                 for (var photoData in detailsData['result']['photos']) {
+                  if (i<=0){
+                    break;
+                  }
                   final photoReference = photoData['photo_reference'];
                   final photoUrl = 'https://maps.googleapis.com/maps/api/place/photo?maxwidth=120&photoreference=$photoReference&key=$_apiKey';
                   photoUrls.add(photoUrl);
+                  i--;
                 }
               }
               places.add(
@@ -76,7 +81,7 @@ class PlacesApi {
         }
           return places;
         } else {
-        throw Exception('Failed to load places');
+        return places;
       }
     } else {
       throw Exception('Failed to load places');
