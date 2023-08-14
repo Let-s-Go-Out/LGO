@@ -4,6 +4,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:nagaja_app/View/main_route_page.dart';
 
 import '../Controller/map_controller.dart';
+import '../Model/place_model.dart';
 
 
 
@@ -17,6 +18,17 @@ class MainLoadingPage extends StatefulWidget {
 class _MainLoadingPageState extends State<MainLoadingPage> {
   MapController controller = MapController();
   bool isLoading = true;
+  List<String> typeList= ['restaurant'
+    ,'cafe'
+    ,'store'
+    ,'museum'
+    ,'movie_theater'
+    ,'library'
+    ,'bar'
+    ,'tourist_attraction'
+    ,'amusement_park'
+    ,'bowling_alley'];
+  List<Place> placeInfo=[];
 
   @override
   void initState() {
@@ -25,21 +37,33 @@ class _MainLoadingPageState extends State<MainLoadingPage> {
 
   Future<void> getLocation() async {
     var position = await controller.getPosition();
-    setState(() {
       controller.model.nowPosition = position;
       controller.model.nowPLatLng = LatLng(controller.model.nowPosition!.latitude, controller.model.nowPosition!.longitude);
       print(controller.model.nowPLatLng);
+  }
+
+  Future<void> getPlaceInfo() async {
+    for (var type in typeList) {
+      List<Place> placeInfoFragment;
+      placeInfoFragment = await PlacesApi.searchPlaces(
+          controller.model.nowPLatLng.latitude,
+          controller.model.nowPLatLng.longitude, type);
+      placeInfo.addAll(placeInfoFragment);
+    }
+    setState(() {
       isLoading = false;
     });
-
-    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MainRoutePage(initialLatLng: controller.model.nowPLatLng)));
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MainRoutePage(initialLatLng: controller.model.nowPLatLng, allPlacesData: placeInfo)));
   }
+
+
 
   @override
   Widget build(BuildContext context) {
     if (isLoading) {
-      Future.delayed(Duration(seconds: 3));
       getLocation();
+      Future.delayed(Duration(milliseconds: 1000));
+      getPlaceInfo();
       return Scaffold(
         backgroundColor: Colors.white,
         body: Center(
@@ -50,7 +74,7 @@ class _MainLoadingPageState extends State<MainLoadingPage> {
         ),
       );
     } else{
-      return MainRoutePage(initialLatLng: controller.model.nowPLatLng);
+      return MainRoutePage(initialLatLng: controller.model.nowPLatLng, allPlacesData: placeInfo,);
     }
   }
 }

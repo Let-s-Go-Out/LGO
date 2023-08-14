@@ -9,7 +9,8 @@ import 'package:flutter_rating_stars/flutter_rating_stars.dart';
 
 class MainRoutePage extends StatefulWidget {
   final LatLng initialLatLng;
-  const MainRoutePage({Key? key, required this.initialLatLng}) : super(key: key);
+  final List<Place> allPlacesData;
+  const MainRoutePage({Key? key, required this.initialLatLng, required this.allPlacesData}) : super(key: key);
 
   @override
   _MainRoutePageState createState() => _MainRoutePageState();
@@ -56,15 +57,13 @@ class _MainRoutePageState extends State<MainRoutePage> {
     '어트랙션': ['tourist_attraction', 'amusement_park', 'bowling_alley']
   };
 
+  List<Place> allPlaces = [];
+
   @override
   void initState() {
     super.initState();
-    controller.getPosition().then((position) {
-      setState(() {
-        controller.model.nowPosition = position;
-      });
-    });
-
+    nowP = widget.initialLatLng;
+    allPlaces = widget.allPlacesData;
     markers = Set<Marker>();
   }
 
@@ -195,21 +194,7 @@ class _MainRoutePageState extends State<MainRoutePage> {
   }
 
   Widget _buildTourTab() {
-    return FutureBuilder<List<Place>>(
-        future: PlacesApi.searchPlaces(nowP.latitude, nowP.longitude, selectedPlaceType),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(),
-            );
-          } else if (snapshot.hasError) {
-            return Center(
-              child: Text('Error: ${snapshot.error}'),
-            );
-          } else {
-            List<Place> allPlaces = snapshot.data ?? [];
             markers.clear();
-
             List<Place> filteredPlaces = allPlaces
                 .where((place) => place.types.contains(selectedPlaceType))
                 .toList();
@@ -319,23 +304,10 @@ class _MainRoutePageState extends State<MainRoutePage> {
                 ),
               ),
             );
-          }
-        });
   }
 
   Widget _buildTourTabContent() {
-    return FutureBuilder<LatLng>(
-        future: _getInitialCameraPosition(), builder: (context, snapshot) {
-      if (snapshot.connectionState == ConnectionState.waiting) {
-        return Center(
-          child: CircularProgressIndicator(),
-        );
-      } else if (snapshot.hasError) {
-        return Center(
-          child: Text('Error: ${snapshot.error}'),
-        );
-      } else {
-        LatLng target = snapshot.data!;
+        LatLng target = nowP;
         return FutureBuilder<void>(
             future: addMarkersFromPlacesApi(),
             builder: (context, snapshot) {
@@ -360,8 +332,6 @@ class _MainRoutePageState extends State<MainRoutePage> {
                 );
               }
             });
-      }
-    });
   }
 }
 
