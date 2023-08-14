@@ -17,7 +17,7 @@ class _MyAppHomePageState extends State<MyAppHomePage> {
 
   final List<Widget> _navIndex = [
     MainPage(),
-    SecondDiaryPage(),
+    DiaryPage(),
     MyPage(),
   ];
 

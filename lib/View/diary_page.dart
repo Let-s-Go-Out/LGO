@@ -7,14 +7,14 @@ import 'package:nagaja_app/View/widgets/diary_view.dart';
 import 'package:nagaja_app/View/widgets/diary_edit_view.dart';
 import 'package:nagaja_app/View/widgets/action_buttons.dart';
 
-class SecondDiaryPage extends StatefulWidget {
-  const SecondDiaryPage({super.key});
+class DiaryPage extends StatefulWidget {
+  const DiaryPage({super.key});
 
   @override
-  State<SecondDiaryPage> createState() => _SecondDiaryPageState();
+  State<DiaryPage> createState() => _DiaryPageState();
 }
 
-class _SecondDiaryPageState extends State<SecondDiaryPage> with TickerProviderStateMixin {
+class _DiaryPageState extends State<DiaryPage> with TickerProviderStateMixin {
   bool isFrontView = true;
 
   late AnimationController controller;
