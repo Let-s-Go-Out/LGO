@@ -413,12 +413,17 @@ class PlaceCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Text(
+            place.name,
+            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: 4),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                place.name,
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                '$firstPlaceType',
+                style: TextStyle(fontSize: 13, color: Colors.grey),
               ),
               // 별점 표시
               RatingStars(
@@ -445,11 +450,6 @@ class PlaceCard extends StatelessWidget {
                 starColor: Colors.yellow,
               ),
             ],
-          ),
-          SizedBox(height: 4),
-          Text(
-            '$firstPlaceType',
-            style: TextStyle(fontSize: 13, color: Colors.grey),
           ),
           SizedBox(height: 8),
           // 사진 표시
