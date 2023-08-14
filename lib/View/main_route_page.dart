@@ -2,8 +2,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:nagaja_app/Controller/map_controller.dart';
+import 'package:nagaja_app/Model/draw_recommend_route.dart';
 import 'package:snapping_sheet_2/snapping_sheet.dart';
-import 'package:provider/provider.dart';
+//import 'package:provider/provider.dart';
 import '../Model/place_model.dart';
 
 class MainRoutePage extends StatefulWidget {
@@ -23,6 +24,8 @@ class _MainRoutePageState extends State<MainRoutePage> {
   LatLng nowP = LatLng(37.58638333, 127.0203333);
   List<Marker> newMarkers = [];
   Set<Marker> markers = Set<Marker>();
+
+  DrawRecommendRoute test = DrawRecommendRoute();
 
   @override
   void initState() {
@@ -170,12 +173,15 @@ class _MainRoutePageState extends State<MainRoutePage> {
                 ),
               ),
             },
+            //
+            polylines: Set<Polyline>.of(test.polylineList.values),
           );
   }
 
+  //임의 변경
   Widget _buildTourTab() {
     return FutureBuilder<List<Place>>(
-        future: PlacesApi.searchPlaces(nowP.latitude, nowP.longitude),
+        future: PlacesApi.searchPlaces(nowP.latitude, nowP.longitude, 'restaurant'),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
