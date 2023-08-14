@@ -90,7 +90,7 @@ class PlacesApi {
         }
         return places;
       } else {
-        throw Exception('Failed to load places');
+        return places;
       }
     } else {
       throw Exception('Failed to load places');

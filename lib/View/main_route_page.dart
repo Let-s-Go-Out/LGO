@@ -26,7 +26,7 @@ class _MainRoutePageState extends State<MainRoutePage> {
   LatLng nowP = LatLng(37.58638333, 127.0203333);
   List<Marker> newMarkers = [];
   Set<Marker> markers = Set<Marker>();
-  List<String> placeTypes = [
+  /*List<String> placeTypes = [
     'restaurant',
     'cafe',
     'bakery',
@@ -43,18 +43,23 @@ class _MainRoutePageState extends State<MainRoutePage> {
     'tourist_attraction',
     'amusement_park',
     'bowling_alley'
-  ];
+  ];*/
+  List<String> categoryRestaurant = ['restaurant'];
+  List<String> categoryCafe = ['cafe', 'bakery'];
+  List<String> categoryShopping = ['department_store', 'clothing_store', 'shopping_mall', 'jewelry_store', 'shoe_store', 'store'];
+  List<String> categoryBar = ['bar'];
+  List<String> categoryAttraction = ['tourist_attraction', 'amusement_park', 'bowling_alley'];
 
   String selectedPlaceType = 'restaurant';// 초기값을 'restaurant'로 설정
 
   // 카테고리 그룹명을 변수로 설정
-  Map<String, List<String>> categoryGroups = {
-    '음식점': ['restaurant'],
-    '카페': ['cafe', 'bakery'],
-    '쇼핑': ['department_store', 'clothing_store', 'shopping_mall', 'jewelry_store', 'shoe_store', 'store'],
-    '문화': ['museum', 'movie_theater', 'library'],
-    '바': ['bar'],
-    '어트랙션': ['tourist_attraction', 'amusement_park', 'bowling_alley']
+  Map<String, List<Place>> categoryGroupPlaceLists = {
+    '음식점': [],
+    '카페': [],
+    '쇼핑': [],
+    '문화': [],
+    '바': [],
+    '어트랙션': []
   };
 
   List<Place> allPlaces = [];
@@ -195,7 +200,7 @@ class _MainRoutePageState extends State<MainRoutePage> {
 
   Widget _buildTourTab() {
             markers.clear();
-            List<Place> filteredPlaces = allPlaces
+            /*List<Place> filteredPlaces = allPlaces
                 .where((place) => place.types.contains(selectedPlaceType))
                 .toList();
 
@@ -206,7 +211,26 @@ class _MainRoutePageState extends State<MainRoutePage> {
                 infoWindow: InfoWindow(title: place.name),
               );
               markers.add(newMarker);
-            }
+            }*/
+            // 선택된 장소 유형에 기반한 장소 목록 가져오기
+            //List<Place> selectedCategoryPlaces = categoryGroupPlaceLists[selectedPlaceType] ?? [];
+            categoryGroupPlaceLists['음식점'] = allPlaces
+                .where((place) => categoryRestaurant.contains(place.types[0]))
+                .toList();
+            categoryGroupPlaceLists['카페'] = allPlaces
+                .where((place) => categoryCafe.contains(place.types[0]))
+                .toList();
+            categoryGroupPlaceLists['쇼핑'] = allPlaces
+                .where((place) => categoryShopping.contains(place.types[0]))
+                .toList();
+            categoryGroupPlaceLists['바'] = allPlaces
+                .where((place) => categoryBar.contains(place.types[0]))
+                .toList();
+            categoryGroupPlaceLists['어트랙션'] = allPlaces
+                .where((place) => categoryAttraction.contains(place.types[0]))
+                .toList();
+
+
             return Scaffold(
               body: SnappingSheet(
                 lockOverflowDrag: true,
@@ -243,11 +267,11 @@ class _MainRoutePageState extends State<MainRoutePage> {
                               physics: ClampingScrollPhysics(),
                               scrollDirection: Axis.horizontal,
                               shrinkWrap: true,
-                              itemCount: categoryGroups.length,
+                              itemCount: categoryGroupPlaceLists.length,
                               itemBuilder: (context, index) {
-                                String groupName = categoryGroups.keys.toList()[index];
-                                List<String> groupCategories = categoryGroups[groupName]!;
-                                bool isSelectedGroup = groupCategories.contains(selectedPlaceType);
+                                String groupName = categoryGroupPlaceLists.keys.toList()[index];
+                                List<Place> groupCategories = categoryGroupPlaceLists[groupName]!;
+                                bool isSelectedGroup = groupName == selectedPlaceType;
                                 return Center(
                                   child: Container(
                                     /*height: 30,
@@ -275,7 +299,8 @@ class _MainRoutePageState extends State<MainRoutePage> {
                                       ),
                                       onPressed: () {
                                         setState(() {
-                                          selectedPlaceType = groupCategories.first;
+                                          selectedPlaceType = groupName;
+                                          //selectedPlaceType = categoryGroupPlaceLists.keys.elementAt(index);
                                         });
                                       },
                                       child: Text(groupName),
@@ -289,12 +314,30 @@ class _MainRoutePageState extends State<MainRoutePage> {
                           // 카테고리 별 장소 리스트
                           Container(
                             height: MediaQuery.of(context).size.height * 0.5,
-                            child: ListView.builder(
-                              shrinkWrap: true,
-                              itemCount: filteredPlaces.length,
-                              itemBuilder: (context, index) {
-                                return PlaceCard(place: filteredPlaces[index]);
-                              },
+                            child: FutureBuilder<void>(
+                              future: addMarkersFromPlacesApi(),
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState ==
+                                      ConnectionState.waiting) {
+                                    return Center(
+                                      child: CircularProgressIndicator(),
+                                    );
+                                  } else if (snapshot.hasError) {
+                                    return Center(
+                                      child: Text('Error: ${snapshot.error}'),
+                                    );
+                                  } else {
+                                    List<Place> selectedCategoryPlaces = categoryGroupPlaceLists[selectedPlaceType] ?? [];
+                                    return ListView.builder(
+                                      shrinkWrap: true,
+                                      itemCount: selectedCategoryPlaces.length,
+                                      itemBuilder: (context, index) {
+                                        return PlaceCard(
+                                            place: selectedCategoryPlaces[index]);
+                                      },
+                                    );
+                                  }
+                                },
                             ),
                           )
                         ],
@@ -320,6 +363,8 @@ class _MainRoutePageState extends State<MainRoutePage> {
                   child: Text('Error: ${snapshot.error}'),
                 );
               } else {
+                // 선택된 카테고리 그룹에 해당하는 장소 리스트 가져오기
+                List<Place> selectedCategoryPlaces = categoryGroupPlaceLists[selectedPlaceType] ?? [];
                 return GoogleMap(
                   myLocationEnabled: true,
                   myLocationButtonEnabled: false,
@@ -328,12 +373,22 @@ class _MainRoutePageState extends State<MainRoutePage> {
                     target: target,
                     zoom: 15.0,
                   ),
-                  markers: markers,
+                  //markers: markers,
+                  // 선택된 카테고리 그룹의 장소 리스트로 마커 추가
+                  markers: selectedCategoryPlaces.map((place) {
+                    return Marker(
+                      markerId: MarkerId(place.placeId),
+                      position: LatLng(place.placeLat, place.placeLng),
+                      infoWindow: InfoWindow(title: place.name),
+                    );
+                  }).toSet(),
                 );
               }
-            });
-  }
-}
+            }
+                );
+              }
+            }
+
 
 class GrabbingWidget extends StatelessWidget {
   @override
