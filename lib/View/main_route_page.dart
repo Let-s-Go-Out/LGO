@@ -5,6 +5,7 @@ import 'package:nagaja_app/Controller/map_controller.dart';
 import 'package:snapping_sheet_2/snapping_sheet.dart';
 import 'package:provider/provider.dart';
 import '../Model/place_model.dart';
+import 'package:flutter_rating_stars/flutter_rating_stars.dart';
 
 class MainRoutePage extends StatefulWidget {
   final LatLng initialLatLng;
@@ -412,9 +413,38 @@ class PlaceCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            place.name,
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                place.name,
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              ),
+              // 별점 표시
+              RatingStars(
+                value: place.rating,
+                starCount: 5,
+                starSize: 10,
+                valueLabelColor: const Color(0xff9b9b9b),
+                valueLabelTextStyle: TextStyle(
+                    color: Colors.white,
+                    fontFamily: 'WorkSans',
+                    fontWeight: FontWeight.w400,
+                    fontStyle: FontStyle.normal,
+                    fontSize: 12.0
+                ),
+                valueLabelRadius: 10,
+                starSpacing: 2,
+                maxValueVisibility: false,
+                valueLabelVisibility: true,
+                animationDuration: Duration(milliseconds: 1000),
+                valueLabelPadding: const EdgeInsets.symmetric(
+                    vertical: 1, horizontal: 8),
+                valueLabelMargin: const EdgeInsets.only(right: 8),
+                starOffColor: const Color(0xffe7e8ea),
+                starColor: Colors.yellow,
+              ),
+            ],
           ),
           SizedBox(height: 4),
           Text(
