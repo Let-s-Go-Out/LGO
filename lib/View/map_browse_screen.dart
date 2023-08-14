@@ -165,6 +165,7 @@ class _MapBrowseScreenState extends State<MapBrowseScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('지도 검색'),
+        backgroundColor: Colors.black38,
       ),
       body: FutureBuilder<LatLng>(
         future: _getInitialCameraPosition(),
@@ -250,31 +251,40 @@ class _MapBrowseScreenState extends State<MapBrowseScreen> {
                           child: Padding(
                             padding:
                                 const EdgeInsets.only(left: 10.0, bottom: 10.0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.end,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                FloatingActionButton(
-                                  onPressed: () {
-                                    _onMapTapped(LatLng(
-                                      controller.model.nowPosition!.latitude,
-                                      controller.model.nowPosition!.longitude,
-                                    ));
-                                  },
-                                  backgroundColor: Colors.white,
-                                  child: const Icon(
-                                    Icons.my_location,
-                                    color: Colors.black,
+                                SizedBox(
+                                  width: 40,
+                                  height: 40,
+                                  child: FloatingActionButton(
+                                    onPressed: () {
+                                      _onMapTapped(LatLng(
+                                        controller.model.nowPosition!.latitude,
+                                        controller.model.nowPosition!.longitude,
+                                      ));
+                                    },
+                                    backgroundColor: Colors.white,
+                                    child: const Icon(
+                                      Icons.my_location,
+                                      color: Colors.black,
+                                      size: 23,
+                                    ),
                                   ),
                                 ),
-                                const SizedBox(height: 4),
-                                FloatingActionButton.extended(
-                                  onPressed: () {
-                                    Navigator.pop(context, controller.model.selectedPlaceAddress);
-                                  },
-                                  label: const Text('이 위치에서 출발할래요!'),
-                                  backgroundColor: Colors.white,
-                                  foregroundColor: Colors.black,
-                                  icon: const Icon(Icons.location_on),
+                                const SizedBox(width: 10),
+                                SizedBox(
+                                  width: 180,
+                                  height: 40,
+                                  child: FloatingActionButton.extended(
+                                    onPressed: () {
+                                      Navigator.pop(context, controller.model.selectedPlaceAddress);
+                                    },
+                                    label: const Text('이 위치에서 출발할래요!', style: TextStyle(fontSize: 10)),
+                                    backgroundColor: Colors.white,
+                                    foregroundColor: Colors.black,
+                                    icon: const Icon(Icons.location_on, size: 25),
+                                  ),
                                 ),
                                 const SizedBox(width: 8),
                               ],
