@@ -9,8 +9,8 @@ import 'package:flutter_rating_stars/flutter_rating_stars.dart';
 
 class MainRoutePage extends StatefulWidget {
   final LatLng initialLatLng;
-  final List<Place> allPlacesData;
-  const MainRoutePage({Key? key, required this.initialLatLng, required this.allPlacesData}) : super(key: key);
+  final Map<String, List<Place>> categoryGroupPlaceLists;
+  const MainRoutePage({Key? key, required this.initialLatLng, required this.categoryGroupPlaceLists}) : super(key: key);
 
   @override
   _MainRoutePageState createState() => _MainRoutePageState();
@@ -44,23 +44,10 @@ class _MainRoutePageState extends State<MainRoutePage> {
     'amusement_park',
     'bowling_alley'
   ];*/
-  List<String> categoryRestaurant = ['restaurant'];
-  List<String> categoryCafe = ['cafe', 'bakery'];
-  List<String> categoryShopping = ['department_store', 'clothing_store', 'shopping_mall', 'jewelry_store', 'shoe_store', 'store'];
-  List<String> categoryBar = ['bar'];
-  List<String> categoryAttraction = ['tourist_attraction', 'amusement_park', 'bowling_alley'];
-
   String selectedPlaceType = 'restaurant';// 초기값을 'restaurant'로 설정
 
   // 카테고리 그룹명을 변수로 설정
-  Map<String, List<Place>> categoryGroupPlaceLists = {
-    '음식점': [],
-    '카페': [],
-    '쇼핑': [],
-    '문화': [],
-    '바': [],
-    '어트랙션': []
-  };
+  Map<String, List<Place>> categoryGroupPlaceLists = {};
 
   List<Place> allPlaces = [];
 
@@ -68,7 +55,7 @@ class _MainRoutePageState extends State<MainRoutePage> {
   void initState() {
     super.initState();
     nowP = widget.initialLatLng;
-    allPlaces = widget.allPlacesData;
+    categoryGroupPlaceLists = widget.categoryGroupPlaceLists;
     markers = Set<Marker>();
   }
 
@@ -214,22 +201,6 @@ class _MainRoutePageState extends State<MainRoutePage> {
             }*/
             // 선택된 장소 유형에 기반한 장소 목록 가져오기
             //List<Place> selectedCategoryPlaces = categoryGroupPlaceLists[selectedPlaceType] ?? [];
-            categoryGroupPlaceLists['음식점'] = allPlaces
-                .where((place) => categoryRestaurant.contains(place.types[0]))
-                .toList();
-            categoryGroupPlaceLists['카페'] = allPlaces
-                .where((place) => categoryCafe.contains(place.types[0]))
-                .toList();
-            categoryGroupPlaceLists['쇼핑'] = allPlaces
-                .where((place) => categoryShopping.contains(place.types[0]))
-                .toList();
-            categoryGroupPlaceLists['바'] = allPlaces
-                .where((place) => categoryBar.contains(place.types[0]))
-                .toList();
-            categoryGroupPlaceLists['어트랙션'] = allPlaces
-                .where((place) => categoryAttraction.contains(place.types[0]))
-                .toList();
-
 
             return Scaffold(
               body: SnappingSheet(

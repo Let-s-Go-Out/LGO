@@ -39,7 +39,7 @@ dependencies:
   flutter_polyline_points: ^1.0.0
   google_maps_flutter: ^2.3.1
   shared_preferences: ^2.2.0
-  location: ^5.0.3
+#  location: ^5.0.3
   syncfusion_flutter_sliders: ^22.1.38
   firebase_core : ^2.15.0
   snapping_sheet_2 : ^3.1.5
