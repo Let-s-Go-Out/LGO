@@ -114,7 +114,7 @@ class _MainRoutePageState extends State<MainRoutePage> {
               indicatorColor: Colors.black,
               unselectedLabelColor: Colors.grey,
               unselectedLabelStyle:
-              TextStyle(fontSize: 24, fontWeight: FontWeight.normal),
+                  TextStyle(fontSize: 24, fontWeight: FontWeight.normal),
               labelColor: Colors.black,
               labelStyle: TextStyle(fontWeight: FontWeight.bold),
             ),
@@ -207,10 +207,8 @@ class _MainRoutePageState extends State<MainRoutePage> {
                 infoWindow: InfoWindow(title: place.name),
               );
               markers.add(newMarker);
+            }
             }*/
-            // 선택된 장소 유형에 기반한 장소 목록 가져오기
-            //List<Place> selectedCategoryPlaces = categoryGroupPlaceLists[selectedPlaceType] ?? [];
-
             return Scaffold(
               body: SnappingSheet(
                 lockOverflowDrag: true,
@@ -372,7 +370,6 @@ class _MainRoutePageState extends State<MainRoutePage> {
               }
             }
 
-
 class GrabbingWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -415,6 +412,32 @@ class PlaceCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.all(21),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: 10),
+          Text(
+            place.name,
+            style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+          ),
+          SizedBox(height: 5),
+          Text(
+            'Place ID: ${place.placeId}', // Display the placeId
+            style: TextStyle(fontSize: 16, color: Colors.grey),
+          ),
+          SizedBox(height: 5),
+          Text(
+
+            'Place LatLng: ${place.placeLat},${place.placeLng}',
+            // Display the placeId
+            style: TextStyle(fontSize: 16, color: Colors.grey),
+          ),
+        ],
+      ),
+    );
+  }
     String firstPlaceType = place.types.isNotEmpty ? place.types[0] : 'Unknown';
     return InkWell(
         onTap: onTap,
