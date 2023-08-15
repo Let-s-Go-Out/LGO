@@ -24,15 +24,10 @@ class DefaultFirebaseOptions {
       case TargetPlatform.android:
         return android;
       case TargetPlatform.iOS:
-<<<<<<< HEAD
-
-        return ios;
-=======
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for ios - '
           'you can reconfigure this by running the FlutterFire CLI again.',
         );
->>>>>>> f427a30b008ff1b3c1aae6c53a8d1bea7bc3b049
       case TargetPlatform.macOS:
         throw UnsupportedError(
           'DefaultFirebaseOptions have not been configured for macos - '

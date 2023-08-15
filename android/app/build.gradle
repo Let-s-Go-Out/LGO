@@ -82,9 +82,5 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:21.0.1'
     implementation 'com.google.android.gms:play-services-maps:18.1.0'
     implementation 'com.android.support:multidex:2.0.1'
-<<<<<<< HEAD
 }
 
-=======
-}
->>>>>>> f427a30b008ff1b3c1aae6c53a8d1bea7bc3b049
