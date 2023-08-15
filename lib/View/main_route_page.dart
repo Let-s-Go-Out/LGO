@@ -25,7 +25,9 @@ class _MainRoutePageState extends State<MainRoutePage> {
   List<Marker> newMarkers = [];
   Set<Marker> markers = Set<Marker>();
 
-  DrawRecommendRoute test = DrawRecommendRoute();
+  //List<Place> selectedCategoryPlaces = categoryGroupPlaceLists[selectedPlaceType] ?? [];
+  //DrawRecommendRoute routeDraw = DrawRecommendRoute(selectedCategoryPlaces);
+  //routeDraw.drawPolyline();
 
   @override
   void initState() {
