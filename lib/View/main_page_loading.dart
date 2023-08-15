@@ -85,6 +85,10 @@ class _MainLoadingPageState extends State<MainLoadingPage> {
         .where((place) => categoryAttraction.contains(place.types[0]))
         .toList();
 
+    for(var type in categoryGroupPlaceLists.keys){
+      categoryGroupPlaceLists[type]?.sort((a,b) => b.rating.compareTo(a.rating));
+    }
+
     setState(() {
       isLoading = false;
     });
