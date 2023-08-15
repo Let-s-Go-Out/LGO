@@ -68,15 +68,15 @@ class _MainRoutePageState extends State<MainRoutePage> {
     mapController = controller;
   }
 
-  Future<LatLng> _getInitialCameraPosition() async {
-    nowP = LatLng(controller.model.nowPosition!.latitude,
-        controller.model.nowPosition!.longitude);
-    return nowP;
-
-  }
-
   Future<void> addMarkersFromPlacesApi() async {
     markers.addAll(newMarkers);
+  }
+
+  Future<void> _updateCameraPosition(dynamic latlng, double zoom) async {
+    await mapController.animateCamera(CameraUpdate.newLatLngZoom(
+      LatLng(latlng.latitude, latlng.longitude),
+      zoom,
+    ));
   }
 
   @override
@@ -190,9 +190,11 @@ class _MainRoutePageState extends State<MainRoutePage> {
             /*List<Place> filteredPlaces = allPlaces
                 .where((place) => place.types.contains(selectedPlaceType))
                 .toList();
-
+            int hue = 0;
             for (var place in filteredPlaces) {
+              hue ++;
               var newMarker = Marker(
+                icon: BitmapDescriptor.defaultMarkerWithHue(360-hue*16),
                 markerId: MarkerId(place.placeId),
                 position: LatLng(place.placeLat, place.placeLng),
                 infoWindow: InfoWindow(title: place.name),
@@ -218,7 +220,7 @@ class _MainRoutePageState extends State<MainRoutePage> {
                   )
                 ],
                 initialSnappingPosition:
-                SnappingPosition.factor(positionFactor: 0.5),
+                SnappingPosition.factor(positionFactor: 0.4),
                 child: _buildTourTabContent(),
                 grabbingHeight: 50,
                 grabbing: GrabbingWidget(),
@@ -397,14 +399,16 @@ class GrabbingWidget extends StatelessWidget {
 
 class PlaceCard extends StatelessWidget {
   final Place place;
+  final VoidCallback onTap;
 
-  PlaceCard({required this.place});
+  PlaceCard({required this.place, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
     String firstPlaceType = place.types.isNotEmpty ? place.types[0] : 'Unknown';
-
-    return Container(
+    return InkWell(
+        onTap: onTap,
+        child: Container(
       padding: EdgeInsets.fromLTRB(15, 5, 15, 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -470,6 +474,7 @@ class PlaceCard extends StatelessWidget {
           SizedBox(height: 10),
         ],
       ),
+    ),
     );
   }
 }

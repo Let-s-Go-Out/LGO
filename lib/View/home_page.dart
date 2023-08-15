@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nagaja_app/View/home.dart';
 import 'login_page.dart';
 import 'signup_page.dart';
 import '../Controller/auth_controller.dart';
