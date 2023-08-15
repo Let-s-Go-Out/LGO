@@ -3,9 +3,11 @@ import '../diary_page.dart';
 
 class DiaryView extends StatelessWidget {
   final int monthIndex;
+  //final DateTime selectedDate;
   const DiaryView({
     Key? key,
     required this.monthIndex,
+    //required this.selectedDate,
   }) : super(key: key);
 
   @override
