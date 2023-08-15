@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer' show log;
 import 'package:flutter/material.dart';
+import 'package:latlng/latlng.dart';
 import 'package:nagaja_app/View/map_browse_screen.dart';
 import 'package:http/http.dart' as http;
 import 'package:syncfusion_flutter_sliders/sliders.dart';
@@ -20,6 +21,9 @@ class _MainPageState extends State<MainPage> {
   String selectedStartTime = '';
   String selectedDuration = '';
   String text = '검색어를 입력하세요.';
+  String selectedPlaceAddress='';
+  String selectedPlaceName='';
+  LatLng selectedPlaceLatLng=LatLng(0, 0);
 
   // create TimeOfDay variable
   TimeOfDay _timeOfDay = TimeOfDay.now();
@@ -142,8 +146,11 @@ class _MainPageState extends State<MainPage> {
                   MaterialPageRoute(builder: (context) => MapBrowseScreen()),
                 );
                 if(returnData != null){
+                  selectedPlaceAddress = returnData.address;
+                  selectedPlaceName = returnData.name;
+                  selectedPlaceLatLng = returnData.latlng;
                   setState(() {
-                    text = returnData;
+                    text = returnData.address;
                   });
                 }
               },
