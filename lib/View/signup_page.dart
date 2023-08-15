@@ -90,7 +90,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 // 회원가입 처리
                 User? user = await _authController.signUpWithEmailAndPassword(email, password, nickname);
                 if (user != null) {
-                  UserModel userModel = UserModel.fromUser(user);
+                  UserModel userModel = UserModel.fromUser(user,nickname);
                   print('회원가입 성공: ${userModel.email}');
                   Navigator.push(
                     context,

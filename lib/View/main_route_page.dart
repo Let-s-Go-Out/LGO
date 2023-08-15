@@ -114,7 +114,7 @@ class _MainRoutePageState extends State<MainRoutePage> {
               indicatorColor: Colors.black,
               unselectedLabelColor: Colors.grey,
               unselectedLabelStyle:
-              TextStyle(fontSize: 24, fontWeight: FontWeight.normal),
+                  TextStyle(fontSize: 24, fontWeight: FontWeight.normal),
               labelColor: Colors.black,
               labelStyle: TextStyle(fontWeight: FontWeight.bold),
             ),
@@ -296,10 +296,8 @@ class _MainRoutePageState extends State<MainRoutePage> {
                 infoWindow: InfoWindow(title: place.name),
               );
               markers.add(newMarker);
+            }
             }*/
-            // 선택된 장소 유형에 기반한 장소 목록 가져오기
-            //List<Place> selectedCategoryPlaces = categoryGroupPlaceLists[selectedPlaceType] ?? [];
-
             return Scaffold(
               body: SnappingSheet(
                 lockOverflowDrag: true,
@@ -461,7 +459,6 @@ class _MainRoutePageState extends State<MainRoutePage> {
               }
 }
 
-
 class GrabbingWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -577,7 +574,6 @@ class PlaceCard extends StatelessWidget {
     );
   }
 }
-
 class RecommendPlaceCard extends StatelessWidget{
   final Place place;
   final VoidCallback onTap;
