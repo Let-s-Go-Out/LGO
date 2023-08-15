@@ -81,6 +81,9 @@ class _MainLoadingPageState extends State<MainLoadingPage> {
     categoryGroupPlaceLists['바'] = placeInfo
         .where((place) => categoryBar.contains(place.types[0]))
         .toList();
+    categoryGroupPlaceLists['문화'] = placeInfo
+        .where((place) => categoryBar.contains(place.types[0]))
+        .toList();
     categoryGroupPlaceLists['어트랙션'] = placeInfo
         .where((place) => categoryAttraction.contains(place.types[0]))
         .toList();
@@ -96,7 +99,7 @@ class _MainLoadingPageState extends State<MainLoadingPage> {
       '음식점': categoryGroupPlaceLists['음식점']!,
       '카페': categoryGroupPlaceLists['카페']!,
       '쇼핑': categoryGroupPlaceLists['쇼핑']!,
-      '문화': [],
+      '문화': categoryGroupPlaceLists['문화']!,
       '바': categoryGroupPlaceLists['바']!,
       '어트랙션': categoryGroupPlaceLists['어트랙션']!},)));
   }
@@ -129,7 +132,7 @@ class _MainLoadingPageState extends State<MainLoadingPage> {
         '음식점': categoryGroupPlaceLists['음식점']!,
         '카페': categoryGroupPlaceLists['카페']!,
         '쇼핑': categoryGroupPlaceLists['쇼핑']!,
-        '문화': [],
+        '문화': categoryGroupPlaceLists['문화']!,
         '바': categoryGroupPlaceLists['바']!,
         '어트랙션': categoryGroupPlaceLists['어트랙션']!},);
     }
