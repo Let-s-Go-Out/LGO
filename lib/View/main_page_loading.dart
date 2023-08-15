@@ -105,7 +105,12 @@ class _MainLoadingPageState extends State<MainLoadingPage> {
       getLocation().then((_) {
         return getPlaceInfo();
       });
-      return Scaffold(
+      return WillPopScope(
+        onWillPop: () async {
+          // 뒤로가기 버튼 동작을 막음
+          return false;
+        },
+      child: Scaffold(
         backgroundColor: Colors.white,
         body: Center(
           child: SpinKitPianoWave(
@@ -113,6 +118,7 @@ class _MainLoadingPageState extends State<MainLoadingPage> {
             size: 80.0,
           ),
         ),
+      ),
       );
     } else{
       return MainRoutePage(initialLatLng: controller.model.nowPLatLng, categoryGroupPlaceLists: {
