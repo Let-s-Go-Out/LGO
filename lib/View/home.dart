@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:nagaja_app/View/diary_page.dart';
-import 'package:nagaja_app/View/diary_page_2.dart';
 import 'package:nagaja_app/View/main_page.dart';
 import 'package:nagaja_app/View/my_page.dart';
 
@@ -18,7 +17,7 @@ class _MyAppHomePageState extends State<MyAppHomePage> {
 
   final List<Widget> _navIndex = [
     MainPage(),
-    SecondDiaryPage(),
+    DiaryPage(),
     MyPage(),
   ];
 

@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'dart:developer' show log;
 import 'package:flutter/material.dart';
-import 'package:nagaja_app/View/diary_page.dart';
 import 'package:nagaja_app/View/map_browse_screen.dart';
 import 'package:http/http.dart' as http;
 import 'package:syncfusion_flutter_sliders/sliders.dart';
 import 'package:nagaja_app/View/main_page_loading.dart';
 import 'package:nagaja_app/Controller/user_route_data.dart'; // 사용자에게 입력받는 경로 정보 (출발지, 희망소요시간, 나들이 컨셉 등)
+import 'package:nagaja_app/View/widgets/theme.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -22,19 +22,76 @@ class _MainPageState extends State<MainPage> {
   String text = '검색어를 입력하세요.';
 
   // create TimeOfDay variable
-  TimeOfDay _timeOfDay = TimeOfDay(hour: 8, minute: 30);
+  TimeOfDay _timeOfDay = TimeOfDay.now();
+  //TimeOfDay _timeOfDay = TimeOfDay(hour: 8, minute: 30);
 
   // show time picker method
   void _showTimePicker() {
     showTimePicker(
       context: context,
       initialTime: TimeOfDay.now(),
+      builder: (context, child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            // This uses the _timePickerTheme defined above
+            timePickerTheme: _timePickerTheme,
+            textButtonTheme: TextButtonThemeData(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateColor.resolveWith((states) => Colors.white),
+                foregroundColor: MaterialStateColor.resolveWith((states) => Colors.black),
+                shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                    side: BorderSide(color: Colors.black, width: 2)
+                  )
+                )
+              ),
+            ),
+          ),
+          child: child!,
+        );
+      }
     ).then((value) {
       setState(() {
         _timeOfDay = value!;
       });
     });
   }
+
+  final _timePickerTheme = TimePickerThemeData(
+    backgroundColor: Colors.white,
+    hourMinuteShape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.all(Radius.circular(20)),
+    ),
+    //dayPeriodBorderSide: const BorderSide(color: Colors.orange, width: 4),
+    dayPeriodColor: Colors.white, // AM | PM
+    shape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.all(Radius.circular(10)),
+    ),
+    dayPeriodTextColor: MaterialStateColor.resolveWith(
+            (states) => states.contains(MaterialState.selected) ? Colors.black : Color.fromARGB(255, 198, 198, 198)),
+    dayPeriodShape: const RoundedRectangleBorder(
+      borderRadius: BorderRadius.all(Radius.circular(10)),
+      side: BorderSide(color: Colors.black, width: 8),
+    ),
+    hourMinuteColor: MaterialStateColor.resolveWith((states) =>
+    states.contains(MaterialState.selected) ? Colors.black : Color.fromARGB(255, 216, 216, 216),),
+    hourMinuteTextColor: MaterialStateColor.resolveWith(
+            (states) => states.contains(MaterialState.selected) ? Colors.white : Colors.black),
+    dialHandColor: Colors.white,
+    dialBackgroundColor: Color.fromARGB(255, 216, 216, 216),
+    hourMinuteTextStyle: const TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
+    dayPeriodTextStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+    helpTextStyle:
+    const TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black),
+    inputDecorationTheme: const InputDecorationTheme(
+      border: InputBorder.none,
+      contentPadding: EdgeInsets.all(0),
+    ),
+    dialTextColor: MaterialStateColor.resolveWith(
+            (states) => states.contains(MaterialState.selected) ? Colors.black : Colors.black),
+    entryModeIconColor: Colors.black,
+  );
 
   double _value = 4.0;
 
@@ -63,7 +120,7 @@ class _MainPageState extends State<MainPage> {
               child: Text(
                 '나가자!(Let\'s Go Out!)',
                 textAlign: TextAlign.center,
-                style: TextStyle(fontSize: 26.0, fontWeight: FontWeight.bold),
+                style: mainPageTitleStyle,
               ),
             ),
             SizedBox(height: verticalSpacing*0.05),
@@ -76,7 +133,7 @@ class _MainPageState extends State<MainPage> {
             ),
             Spacer(flex: 2),
             Text('출발지',
-            style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),),
+            style: mainPageSubTitleStyle),
             Spacer(flex: 1),
             InkWell(
               onTap: () async {
@@ -107,7 +164,7 @@ class _MainPageState extends State<MainPage> {
             Spacer(flex: 2),
             // 나들이 컨셉
             Text('나들이 컨셉',
-              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),),
+              style: mainPageSubTitleStyle),
             Spacer(flex: 1),
             Wrap(
               alignment: WrapAlignment.center,
@@ -128,7 +185,7 @@ class _MainPageState extends State<MainPage> {
                   Flexible(
                     flex: 2,
                     child: Text('희망 출발 시간',
-                      style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),),
+                      style: mainPageSubTitleStyle),
                   ),
                   Flexible(
                     flex: 1,
@@ -136,15 +193,24 @@ class _MainPageState extends State<MainPage> {
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                         children: [
                           // button
-                          MaterialButton(
+                          ElevatedButton(
                             onPressed: _showTimePicker,
                             child: Padding(
-                              padding: EdgeInsets.all(6.0),
+                              padding: EdgeInsets.all(5),
                               child: Text(
                                   '${_timeOfDay.format(context)}',
-                                  style: TextStyle(color: Colors.white, fontSize: 13)),
+                                  style: TextStyle(fontSize: 13)),
                             ),
-                            color: Colors.black,
+                            style: ElevatedButton.styleFrom(
+                              primary: Colors.white,
+                              onPrimary: Colors.black,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                  side: BorderSide(
+                                    width: 2,
+                                  )
+                              ),
+                            ),
                           ),
                         ],
                       )
@@ -159,15 +225,16 @@ class _MainPageState extends State<MainPage> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text('희망 장소 개수',
-                    style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),),
+                    style: mainPageSubTitleStyle),
                   Text('${_value.toStringAsFixed(0)}개',
-                    style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),),
+                    style: mainPageSubTitleStyle),
                 ],
               ),
             ),
             Spacer(flex: 1),
             // Slide Bar
             Center(
+              // 슬라이더 ver.1
               child: SfSlider(
                 activeColor: Colors.black,
                 inactiveColor: Colors.grey[200],
@@ -179,11 +246,26 @@ class _MainPageState extends State<MainPage> {
                 showLabels: true,
                 minorTicksPerInterval: 0,
                 onChanged: (dynamic value) {
-                 setState(() {
-                   _value = value;
-                 });
+                  setState(() {
+                    _value = value;
+                  });
                 },
               ),
+              // 슬라이더 ver.2
+              /*child: Slider(
+                value: _value,
+                onChanged: (dynamic value) {
+                  setState(() {
+                    _value = value;
+                  });
+                },
+                activeColor: Colors.black,
+                inactiveColor: Colors.grey,
+                min: 0.0,
+                max: 5.0,
+                divisions: 5,
+                label: _value.toString(),
+              ),*/
             ),
             // 버튼
             Spacer(flex: 2),
@@ -197,6 +279,9 @@ class _MainPageState extends State<MainPage> {
               },
               style: ElevatedButton.styleFrom(
                 primary: Colors.black,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                ),
               ),
               child: Text('Let\'s Go out',
               style: TextStyle(color:Colors.white),),
@@ -220,9 +305,26 @@ class _MainPageState extends State<MainPage> {
         });
       },
       style: ElevatedButton.styleFrom(
-        primary: selectedConcept == concept ? Colors.grey : Colors.black,
+        primary: Colors.white,
+        onPrimary: Colors.black,
+        shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(40),
+            side: BorderSide(
+              width: 2,
+              // 버튼 선택 유무에 따른 버튼 스타일 변경
+              color: selectedConcept == concept ? Colors.black : Colors.white10,
+            )
+        ),
+        textStyle: const TextStyle(
+          fontSize: 13,
+          fontWeight: FontWeight.bold,
+          //color: Colors.black,
+        ),
+        padding: EdgeInsets.all(10),
+        backgroundColor: Colors.white,
       ),
-      child: Text(concept,style: TextStyle(color: Colors.white),),
+      child: Text(concept),
     );
   }
+
 }
