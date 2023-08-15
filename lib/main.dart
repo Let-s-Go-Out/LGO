@@ -33,6 +33,7 @@ class MyApp extends StatelessWidget {
         // Define the default font family.
         fontFamily: 'Georgia',
       ),
+      home: MyAppHomePage(),
       initialRoute: '/', // Set the initial route
       getPages: [
         GetPage(name: '/', page: () => HomePage()), // Define routes here

@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:nagaja_app/View/widgets/diary_view.dart';
 import '../diary_page.dart';
 import 'package:nagaja_app/View/widgets/theme.dart';
 import 'package:nagaja_app/View/widgets/input_field.dart';
@@ -73,8 +74,11 @@ class _DiaryEditViewState extends State<DiaryEditView> {
         child: Column(
           children: [
             // New
-            MyInputFieldMessage(title: "한 줄 일기", hint: "한 줄 일기를 작성해주세요.\n오늘의 나들이는 어땠나요?", controller: _noteController,),
-            MyInputField(title: "날짜", hint: DateFormat.yMd().format(_selectedDate),
+            MyInputFieldMessage(
+              title: "한 줄 일기",
+              hint: "한 줄 일기를 작성해주세요.\n오늘의 나들이는 어땠나요?",
+              controller: _noteController,),
+            MyInputField(title: "날짜", hint: DateFormat.yMEd().format(_selectedDate),
               widget: IconButton(
                 icon: Icon(Icons.calendar_today_outlined,
                     color: Colors.grey
@@ -82,7 +86,12 @@ class _DiaryEditViewState extends State<DiaryEditView> {
                 onPressed: () {
                   _getDataFromUser();
                 },
-              ),),
+              ),
+            ),
+            // 추가
+            /*DiaryView(
+                monthIndex: widget.monthIndex,
+                selectedDate: _selectedDate),*/
             SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -131,7 +140,7 @@ class _DiaryEditViewState extends State<DiaryEditView> {
                   ),
                   onPressed: ()=>pickImage(),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color.fromARGB(255, 216, 216, 216),
+                    backgroundColor: Colors.black87,
                     shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(50),
                     ),
@@ -162,7 +171,7 @@ class _DiaryEditViewState extends State<DiaryEditView> {
                   ),
                   onPressed: ()=>_validateDate(),
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color.fromARGB(255, 216, 216, 216),
+                    backgroundColor: Colors.black87,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(50),
                     ),
@@ -219,7 +228,6 @@ class _DiaryEditViewState extends State<DiaryEditView> {
     if(_pickerDate!=null){
       setState(() {
         _selectedDate = _pickerDate;
-        print(_selectedDate);
       });
     }else{
       print("it's null or something is wrong");
