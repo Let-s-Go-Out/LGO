@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 import 'package:flutter/material.dart';
 import './View/home_page.dart';
@@ -13,15 +14,23 @@ void main() async{
 import 'firebase_options.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:developer';
+=======
+import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:nagaja_app/View/home_page.dart';
+>>>>>>> f427a30b008ff1b3c1aae6c53a8d1bea7bc3b049
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:nagaja_app/View/home.dart';
 import 'package:nagaja_app/View/main_page.dart';
 import 'package:nagaja_app/View/main_page_loading.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:nagaja_app/firebase_options.dart';
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> f427a30b008ff1b3c1aae6c53a8d1bea7bc3b049
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -39,6 +48,7 @@ class MyApp extends StatelessWidget {
       home: HomePage(),
     );
   }
+<<<<<<< HEAD
 }
 
 /*
@@ -52,3 +62,6 @@ class MyApp extends StatelessWidget {
   }
 }
 */
+=======
+}
+>>>>>>> f427a30b008ff1b3c1aae6c53a8d1bea7bc3b049

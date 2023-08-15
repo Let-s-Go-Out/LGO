@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 /*<<<<<<< HEAD
 // 사용자 경로 정보 입력 시 입력한 출발지 기준 주변 장소 지도 + 목록 화면에 나타낼 때, 장소 관련 model
 
@@ -15,8 +16,9 @@ class Place {
   });
 }
 =======*/
+=======
+>>>>>>> f427a30b008ff1b3c1aae6c53a8d1bea7bc3b049
 import 'dart:convert';
-
 import 'package:http/http.dart';
 
 class Place {
@@ -61,4 +63,8 @@ class PlacesApi {
       throw Exception('Failed to load places');
     }
   }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> f427a30b008ff1b3c1aae6c53a8d1bea7bc3b049

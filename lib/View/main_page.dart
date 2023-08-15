@@ -7,6 +7,7 @@ import 'package:http/http.dart' as http;
 import 'package:syncfusion_flutter_sliders/sliders.dart';
 import 'package:nagaja_app/View/main_page_loading.dart';
 import 'package:nagaja_app/Controller/user_route_data.dart'; // 사용자에게 입력받는 경로 정보 (출발지, 희망소요시간, 나들이 컨셉 등)
+<<<<<<< HEAD
 // import 'package:nagaja_app/View/diary_page.dart';
 // import 'package:nagaja_app/View/map_browse_screen.dart';
 // import 'package:http/http.dart' as http;
@@ -14,6 +15,8 @@ import 'package:nagaja_app/Controller/user_route_data.dart'; // 사용자에게 
 // import 'package:nagaja_app/View/main_page_loading.dart';
 // import 'package:nagaja_app/Controller/user_route_data.dart'; // 사용자에게 입력받는 경로 정보 (출발지, 희망소요시간, 나들이 컨셉 등)
 
+=======
+>>>>>>> f427a30b008ff1b3c1aae6c53a8d1bea7bc3b049
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -44,6 +47,7 @@ class _MainPageState extends State<MainPage> {
   }
 
   double _value = 4.0;
+<<<<<<< HEAD
 /*<<<<<<< HEAD
   // 사용자 경로 정보 controller 인스턴스 생성
   // final UserRouteInfoController _userRouteInfoController = UserRouteInfoController();
@@ -208,6 +212,8 @@ class _MainPageState extends State<MainPage> {
         },
       ),
 =======*/
+=======
+>>>>>>> f427a30b008ff1b3c1aae6c53a8d1bea7bc3b049
 
   @override
   Widget build(BuildContext context) {

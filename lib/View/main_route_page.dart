@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:nagaja_app/Controller/map_controller.dart';
 import 'package:snapping_sheet_2/snapping_sheet.dart';
-
+import 'package:provider/provider.dart';
 import '../Model/place_model.dart';
 
 class MainRoutePage extends StatefulWidget {
-  const MainRoutePage({Key? key}) : super(key: key);
+  final LatLng initialLatLng;
+  const MainRoutePage({Key? key, required this.initialLatLng}) : super(key: key);
 
   @override
   _MainRoutePageState createState() => _MainRoutePageState();
@@ -15,21 +16,30 @@ class MainRoutePage extends StatefulWidget {
 
 class _MainRoutePageState extends State<MainRoutePage> {
   late GoogleMapController mapController;
+<<<<<<< HEAD
 
   // final LatLng _center = const LatLng(37.58638333, 127.0203333);
+=======
+>>>>>>> f427a30b008ff1b3c1aae6c53a8d1bea7bc3b049
   MapController controller = MapController();
   bool isExpanded = false;
   ScrollController scrollcontroller = ScrollController();
   List<Place> places = [];
   LatLng nowP = LatLng(37.58638333, 127.0203333);
+<<<<<<< HEAD
 
   List<Marker> newMarkers = [];
   Set<Marker> markers = Set<Marker>();
 
+=======
+  List<Marker> newMarkers = [];
+  Set<Marker> markers = Set<Marker>();
+>>>>>>> f427a30b008ff1b3c1aae6c53a8d1bea7bc3b049
 
   @override
   void initState() {
     super.initState();
+<<<<<<< HEAD
     controller.getPosition().then((position) {
       setState(() {
         controller.model.nowPosition = position;
@@ -38,6 +48,10 @@ class _MainRoutePageState extends State<MainRoutePage> {
 
     markers = Set<Marker>();
 
+=======
+    nowP = widget.initialLatLng;
+    markers = Set<Marker>();
+>>>>>>> f427a30b008ff1b3c1aae6c53a8d1bea7bc3b049
   }
 
   @override
@@ -49,14 +63,22 @@ class _MainRoutePageState extends State<MainRoutePage> {
     mapController = controller;
   }
 
+<<<<<<< HEAD
   Future<LatLng> _getInitialCameraPosition() async {
     nowP = LatLng(controller.model.nowPosition!.latitude,
         controller.model.nowPosition!.longitude);
     return nowP;
+=======
+  Future<void> addMarkersFromPlacesApi() async {
+    markers.addAll(newMarkers);
+>>>>>>> f427a30b008ff1b3c1aae6c53a8d1bea7bc3b049
   }
 
-  Future<void> addMarkersFromPlacesApi() async {
-        markers.addAll(newMarkers);
+  Future<void> _updateCameraPosition(dynamic latlng, double zoom) async {
+    await mapController.animateCamera(CameraUpdate.newLatLngZoom(
+      LatLng(latlng.latitude, latlng.longitude),
+      zoom,
+    ));
   }
 
   @override
@@ -90,7 +112,11 @@ class _MainRoutePageState extends State<MainRoutePage> {
               indicatorColor: Colors.black,
               unselectedLabelColor: Colors.grey,
               unselectedLabelStyle:
+<<<<<<< HEAD
                   TextStyle(fontSize: 24, fontWeight: FontWeight.normal),
+=======
+              TextStyle(fontSize: 24, fontWeight: FontWeight.normal),
+>>>>>>> f427a30b008ff1b3c1aae6c53a8d1bea7bc3b049
               labelColor: Colors.black,
               labelStyle: TextStyle(fontWeight: FontWeight.bold),
             ),
@@ -123,7 +149,7 @@ class _MainRoutePageState extends State<MainRoutePage> {
             positionFactor: 0.9,
           )
         ],
-        initialSnappingPosition: SnappingPosition.factor(positionFactor: 0.5),
+        initialSnappingPosition: SnappingPosition.factor(positionFactor: 0.4),
         child: _buildAIRecommendationContent(),
         grabbingHeight: 50,
         grabbing: GrabbingWidget(),
@@ -160,38 +186,23 @@ class _MainRoutePageState extends State<MainRoutePage> {
   }
 
   Widget _buildAIRecommendationContent() {
-    return FutureBuilder<LatLng>(
-      future: _getInitialCameraPosition(),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        } else if (snapshot.hasError) {
-          return Center(
-            child: Text('Error: ${snapshot.error}'),
-          );
-        } else {
-          return GoogleMap(
-            myLocationEnabled: true,
-            myLocationButtonEnabled: false,
-            onMapCreated: _onMapCreated,
-            initialCameraPosition: CameraPosition(
-              target: snapshot.data!,
-              zoom: 15.0,
-            ),
-            markers: {
-              Marker(
-                markerId: MarkerId('marker_id'),
-                position: snapshot.data!,
-                infoWindow: InfoWindow(
-                  title: '현재 위치',
-                  snippet: '',
-                ),
-              ),
-            },
-          );
-        }
+    return GoogleMap(
+      myLocationEnabled: true,
+      myLocationButtonEnabled: false,
+      onMapCreated: _onMapCreated,
+      initialCameraPosition: CameraPosition(
+        target: nowP,
+        zoom: 15.0,
+      ),
+      markers: {
+        Marker(
+          markerId: MarkerId('marker_id'),
+          position: nowP,
+          infoWindow: InfoWindow(
+            title: '현재 위치',
+            snippet: '',
+          ),
+        ),
       },
     );
   }
@@ -210,18 +221,26 @@ class _MainRoutePageState extends State<MainRoutePage> {
             );
           } else {
             List<Place> places = snapshot.data ?? [];
+<<<<<<< HEAD
 
+=======
+>>>>>>> f427a30b008ff1b3c1aae6c53a8d1bea7bc3b049
             markers.clear();
-
+            int hue = 0;
             for (var place in places) {
+              hue ++;
               var newMarker = Marker(
+                icon: BitmapDescriptor.defaultMarkerWithHue(360-hue*16),
                 markerId: MarkerId(place.placeId),
                 position: LatLng(place.placeLat, place.placeLng),
                 infoWindow: InfoWindow(title: place.name),
               );
               markers.add(newMarker);
             }
+<<<<<<< HEAD
 
+=======
+>>>>>>> f427a30b008ff1b3c1aae6c53a8d1bea7bc3b049
             return Scaffold(
               body: SnappingSheet(
                 lockOverflowDrag: true,
@@ -238,19 +257,36 @@ class _MainRoutePageState extends State<MainRoutePage> {
                   )
                 ],
                 initialSnappingPosition:
+<<<<<<< HEAD
                     SnappingPosition.factor(positionFactor: 0.5),
+=======
+                SnappingPosition.factor(positionFactor: 0.4),
+>>>>>>> f427a30b008ff1b3c1aae6c53a8d1bea7bc3b049
                 child: _buildTourTabContent(),
                 grabbingHeight: 50,
                 grabbing: GrabbingWidget(),
                 sheetBelow: SnappingSheetContent(
                   draggable: (details) => true,
                   child: Container(
-                    color: Colors.white,
-                    child: ListView.builder(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                    ),
+                    child: ListView.separated(
                       itemCount: places.length,
                       itemBuilder: (context, index) {
-                        return PlaceCard(place: places[index]);
+                        return Material(
+                            color: Colors.transparent,
+                            child:PlaceCard(
+                                place: places[index],
+                                onTap: () {
+                                  _updateCameraPosition(LatLng(places[index].placeLat, places[index].placeLng), 16.0);
+                                  print('PlaceCard tapped: ${places[index].name}');
+                                }));
                       },
+                      separatorBuilder: (context, index) => const Divider(
+                        height: 11.0,
+                        color: Colors.grey,
+                      ),
                     ),
                   ),
                 ),
@@ -277,8 +313,14 @@ class _MainRoutePageState extends State<MainRoutePage> {
   }
 
   Widget _buildTourTabContent() {
+<<<<<<< HEAD
     return FutureBuilder<LatLng>(
         future: _getInitialCameraPosition(),
+=======
+    LatLng target = nowP;
+    return FutureBuilder<void>(
+        future: addMarkersFromPlacesApi(),
+>>>>>>> f427a30b008ff1b3c1aae6c53a8d1bea7bc3b049
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
@@ -289,31 +331,16 @@ class _MainRoutePageState extends State<MainRoutePage> {
               child: Text('Error: ${snapshot.error}'),
             );
           } else {
-            LatLng target = snapshot.data!;
-            return FutureBuilder<void>(
-                future: addMarkersFromPlacesApi(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(
-                      child: CircularProgressIndicator(),
-                    );
-                  } else if (snapshot.hasError) {
-                    return Center(
-                      child: Text('Error: ${snapshot.error}'),
-                    );
-                  } else {
-                    return GoogleMap(
-                      myLocationEnabled: true,
-                      myLocationButtonEnabled: false,
-                      onMapCreated: _onMapCreated,
-                      initialCameraPosition: CameraPosition(
-                        target: target,
-                        zoom: 15.0,
-                      ),
-                      markers: markers,
-                        );
-                  }
-                });
+            return GoogleMap(
+              myLocationEnabled: true,
+              myLocationButtonEnabled: false,
+              onMapCreated: _onMapCreated,
+              initialCameraPosition: CameraPosition(
+                target: target,
+                zoom: 15.0,
+              ),
+              markers: markers,
+            );
           }
         });
   }
@@ -355,11 +382,13 @@ class GrabbingWidget extends StatelessWidget {
 
 class PlaceCard extends StatelessWidget {
   final Place place;
+  final VoidCallback onTap;
 
-  PlaceCard({required this.place});
+  PlaceCard({required this.place, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
+<<<<<<< HEAD
     return Container(
       padding: EdgeInsets.all(21),
       child: Column(
@@ -749,4 +778,35 @@ class PlaceCard extends StatelessWidget {
 //     );
 //   }
 // }
+=======
+    return InkWell(
+      onTap: onTap,
+      // Call the provided onTap callback when tapped
+      child: Container(
+        color: Colors.transparent,
+        padding: EdgeInsets.all(10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              place.name,
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            ),
+            SizedBox(height: 5),
+            Text(
+              'Place ID: ${place.placeId}', // Display the placeId
+              style: TextStyle(fontSize: 16, color: Colors.grey),
+            ),
+            SizedBox(height: 5),
+            Text(
+              'Place LatLng: ${place.placeLat},${place.placeLng}',
+              // Display the placeId
+              style: TextStyle(fontSize: 16, color: Colors.grey),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+>>>>>>> f427a30b008ff1b3c1aae6c53a8d1bea7bc3b049
 }
