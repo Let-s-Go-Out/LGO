@@ -21,15 +21,8 @@ class _MainLoadingPageState extends State<MainLoadingPage> {
   List<String> typeList= [
     'restaurant',
     'cafe',
-    'bakery',
-    'clothing_store',
-    'department_store',
-    'shopping_mall',
-    'jewelry_store',
-    'shoe_store',
     'store',
     'museum',
-    'movie_theater',
     'library',
     'bar',
     'tourist_attraction',
@@ -49,9 +42,9 @@ class _MainLoadingPageState extends State<MainLoadingPage> {
   };
 
   List<String> categoryRestaurant = ['restaurant'];
-  List<String> categoryCafe = ['cafe', 'bakery'];
-  List<String> categoryShopping = ['department_store', 'clothing_store', 'shopping_mall', 'jewelry_store', 'shoe_store', 'store'];
-  List<String> categoryCulture = ['museum', 'movie_theater', 'library'];
+  List<String> categoryCafe = ['cafe'];
+  List<String> categoryShopping = ['store'];
+  List<String> categoryCulture = ['museum', 'library'];
   List<String> categoryBar = ['bar'];
   List<String> categoryAttraction = ['tourist_attraction', 'amusement_park', 'bowling_alley'];
 
