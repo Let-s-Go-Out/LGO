@@ -2,6 +2,7 @@
 //
 // import 'package:cloud_firestore/cloud_firestore.dart';
 // import 'package:flutter/material.dart';
+// import 'package:nagaja_app/Controller/auth_controller.dart';
 //
 // class UserRouteDataController {
 //   // Firestore 인스턴스 생성
@@ -17,7 +18,7 @@
 //   }) async {
 //     try {
 //       // Firestore에 데이터 저장
-//       await _firestore.collection('Users').doc(userId).set({ // doc userId 혹은 user UID 혹은 documentId??
+//       await _firestore.collection('Users').doc(user.uid).set({
 //         // 필드 이름 : 변수
 //         'departure_address' : departureAddress,
 //         'departure_geopoint' : departureGeopoint,

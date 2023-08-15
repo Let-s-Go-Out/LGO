@@ -21,6 +21,14 @@ class HomePage extends StatelessWidget {
                 fontWeight: FontWeight.bold,
               ),
             ),
+            SizedBox(height: 8), // 조절 가능한 공간
+            Text(
+              "나가자!",
+              style: TextStyle(
+                fontSize: 16, // 작은 글씨 크기 조절
+                fontWeight: FontWeight.bold,
+              ),
+            ),
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {

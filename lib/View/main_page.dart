@@ -1,12 +1,15 @@
 import 'dart:async';
 import 'dart:developer' show log;
 import 'package:flutter/material.dart';
+import 'package:latlng/latlng.dart';
 import 'package:nagaja_app/View/map_browse_screen.dart';
 import 'package:http/http.dart' as http;
 import 'package:syncfusion_flutter_sliders/sliders.dart';
 import 'package:nagaja_app/View/main_page_loading.dart';
-import 'package:nagaja_app/Controller/user_route_data.dart'; // 사용자에게 입력받는 경로 정보 (출발지, 희망소요시간, 나들이 컨셉 등)
+import 'package:nagaja_app/Controller/user_route_data.dart';
 import 'package:nagaja_app/View/widgets/theme.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -18,8 +21,11 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   String selectedConcept = '';
   String selectedStartTime = '';
-  String selectedDuration = '';
+
   String text = '검색어를 입력하세요.';
+  String selectedPlaceAddress='';
+  String selectedPlaceName='';
+  LatLng selectedPlaceLatLng=LatLng(0, 0);
 
   // create TimeOfDay variable
   TimeOfDay _timeOfDay = TimeOfDay.now();
@@ -95,6 +101,39 @@ class _MainPageState extends State<MainPage> {
 
   double _value = 4.0;
 
+
+
+  // Firestore에 사용자에게 입력받은 경로 데이터를 저장하는 함수
+  void saveUserRouteData() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? user = auth.currentUser;
+
+    if (user == null) {
+      print('로그인이 필요합니다.');
+      return;
+    }
+
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    // 사용자 경로 데이터
+    Map<String, dynamic> userRouteData = {
+      'picnicConcept': selectedConcept,
+      'DepartureTime': _timeOfDay.format(context),
+      'placeCount': _value.toStringAsFixed(0),
+      'placeAddress': selectedPlaceAddress,
+      'placeName': selectedPlaceName,
+      'placeGeopoint': GeoPoint(selectedPlaceLatLng.latitude, selectedPlaceLatLng.longitude),
+    };
+
+    try {
+      await firestore.collection('PicnicRecord').doc(user.uid).set(userRouteData);
+      print('사용자 경로 정보 저장 성공');
+    } catch (e) {
+      print('사용자 경로 정보 저장 실패: $e');
+    }
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -142,8 +181,11 @@ class _MainPageState extends State<MainPage> {
                   MaterialPageRoute(builder: (context) => MapBrowseScreen()),
                 );
                 if(returnData != null){
+                  selectedPlaceAddress = returnData.address;
+                  selectedPlaceName = returnData.name;
+                  selectedPlaceLatLng = returnData.latlng;
                   setState(() {
-                    text = returnData;
+                    text = returnData.address;
                   });
                 }
               },
@@ -170,11 +212,12 @@ class _MainPageState extends State<MainPage> {
               alignment: WrapAlignment.center,
               spacing: 8.0,
               children: [
-                conceptButton('산책'),
-                conceptButton('액티비티'),
-                conceptButton('휴양'),
-                conceptButton('맛집탐방'),
-                conceptButton('체험'),
+                conceptButton('음식점'),
+                conceptButton('카페'),
+                conceptButton('쇼핑'),
+                conceptButton('문화'),
+                conceptButton('바'),
+                conceptButton('어트랙션'),
               ],
             ),
             Spacer(flex: 2),
@@ -271,6 +314,7 @@ class _MainPageState extends State<MainPage> {
             Spacer(flex: 2),
             ElevatedButton(
               onPressed: () {
+                saveUserRouteData(); // saveUserRouteData 함수 호출
                 // Add code to handle the "Let's Go out" button
                 Navigator.push(
                   context,
@@ -328,3 +372,7 @@ class _MainPageState extends State<MainPage> {
   }
 
 }
+
+
+
+
