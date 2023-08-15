@@ -4,6 +4,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:nagaja_app/View/main_route_page.dart';
 
 import '../Controller/map_controller.dart';
+import '../Model/draw_recommend_route.dart';
 import '../Model/place_model.dart';
 
 
@@ -16,6 +17,7 @@ class MainLoadingPage extends StatefulWidget {
 }
 
 class _MainLoadingPageState extends State<MainLoadingPage> {
+  DrawRecommendRoute test = DrawRecommendRoute();
   MapController controller = MapController();
   bool isLoading = true;
   List<String> typeList= [
@@ -111,6 +113,8 @@ class _MainLoadingPageState extends State<MainLoadingPage> {
     if (isLoading) {
       getLocation().then((_) {
         return getPlaceInfo();
+      }).then((_){
+        test.setRecommendPlaces(categoryGroupPlaceLists);
       });
       return WillPopScope(
         onWillPop: () async {
