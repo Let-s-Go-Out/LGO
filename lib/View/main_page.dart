@@ -8,6 +8,8 @@ import 'package:syncfusion_flutter_sliders/sliders.dart';
 import 'package:nagaja_app/View/main_page_loading.dart';
 import 'package:nagaja_app/Controller/user_route_data.dart';
 import 'package:nagaja_app/View/widgets/theme.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -19,7 +21,7 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   String selectedConcept = '';
   String selectedStartTime = '';
-  String selectedDuration = '';
+
   String text = '검색어를 입력하세요.';
   String selectedPlaceAddress='';
   String selectedPlaceName='';
@@ -98,6 +100,39 @@ class _MainPageState extends State<MainPage> {
   );
 
   double _value = 4.0;
+
+
+
+  // Firestore에 사용자에게 입력받은 경로 데이터를 저장하는 함수
+  void saveUserRouteData() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? user = auth.currentUser;
+
+    if (user == null) {
+      print('로그인이 필요합니다.');
+      return;
+    }
+
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+    // 사용자 경로 데이터
+    Map<String, dynamic> userRouteData = {
+      'picnicConcept': selectedConcept,
+      'DepartureTime': _timeOfDay.format(context),
+      'placeCount': _value.toStringAsFixed(0),
+      'placeAddress': selectedPlaceAddress,
+      'placeName': selectedPlaceName,
+      'placeGeopoint': GeoPoint(selectedPlaceLatLng.latitude, selectedPlaceLatLng.longitude),
+    };
+
+    try {
+      await firestore.collection('PicnicRecord').doc(user.uid).set(userRouteData);
+      print('사용자 경로 정보 저장 성공');
+    } catch (e) {
+      print('사용자 경로 정보 저장 실패: $e');
+    }
+  }
+
+
 
   @override
   Widget build(BuildContext context) {
