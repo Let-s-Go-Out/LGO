@@ -18,16 +18,24 @@ class MainLoadingPage extends StatefulWidget {
 class _MainLoadingPageState extends State<MainLoadingPage> {
   MapController controller = MapController();
   bool isLoading = true;
-  List<String> typeList= ['restaurant'
-    ,'cafe'
-    ,'store'
-    ,'museum'
-    ,'movie_theater'
-    ,'library'
-    ,'bar'
-    ,'tourist_attraction'
-    ,'amusement_park'
-    ,'bowling_alley'];
+  List<String> typeList= [
+    'restaurant',
+    'cafe',
+    'bakery',
+    'clothing_store',
+    'department_store',
+    'shopping_mall',
+    'jewelry_store',
+    'shoe_store',
+    'store',
+    'museum',
+    'movie_theater',
+    'library',
+    'bar',
+    'tourist_attraction',
+    'amusement_park',
+    'bowling_alley'
+  ];
   List<Place> placeInfo=[];
 
   // 카테고리 그룹명을 변수로 설정
@@ -43,6 +51,7 @@ class _MainLoadingPageState extends State<MainLoadingPage> {
   List<String> categoryRestaurant = ['restaurant'];
   List<String> categoryCafe = ['cafe', 'bakery'];
   List<String> categoryShopping = ['department_store', 'clothing_store', 'shopping_mall', 'jewelry_store', 'shoe_store', 'store'];
+  List<String> categoryCulture = ['museum', 'movie_theater', 'library'];
   List<String> categoryBar = ['bar'];
   List<String> categoryAttraction = ['tourist_attraction', 'amusement_park', 'bowling_alley'];
 
