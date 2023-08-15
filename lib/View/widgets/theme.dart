@@ -20,7 +20,7 @@ TextStyle get headingStyle{
 
 TextStyle get titleStyle{
   return TextStyle(
-    fontSize: 16,
+    fontSize: 13,
     fontWeight: FontWeight.w400,
     fontFamily: 'Roboto',
   );
@@ -28,9 +28,21 @@ TextStyle get titleStyle{
 
 TextStyle get subTitleStyle{
   return TextStyle(
-    fontSize: 14,
+    fontSize: 11,
     fontWeight: FontWeight.w400,
     fontFamily: 'Roboto',
     color: Colors.grey,
   );
+}
+
+TextStyle get mainPageTitleStyle{
+  return TextStyle(
+      fontSize: 26.0,
+      fontWeight: FontWeight.bold);
+}
+
+TextStyle get mainPageSubTitleStyle{
+  return TextStyle(
+      fontSize: 20.0,
+      fontWeight: FontWeight.w500);
 }

@@ -6,7 +6,7 @@ import 'package:nagaja_app/Model/map_model.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class MapController{
-  static const String apiKey = 'AIzaSyAIeZMzg3xE5dYXgiWNoIjDE34R0SzTAzE';
+  static const String apiKey = 'AIzaSyBrK8RWyR1_3P7M7yjNiJ8xyXTAuFpeLlM';
 
   MapModel model = MapModel();
   Position? get nowPosition => model.nowPosition;

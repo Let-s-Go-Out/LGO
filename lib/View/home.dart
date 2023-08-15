@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:nagaja_app/View/diary_page.dart';
-import 'package:nagaja_app/View/diary_page_2.dart';
 import 'package:nagaja_app/View/main_page.dart';
 import 'package:nagaja_app/View/my_page.dart';
 
@@ -18,7 +17,7 @@ class _MyAppHomePageState extends State<MyAppHomePage> {
 
   final List<Widget> _navIndex = [
     MainPage(),
-    SecondDiaryPage(),
+    DiaryPage(),
     MyPage(),
   ];
 
@@ -33,7 +32,7 @@ class _MyAppHomePageState extends State<MyAppHomePage> {
     return Scaffold(
       body: _navIndex.elementAt(_selectedIndex),
       bottomNavigationBar: BottomNavigationBar(
-        fixedColor: Colors.blue,
+        fixedColor: Colors.black,
         unselectedItemColor: Colors.blueGrey,
         showSelectedLabels: true,
         type: BottomNavigationBarType.fixed,

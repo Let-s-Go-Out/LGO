@@ -1,8 +1,4 @@
 buildscript {
-<<<<<<< HEAD
-=======
-
->>>>>>> f427a30b008ff1b3c1aae6c53a8d1bea7bc3b049
     ext.kotlin_version = '1.8.0'
     repositories {
         gradlePluginPortal()
@@ -10,7 +6,6 @@ buildscript {
         maven { url "https://maven.google.com" }
         mavenCentral()
     }
-<<<<<<< HEAD
     dependencies {
         classpath 'com.android.tools.build:gradle:7.3.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
@@ -35,29 +30,3 @@ subprojects {
 tasks.register("clean", Delete) {
     delete rootProject.buildDir
 }
-=======
-        dependencies {
-            classpath 'com.android.tools.build:gradle:7.3.1'
-            classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-        }
-    }
-
-    allprojects {
-        repositories {
-            google()
-            mavenCentral()
-        }
-    }
-
-    rootProject.buildDir = '../build'
-    subprojects {
-        project.buildDir = "${rootProject.buildDir}/${project.name}"
-    }
-    subprojects {
-        project.evaluationDependsOn(':app')
-    }
-
-    tasks.register("clean", Delete) {
-        delete rootProject.buildDir
-    }
->>>>>>> f427a30b008ff1b3c1aae6c53a8d1bea7bc3b049

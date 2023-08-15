@@ -1,12 +1,6 @@
-<<<<<<< HEAD
 
 name: nagaja_app
 description: A new Flutter project.
-
-=======
-name: nagaja_app
-description: A new Flutter project.
->>>>>>> f427a30b008ff1b3c1aae6c53a8d1bea7bc3b049
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -46,31 +40,20 @@ dependencies:
   flutter_polyline_points: ^1.0.0
   google_maps_flutter: ^2.3.1
   shared_preferences: ^2.2.0
-  location: ^5.0.0
   syncfusion_flutter_sliders: ^22.1.38
   firebase_core : ^2.15.0
   snapping_sheet_2 : ^3.1.5
   html : ^0.15.4
   firebase_storage: ^11.2.5
-<<<<<<< HEAD
-
-=======
->>>>>>> f427a30b008ff1b3c1aae6c53a8d1bea7bc3b049
+  latlong2: ^0.9.0
+  latlng: ^1.0.0
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
-<<<<<<< HEAD
-  #firebase_core: ^2.15.0
   firebase_auth: ^4.7.2
   cloud_firestore: ^4.8.4
   google_sign_in: ^6.1.4
-
-=======
-  firebase_auth: ^4.7.2
-  cloud_firestore: ^4.8.4
-  google_sign_in: ^6.1.4
->>>>>>> f427a30b008ff1b3c1aae6c53a8d1bea7bc3b049
   table_calendar: ^3.0.9
   date_picker_timeline: ^1.2.5
   intl:
@@ -78,19 +61,12 @@ dependencies:
   path:
   image_picker: ^1.0.1
   file_picker: ^5.3.3
-<<<<<<< HEAD
-=======
   flutter_spinkit: ^5.2.0
->>>>>>> f427a30b008ff1b3c1aae6c53a8d1bea7bc3b049
-
+  flutter_rating_stars: ^1.0.3+4
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-<<<<<<< HEAD
-=======
-
->>>>>>> f427a30b008ff1b3c1aae6c53a8d1bea7bc3b049
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
   # activated in the `analysis_options.yaml` file located at the root of your
@@ -111,17 +87,9 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   # assets:
-<<<<<<< HEAD
   #   - images/a_dot_burr.jpeg
 
   #   - assets/
-
-=======
-
-  #   - images/a_dot_burr.jpeg
-
-  #   - assets/
->>>>>>> f427a30b008ff1b3c1aae6c53a8d1bea7bc3b049
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see
