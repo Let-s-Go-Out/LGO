@@ -278,7 +278,7 @@ class _MapBrowseScreenState extends State<MapBrowseScreen> {
                                   height: 40,
                                   child: FloatingActionButton.extended(
                                     onPressed: () {
-                                      Navigator.pop(context, SelectedPlaceData(controller.model.selectedPlaceAddress!, controller.model.selectedPlaceName!, controller.model.selectedPlaceLatLng));
+                                      Navigator.pop(context, SelectedPlaceData(controller.model.selectedPlaceAddress!, controller.model.selectedPlaceName!, LatLng(controller.model.latitudeP,controller.model.longitudeP)));
                                     },
                                     label: const Text('이 위치에서 출발할래요!', style: TextStyle(fontSize: 10)),
                                     backgroundColor: Colors.white,
