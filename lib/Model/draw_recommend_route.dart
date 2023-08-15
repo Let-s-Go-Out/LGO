@@ -33,6 +33,7 @@ class DrawRecommendRoute {
     placeLat: 37.591054,
     placeLng: 127.022626,
     types: ['cafe'],
+    rating: 0,
     photoUrls: [''],
   ),
     Place(
@@ -41,6 +42,7 @@ class DrawRecommendRoute {
     placeLat: 37.591776,
     placeLng: 127.021206,
     types: ['cafe'],
+      rating: 0,
     photoUrls: [''],
   ),
     Place(
@@ -49,6 +51,7 @@ class DrawRecommendRoute {
     placeLat: 37.590641,
     placeLng: 127.021988,
     types: ['cafe'],
+      rating: 0,
     photoUrls: [''],
   ),
   ];
@@ -72,6 +75,7 @@ class DrawRecommendRoute {
       placeLat: origin.latitude,
       placeLng: origin.longitude,
       types: [''],
+      rating: 0,
       photoUrls: [''],
     ),);
   }

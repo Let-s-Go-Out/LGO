@@ -19,7 +19,6 @@ class MainRoutePage extends StatefulWidget {
 
 class _MainRoutePageState extends State<MainRoutePage> {
   late GoogleMapController mapController;
-
   MapController controller = MapController();
   bool isExpanded = false;
   ScrollController scrollcontroller = ScrollController();
@@ -188,7 +187,7 @@ class _MainRoutePageState extends State<MainRoutePage> {
               ),
             },
             //
-            polylines: Set<Polyline>.of(test.polylineList.values),
+            // polylines: Set<Polyline>.of(test.polylineList.values),
           );
   }
 
@@ -314,7 +313,10 @@ class _MainRoutePageState extends State<MainRoutePage> {
                                       itemCount: selectedCategoryPlaces.length,
                                       itemBuilder: (context, index) {
                                         return PlaceCard(
-                                            place: selectedCategoryPlaces[index]);
+                                            place: selectedCategoryPlaces[index], onTap: () {
+                                          _updateCameraPosition(LatLng(selectedCategoryPlaces[index].placeLat, selectedCategoryPlaces[index].placeLng), 16.0);
+                                          print('PlaceCard tapped: ${selectedCategoryPlaces[index].name}');
+                                        });
                                       },
                                     );
                                   }

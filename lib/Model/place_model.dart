@@ -46,7 +46,7 @@ class Place {
 }
 
 class PlacesApi {
-  static const String _apiKey = 'AIzaSyAIeZMzg3xE5dYXgiWNoIjDE34R0SzTAzE';
+  static const String _apiKey = 'AIzaSyBrK8RWyR1_3P7M7yjNiJ8xyXTAuFpeLlM';
   static const String _baseUrl =
       'https://maps.googleapis.com/maps/api/place/nearbysearch/json';
 
