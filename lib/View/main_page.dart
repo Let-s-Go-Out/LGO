@@ -314,6 +314,7 @@ class _MainPageState extends State<MainPage> {
             Spacer(flex: 2),
             ElevatedButton(
               onPressed: () {
+                saveUserRouteData(); // saveUserRouteData 함수 호출
                 // Add code to handle the "Let's Go out" button
                 Navigator.push(
                   context,
