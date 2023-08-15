@@ -78,54 +78,7 @@ class DrawRecommendRoute {
   setRecommendPlaces(Map<String, List<Place>> categoryGroupPlaceLists) {
     setOriginPlace(DrawRecommendRoute(categoryGroupPlaceLists).origin);
 
-
-    for(var type in categoryGroupPlaceLists.keys) {
-      Map<String, int> typeList = {
-        '음식점': 1,
-        '카페': 1,
-        '쇼핑': 1,
-        '문화': 2,
-        '바': 1,
-        '어트랙션': 3,
-      };
-
-      //사용자가 선택한 type 인지 확인 후
-      //수정
-      var selectedType = {};
-
-      int addedPlaceCounter = 0;
-
-      // i < selectedType.length;
-      //categoryGroupPlaceLists[selectedType[i++]] => categoryGroupPlaceLists['음식점']
-      // => types: 'restaurant'
-
-      //categoryGroupPlaceLists[selectedType[i++]]
-      // => categoryGroupPlaceLists['어트랙션']
-      // => types: 'tourist_attraction', 'amusement_park', 'bowling_alley'
-      //
-
-      }
-    }
-
-
-    /*
-    //이미 별점 순서로 정렬
-    categoryGroupPlaceLists.forEach((place) {
-      // if(types 가 한 가지로만 이루어진 경우)
-      //recommendPlaces.addAll(categoryGroupPlaceLists.take(placesCounter));
-      if(!addedType.contains(place.types)) {
-        recommendPlaces.add(place);
-        addedPlaceCounter++;
-        addedType.add(place.types);
-      }
-      // if(recommendPlaces 에 types 가 한번씩 다 들어간 경우)
-      // addedType 리셋
-
-      if (addedPlaceCounter > placesCounter) { return ;}
-
-    });
-
-     */
+    //recommendPlaces.add
 
     sortingCloseDistance();
   }
