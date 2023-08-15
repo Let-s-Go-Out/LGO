@@ -1,6 +1,9 @@
 import 'dart:convert';
+import 'package:geolocator/geolocator.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart';
 
+//place model 수정
 class Place {
   final String name;
   final String placeId;
@@ -8,7 +11,9 @@ class Place {
   final double placeLng;
   final double rating; // 평점 정보
   final List<String> types;
-  final List<String> photoUrls; // 사진 URL 리스트
+  final List<String> photoUrls;
+  LatLng? latlng;
+  double? distance;
 
   Place({
     required this.name,
@@ -17,7 +22,27 @@ class Place {
     required this.placeLng,
     required this.rating,
     required this.types,
-    required this.photoUrls});
+    required this.photoUrls}) {
+
+    distance = distanceCalculation(placeLat, placeLng);
+    latlng = LatLng(placeLat, placeLng);
+  }
+
+  double distanceCalculation(double lat, double lng) {
+    final geo = GeolocatorPlatform.instance;
+
+    //사용자 설정 출발지 위치 좌표 >> controller.model.nowPLatLng 값
+    //수정
+    double originLat = 37.591054;
+    double originLng = 127.022626;
+
+    double result = geo.distanceBetween(originLat, originLng, lat, lng);
+
+    return result;
+  }
+
+  get distanceFromOrigin => distance;
+  get location => latlng;
 }
 
 class PlacesApi {

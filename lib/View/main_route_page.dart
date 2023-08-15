@@ -2,8 +2,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:nagaja_app/Controller/map_controller.dart';
+import 'package:nagaja_app/Model/draw_recommend_route.dart';
 import 'package:snapping_sheet_2/snapping_sheet.dart';
-import 'package:provider/provider.dart';
+//import 'package:provider/provider.dart';
 import '../Model/place_model.dart';
 import 'package:flutter_rating_stars/flutter_rating_stars.dart';
 
@@ -50,6 +51,10 @@ class _MainRoutePageState extends State<MainRoutePage> {
   Map<String, List<Place>> categoryGroupPlaceLists = {};
 
   List<Place> allPlaces = [];
+
+  //List<Place> selectedCategoryPlaces = categoryGroupPlaceLists[selectedPlaceType] ?? [];
+  //DrawRecommendRoute routeDraw = DrawRecommendRoute(selectedCategoryPlaces);
+  //routeDraw.drawPolyline();
 
   @override
   void initState() {
@@ -164,27 +169,30 @@ class _MainRoutePageState extends State<MainRoutePage> {
   }
 
   Widget _buildAIRecommendationContent() {
-    return GoogleMap(
-      myLocationEnabled: true,
-      myLocationButtonEnabled: false,
-      onMapCreated: _onMapCreated,
-      initialCameraPosition: CameraPosition(
-        target: nowP,
-        zoom: 15.0,
-      ),
-      markers: {
-        Marker(
-          markerId: MarkerId('marker_id'),
-          position: nowP,
-          infoWindow: InfoWindow(
-            title: '현재 위치',
-            snippet: '',
-          ),
-        ),
-      },
-    );
+          return GoogleMap(
+            myLocationEnabled: true,
+            myLocationButtonEnabled: false,
+            onMapCreated: _onMapCreated,
+            initialCameraPosition: CameraPosition(
+              target: nowP,
+              zoom: 15.0,
+            ),
+            markers: {
+              Marker(
+                markerId: MarkerId('marker_id'),
+                position: nowP,
+                infoWindow: InfoWindow(
+                  title: '현재 위치',
+                  snippet: '',
+                ),
+              ),
+            },
+            //
+            polylines: Set<Polyline>.of(test.polylineList.values),
+          );
   }
 
+  //임의 변경
   Widget _buildTourTab() {
             markers.clear();
             /*List<Place> filteredPlaces = allPlaces
