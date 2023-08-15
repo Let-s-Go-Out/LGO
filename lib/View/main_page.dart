@@ -5,7 +5,7 @@ import 'package:nagaja_app/View/map_browse_screen.dart';
 import 'package:http/http.dart' as http;
 import 'package:syncfusion_flutter_sliders/sliders.dart';
 import 'package:nagaja_app/View/main_page_loading.dart';
-import 'package:nagaja_app/Controller/user_route_data.dart'; // 사용자에게 입력받는 경로 정보 (출발지, 희망소요시간, 나들이 컨셉 등)
+import 'package:nagaja_app/Controller/user_route_data.dart';
 import 'package:nagaja_app/View/widgets/theme.dart';
 
 class MainPage extends StatefulWidget {
@@ -170,11 +170,12 @@ class _MainPageState extends State<MainPage> {
               alignment: WrapAlignment.center,
               spacing: 8.0,
               children: [
-                conceptButton('산책'),
-                conceptButton('액티비티'),
-                conceptButton('휴양'),
-                conceptButton('맛집탐방'),
-                conceptButton('체험'),
+                conceptButton('음식점'),
+                conceptButton('카페'),
+                conceptButton('쇼핑'),
+                conceptButton('문화'),
+                conceptButton('바'),
+                conceptButton('어트랙션'),
               ],
             ),
             Spacer(flex: 2),
@@ -328,3 +329,7 @@ class _MainPageState extends State<MainPage> {
   }
 
 }
+
+
+
+
