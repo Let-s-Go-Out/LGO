@@ -40,7 +40,7 @@ class OutButtons extends StatelessWidget {
               ),
             ),
 
-            SizedBox(height: 5,),
+            //SizedBox(height: 5,),
 
             //탈퇴 하기
             SizedBox(
