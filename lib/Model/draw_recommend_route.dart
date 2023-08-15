@@ -7,18 +7,10 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:nagaja_app/Model/place_model.dart';
 
 
-//PlaceApi 이용해서 List<Place> placesByCategory (category: restaurant, cafe ..) 생성 (예시)
 //나들이 컨셉 - 장소 리스트 연결
-//만약 하나의 컨셉에 여러 개의 장소 리스트를 매칭하다면 합쳐진 컨셉-장소 리스트(selectedCategoryPlaces) 생성
-//* 아직 수정중인 부분인데, 가은님이 컨셉 별 타입 및 장소 리스트 정리해주셔서 추후 로딩 페이지에서 컨셉 별 장소 리스트 생성할 예정입니다!
-//* 에뮬레이터에서 테스트가 안돼서 추가를 못하고 있습니다.
-//* 확인하고 싶으시면 NewGaEun 브랜치에 main_route_page.dart에서 확인 가능해요.
+//만약 하나의 컨셉에 여러 개의 장소 리스트를 매칭하다면 합쳐진 컨셉-장소 리스트 생성
 
-// 선택된 장소 유형에 기반한 장소 목록 가져오기
-//List<Place> selectedCategoryPlaces = categoryGroupPlaceLists[selectedPlaceType] ?? [];
-
-
-//DrawRecommendRoute routeDraw = DrawRecommendRoute(selectedCategoryPlaces);
+//DrawRecommendRoute routeDraw = DrawRecommendRoute(categoryGroupPlaceLists);
 class DrawRecommendRoute {
   static const String _apiKey = ' ';
 
@@ -64,8 +56,9 @@ class DrawRecommendRoute {
   //수정 >> 사용자 설정 추천 장소 갯수, 데이터 받아 오기
   int placesCounter = 3;
 
-  DrawRecommendRoute(List<Place> selectedCategoryPlaces) {
-    setRecommendPlaces(selectedCategoryPlaces);
+  //
+  DrawRecommendRoute(Map<String, List<Place>> categoryGroupPlaceLists) {
+    setRecommendPlaces(categoryGroupPlaceLists);
   }
 
   setOriginPlace(LatLng origin) {
@@ -80,19 +73,61 @@ class DrawRecommendRoute {
     ),);
   }
 
-  //selectedCategoryPlaces = placesMatchingMood
-  setRecommendPlaces(List<Place> placesMatchingMood) {
+
+  //categoryGroupPlaceLists['category'], 예시 참고
+  setRecommendPlaces(Map<String, List<Place>> categoryGroupPlaceLists) {
+    setOriginPlace(DrawRecommendRoute(categoryGroupPlaceLists).origin);
+
+
+    for(var type in categoryGroupPlaceLists.keys) {
+      Map<String, int> typeList = {
+        '음식점': 1,
+        '카페': 1,
+        '쇼핑': 1,
+        '문화': 2,
+        '바': 1,
+        '어트랙션': 3,
+      };
+
+      //사용자가 선택한 type 인지 확인 후
+      //수정
+      var selectedType = {};
+
+      int addedPlaceCounter = 0;
+
+      // i < selectedType.length;
+      //categoryGroupPlaceLists[selectedType[i++]] => categoryGroupPlaceLists['음식점']
+      // => types: 'restaurant'
+
+      //categoryGroupPlaceLists[selectedType[i++]]
+      // => categoryGroupPlaceLists['어트랙션']
+      // => types: 'tourist_attraction', 'amusement_park', 'bowling_alley'
+      //
+
+      }
+    }
+
+
     /*
-    recommendPlaces.addAll(placesMatchingMood.where((place)
-        => place.types.contains('')));
+    //이미 별점 순서로 정렬
+    categoryGroupPlaceLists.forEach((place) {
+      // if(types 가 한 가지로만 이루어진 경우)
+      //recommendPlaces.addAll(categoryGroupPlaceLists.take(placesCounter));
+      if(!addedType.contains(place.types)) {
+        recommendPlaces.add(place);
+        addedPlaceCounter++;
+        addedType.add(place.types);
+      }
+      // if(recommendPlaces 에 types 가 한번씩 다 들어간 경우)
+      // addedType 리셋
+
+      if (addedPlaceCounter > placesCounter) { return ;}
+
+    });
 
      */
-    recommendPlaces.addAll(placesMatchingMood.take(placesCounter));
-    //* 정렬이 된 상태에서 사용자가 설정한 개수만큼 받아오는 게 좋을 것 같습니다.
-    //* 그리고 앞에서부터 순서대로 가져오면 장소 타입이 겹칠 수도 있을 것 같은데,
-    //* 가은님 코드 참고해서 컨셉 별 타입 하나씩 가져오고, 더 없다면 순서대로 가져오는 게 어떨까요?
+
     sortingCloseDistance();
-    setOriginPlace(DrawRecommendRoute(placesMatchingMood).origin);
   }
 
 
@@ -105,7 +140,7 @@ class DrawRecommendRoute {
 
   drawPolyline() async{
     for(int i = 0; i < recommendPlaces.length - 1; i++) {
-      //출발지가 항상 리스트 맨 처음이라는 가정
+      //출발지가 항상 리스트 맨 처음
       LatLng startLocation = recommendPlaces[i].location;
       LatLng endLocation = recommendPlaces[i + 1].location;
 
