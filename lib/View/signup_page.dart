@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:lets_go_out/Controller/auth_controller.dart';
-import 'package:lets_go_out/Model/user.dart';
+import 'package:nagaja_app/Controller/auth_controller.dart';
+import 'package:nagaja_app/Model/user.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class SignUpPage extends StatefulWidget {
@@ -89,7 +89,7 @@ class _SignUpPageState extends State<SignUpPage> {
                 // 회원가입 처리
                 User? user = await _authController.signUpWithEmailAndPassword(email, password, nickname);
                 if (user != null) {
-                  UserModel userModel = UserModel.fromUser(user);
+                  UserModel userModel = UserModel.fromUser(user,nickname);
                   print('회원가입 성공: ${userModel.email}');
                 } else {
                   print('회원가입 실패');

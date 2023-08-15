@@ -24,6 +24,7 @@ class SignUpCompletePage extends StatelessWidget {
             Text('이메일: $email'),
             SizedBox(height: 10),
             Text('닉네임: $nickname'),
+            //Text('닉네임: ${nickname ?? 'Unknown'}'), // nickname 값이 null이거나 비어있는 경우 'Unknown' 표시
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {

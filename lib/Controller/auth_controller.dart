@@ -58,6 +58,7 @@ class AuthController {
         // Firebase Firestore에 회원가입 정보 저장
         await _firestore.collection('Users').doc(user.uid).set({
           'email': email,
+          'password': password,
           'nickname': nickname,
         });
       }

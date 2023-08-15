@@ -81,13 +81,6 @@ dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation 'com.google.android.gms:play-services-location:21.0.1'
     implementation 'com.google.android.gms:play-services-maps:18.1.0'
-<<<<<<< HEAD
-<<<<<<< HEAD
-}
-=======
-}
->>>>>>> 45f67e51b94ae5e6c9c23c1c75ba9a391866e52f
-=======
     implementation 'com.android.support:multidex:2.0.1'
 }
->>>>>>> 9c02c5e06749a0ae18e6e0348d0a050ec983aa02
+
