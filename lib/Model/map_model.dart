@@ -7,9 +7,9 @@ class MapModel {
   String? address;
   List<dynamic> searchResults = [];
   bool showSearchResults = false;
-  String? selectedPlaceName;
-  String? selectedPlaceAddress;
-  late LatLng selectedPlaceLatLng;
+  String selectedPlaceName='';
+  String selectedPlaceAddress='';
+  LatLng selectedPlaceLatLng=LatLng(0,0);
   Set<Marker> markers = {};
   double latitudeP = 0;
   double longitudeP= 0;

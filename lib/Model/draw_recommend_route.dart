@@ -96,20 +96,23 @@ class DrawRecommendRoute {
     int attraction = 0;
     List<Place>? cultureList =[];
     List<Place>? attractionList = [];
-    for(int i=0;i<=placesCounter;) {
+    for(int i=1;i<placesCounter+1;) {
       for (var type in userType) {
         switch (type) {
           case '음식점':
-            if(categoryGroupPlaceLists['음식점'] != null){
+            if(categoryGroupPlaceLists['음식점'] != null && a < categoryGroupPlaceLists['음식점']!.length){
               if(i<=placesCounter){
                 recommendPlaces.add(categoryGroupPlaceLists['음식점']![a]);
                 i++;
                 a++;
+                print(type);
+                print(categoryGroupPlaceLists['음식점']![a].name);
+                print(i);
               }
             }
             break;
           case '카페':
-            if(categoryGroupPlaceLists['카페'] != null){
+            if(categoryGroupPlaceLists['카페'] != null && b < categoryGroupPlaceLists['카페']!.length){
               if(i<=placesCounter&&categoryGroupPlaceLists['카페']?.length != 0){
                 recommendPlaces.add(categoryGroupPlaceLists['카페']![b]);
                 i++;
@@ -118,7 +121,7 @@ class DrawRecommendRoute {
             }
             break;
           case '쇼핑':
-            if(categoryGroupPlaceLists['쇼핑'] != null){
+            if(categoryGroupPlaceLists['쇼핑'] != null && c < categoryGroupPlaceLists['쇼핑']!.length){
               if(i<=placesCounter&&categoryGroupPlaceLists['쇼핑']?.length != 0){
                 recommendPlaces.add(categoryGroupPlaceLists['쇼핑']![c]);
                 i++;
@@ -127,20 +130,21 @@ class DrawRecommendRoute {
             }
             break;
           case '문화':
-            if(categoryGroupPlaceLists['문화'] != null){
+            if(categoryGroupPlaceLists['문화'] != null && d < categoryGroupPlaceLists['문화']!.length){
               if(i<=placesCounter){
                     cultureList = categoryGroupPlaceLists['문화']?.where((item) => categoryCulture.contains(item.types[culture%2])).toList();
                     if(cultureList?.length != 0) {
                       recommendPlaces.add(cultureList![d]);
+                      d++;
+                      i++;
                     }
-                i++;
-                d++;
                 culture++;
+                print(i);
               }
             }
             break;
           case '바':
-            if(categoryGroupPlaceLists['바'] != null){
+            if(categoryGroupPlaceLists['바'] != null && e < categoryGroupPlaceLists['바']!.length){
               if(i<=placesCounter&&categoryGroupPlaceLists['바']?.length != 0){
                 recommendPlaces.add(categoryGroupPlaceLists['바']![e]);
                 i++;
@@ -149,24 +153,25 @@ class DrawRecommendRoute {
             }
             break;
           case '어트랙션':
-            if(categoryGroupPlaceLists['어트랙션'] != null){
+            if(categoryGroupPlaceLists['어트랙션'] != null && f < categoryGroupPlaceLists['어트랙션']!.length){
               if(i<=placesCounter){
                 attractionList = categoryGroupPlaceLists['어트랙션']?.where((item) => categoryAttraction.contains(item.types[attraction%3])).toList();
                 if(attractionList?.length != 0){
                   recommendPlaces.add(attractionList![f]);
+                  f++;
                 }
                 i++;
-                f++;
                 attraction++;
               }
             }
             break;
         }
       }
+      print(i);
     }
     sortingCloseDistance(recommendPlaces);
     print('추천장소');
-    for(int i =0;i<placesCounter+1;i++){
+    for(int i =0;i<placesCounter+1&& i < recommendPlaces.length;i++){
       print(recommendPlaces[i].name);
     }
     return recommendPlaces;
