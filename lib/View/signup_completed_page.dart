@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nagaja_app/View/login_page.dart';
 
 class SignUpCompletePage extends StatelessWidget {
   final String email;
@@ -11,6 +12,7 @@ class SignUpCompletePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('회원가입 완료'),
+        backgroundColor: Colors.black, // AppBar 배경색을 검정색으로 설정
       ),
       body: Center(
         child: Column(
@@ -24,14 +26,39 @@ class SignUpCompletePage extends StatelessWidget {
             Text('이메일: $email'),
             SizedBox(height: 10),
             Text('닉네임: $nickname'),
-            //Text('닉네임: ${nickname ?? 'Unknown'}'), // nickname 값이 null이거나 비어있는 경우 'Unknown' 표시
             SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: () {
-                // 메인 페이지로 이동
-                Navigator.popUntil(context, (route) => route.isFirst);
-              },
-              child: Text('메인페이지로 이동하기'),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    // 시작 페이지로 이동
+                    Navigator.popUntil(context, (route) => route.isFirst);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.black, // 버튼 배경색을 검정색으로 설정
+                    onPrimary: Colors.white, // 텍스트 색상을 흰색으로 설정
+                  ),
+                  child: Text('시작 페이지'),
+                ),
+                SizedBox(width: 20),
+                ElevatedButton(
+                  onPressed: () {
+                    // 로그인 페이지로 이동
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => LoginPage(),
+                      ),
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.black, // 버튼 배경색을 검정색으로 설정
+                    onPrimary: Colors.white, // 텍스트 색상을 흰색으로 설정
+                  ),
+                  child: Text('로그인'),
+                ),
+              ],
             ),
           ],
         ),
@@ -39,5 +66,3 @@ class SignUpCompletePage extends StatelessWidget {
     );
   }
 }
-
-

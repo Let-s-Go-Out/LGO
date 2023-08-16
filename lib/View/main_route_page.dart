@@ -232,7 +232,7 @@ class _MainRoutePageState extends State<MainRoutePage> {
                 children: [
                   SizedBox(height: 10),
                   // 추천 멘트
-                  Text('OO님의 선택에 따른 나들이 추천경로입니다.'),
+                  Text('추천하는 나들이 경로입니다!'),
                   SizedBox(height: 10),
                   // 추천 경로
                   Container(

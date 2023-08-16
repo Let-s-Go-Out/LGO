@@ -232,7 +232,7 @@ class _MainPageState extends State<MainPage> {
             Padding(
               padding: EdgeInsets.symmetric(vertical: verticalSpacing),
               child: Text(
-                '나가자!(Let\'s Go Out!)',
+                '나가자!',
                 textAlign: TextAlign.center,
                 style: mainPageTitleStyle,
               ),
@@ -280,7 +280,7 @@ class _MainPageState extends State<MainPage> {
             ),
             Spacer(flex: 2),
             // 나들이 컨셉
-            Text('나들이 컨셉',
+            Text('나들이 테마',
               style: mainPageSubTitleStyle),
             Spacer(flex: 1),
             Wrap(
