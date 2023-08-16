@@ -183,10 +183,12 @@ class _MainRoutePageState extends State<MainRoutePage> {
                             height: 1000, // 리스트뷰 스크롤 가능 높이 길이
                             child: ListView.builder(
                                 shrinkWrap: true, // 리스트뷰 크기 고정
-                                itemCount: 2, // 경로 추천 장소 개수
+                                itemCount: 2, // 경로 추천 장소 개수 설정
                                 itemBuilder: (context, index) {
+                                  int order = index + 1;
                                   return RecommendPlaceCard(
                                     place: selectedCategoryPlaces[index],
+                                    order: order, // 순서 표시할 수 있는 매개변수 추가
                                     onTap: () {
                                       // snapping sheet에서 장소 탭 -> 카메라 위치 - 임의의 좌표로 설정함
                                       _updateCameraPosition(LatLng(41.40338, 2.17403), 16.0);
@@ -545,9 +547,10 @@ class PlaceCard extends StatelessWidget {
 }
 class RecommendPlaceCard extends StatelessWidget{
   final Place place;
+  final int order;
   final VoidCallback onTap;
 
-  RecommendPlaceCard({required this.place, required this.onTap});
+  RecommendPlaceCard({required this.place, required this.order, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -591,8 +594,8 @@ class RecommendPlaceCard extends StatelessWidget{
                                   ),
                                   child: Center(
                                     child: Text(
-                                      // 추천 경로 개수
-                                      '1',
+                                      // 순서 출력(추천 경로 개수 반영)
+                                      '$order',
                                       style: TextStyle(
                                         fontSize: 20,
                                         fontWeight: FontWeight.w600,
