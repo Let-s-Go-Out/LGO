@@ -27,10 +27,11 @@ class _DiaryEditViewState extends State<DiaryEditView> {
   String _startTime = DateFormat("hh:mm a").format(DateTime.now()).toString();
   String _endTime="9:30 PM";
   File? image;
-  PlatformFile? pickedFile;
+  PlatformFile? pickedFile; // 첫 번째 사진을 나타내는 변수
+  PlatformFile? pickedSecondFile; // 두 번째 사진을 나타내는 변수
   UploadTask? uploadTask;
 
-  // 갤러리에서 사진 선택
+  // 첫 번째 사진 선택
   Future pickImage() async {
     final result = await FilePicker.platform.pickFiles();
     if (result == null) return;
@@ -38,6 +39,16 @@ class _DiaryEditViewState extends State<DiaryEditView> {
     setState(() {
       // 선택된 파일리스트 중 첫번째 파일의 정보
       pickedFile = result.files.first;
+    });
+  }
+
+  // 두 번째 사진 사진 선택
+  Future _uploadSecondImage() async {
+    final result = await FilePicker.platform.pickFiles();
+    if (result == null) return;
+
+    setState(() {
+      pickedSecondFile = result.files.first;
     });
   }
 
@@ -68,10 +79,17 @@ class _DiaryEditViewState extends State<DiaryEditView> {
     });
   }
 
-  // 이미지 삭제 함수 (Firebase에는 그대로 남아있음)
+  // 첫 번째 이미지 삭제 함수 (Firebase에는 그대로 남아있음)
   void _removeSelectedImage() {
     setState(() {
       pickedFile = null;
+    });
+  }
+
+  // 두 번째 이미지 삭제 함수
+  void _removeSecondImage() {
+    setState(() {
+      pickedSecondFile = null;
     });
   }
 
@@ -113,8 +131,7 @@ class _DiaryEditViewState extends State<DiaryEditView> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                // 첫번째 사진
-
+                /*// 첫번째 사진
                 // 사진 선택
                 if (pickedFile != null)
                   Container(
@@ -136,11 +153,75 @@ class _DiaryEditViewState extends State<DiaryEditView> {
                       fit: BoxFit.cover,
                     )
                   ),
+                ),*/
+
+                // 첫 번째 사진
+                // -- 추가 시
+                Container(
+                  width: 95,
+                  height: 95,
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                        width: 2,
+                      ),
+                      borderRadius: BorderRadius.all(Radius.circular(16))
+                  ),
+                  child: GestureDetector(
+                    onTap: _removeSelectedImage, // 이미지 누르면 삭제하는 함수 호출
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.all(Radius.circular(16)),
+                      child: pickedFile != null
+                          ? Image.file(
+                        File(pickedFile!.path!),
+                        width: 95,
+                        height: 95,
+                        fit: BoxFit.cover,
+                      )
+                          : InkWell(
+                        onTap: pickImage, // 이미지를 누르면 _uploadSecondImage() 함수 호출
+                        child: Center(
+                          child: Text('사진', style: TextStyle(fontSize: 10)),
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
+                // -- 추가 끝
 
-
+                // -- 추가 시작
                 // 두번째 사진
                 Container(
+                    width: 95,
+                    height: 95,
+                    decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey,
+                          width: 2,
+                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(16))
+                    ),
+                    child: GestureDetector(
+                      onTap: pickedSecondFile != null ? _removeSecondImage : _uploadSecondImage,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.all(Radius.circular(16)),
+                        child: pickedSecondFile != null
+                            ? Image.file(
+                          File(pickedSecondFile!.path!),
+                          width: 95,
+                          height: 95,
+                          fit: BoxFit.cover,
+                        )
+                            : Center(
+                                child: Text('사진', style: TextStyle(fontSize: 10)),
+                        ),
+                      ),
+                    ),
+                  ),
+                // -- 추가 끝
+
+                // 두번째 사진
+               /* Container(
                   width: 95,
                   height: 95,
                   decoration: BoxDecoration(
@@ -153,7 +234,8 @@ class _DiaryEditViewState extends State<DiaryEditView> {
                   child: Center(
                     child: Text('Upload from gallery', style: TextStyle(fontSize: 8),),
                   ),
-                ),
+                ),*/
+
               ],
             ),
             SizedBox(height: 10),
