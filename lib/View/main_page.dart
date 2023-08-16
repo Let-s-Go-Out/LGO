@@ -27,9 +27,9 @@ class _MainPageState extends State<MainPage> {
   String selectedStartTime = '';
 
   String text = '검색어를 입력하세요.';
-  String selectedPlaceAddress='';
-  String selectedPlaceName='';
-  LatLng selectedPlaceLatLng=LatLng(0, 0);
+  String startPlaceAddress='';
+  String startPlaceName='';
+  LatLng startPlaceLatLng=LatLng(0, 0);
 
   // create TimeOfDay variable
   TimeOfDay _timeOfDay = TimeOfDay.now();
@@ -167,9 +167,9 @@ class _MainPageState extends State<MainPage> {
       'picnicConcept': selectedConcept,
       'DepartureTime': _timeOfDay.format(context),
       'placeCount': _value.toStringAsFixed(0),
-      'placeAddress': selectedPlaceAddress,
-      'placeName': selectedPlaceName,
-      'placeGeopoint': GeoPoint(selectedPlaceLatLng.latitude, selectedPlaceLatLng.longitude),
+      'placeAddress': startPlaceAddress,
+      'placeName': startPlaceName,
+      'placeGeopoint': GeoPoint(startPlaceLatLng.latitude, startPlaceLatLng.longitude),
     };
 
     try {
@@ -256,13 +256,11 @@ class _MainPageState extends State<MainPage> {
                   MaterialPageRoute(builder: (context) => MapBrowseScreen()),
                 );
                 if(returnData != null){
-                  selectedPlaceAddress = returnData.address;
-                  selectedPlaceName = returnData.name;
-                  selectedPlaceLatLng = LatLng(returnData.geoLat,returnData.geoLng);
-                  print(selectedPlaceAddress+selectedPlaceName);
-                  print(selectedPlaceLatLng);
+                  startPlaceAddress = returnData.address;
+                  startPlaceName = returnData.name;
+                  startPlaceLatLng = LatLng(returnData.geoLat,returnData.geoLng);
                   setState(() {
-                    text = selectedPlaceAddress;
+                    text = startPlaceAddress;
                   });
                 }
               },

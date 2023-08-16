@@ -105,9 +105,6 @@ class DrawRecommendRoute {
                 recommendPlaces.add(categoryGroupPlaceLists['음식점']![a]);
                 i++;
                 a++;
-                print(type);
-                print(categoryGroupPlaceLists['음식점']![a].name);
-                print(i);
               }
             }
             break;
@@ -139,7 +136,6 @@ class DrawRecommendRoute {
                       i++;
                     }
                 culture++;
-                print(i);
               }
             }
             break;
@@ -167,7 +163,6 @@ class DrawRecommendRoute {
             break;
         }
       }
-      print(i);
     }
     sortingCloseDistance(recommendPlaces);
     print('추천장소');
