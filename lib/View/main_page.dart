@@ -36,6 +36,7 @@ class _MainPageState extends State<MainPage> {
   //TimeOfDay _timeOfDay = TimeOfDay(hour: 8, minute: 30);
 
   int _selectedIndex = 0;
+  Map<String, dynamic> userRouteData={};
 
   final List<Widget> _navIndex = [
     MainPage(),
@@ -163,13 +164,13 @@ class _MainPageState extends State<MainPage> {
 
     FirebaseFirestore firestore = FirebaseFirestore.instance;
     // 사용자 경로 데이터
-    Map<String, dynamic> userRouteData = {
+    userRouteData = {
       'picnicConcept': selectedConcept,
       'DepartureTime': _timeOfDay.format(context),
       'placeCount': _value.toStringAsFixed(0),
-      'placeAddress': startPlaceAddress,
-      'placeName': startPlaceName,
-      'placeGeopoint': GeoPoint(startPlaceLatLng.latitude, startPlaceLatLng.longitude),
+      'startPlaceAddress': startPlaceAddress,
+      'startPlaceName': startPlaceName,
+      'startPlaceGeopoint': GeoPoint(startPlaceLatLng.latitude, startPlaceLatLng.longitude),
     };
 
     try {
@@ -232,7 +233,7 @@ class _MainPageState extends State<MainPage> {
             Padding(
               padding: EdgeInsets.symmetric(vertical: verticalSpacing),
               child: Text(
-                '나가자!(Let\'s Go Out!)',
+                '나가자!',
                 textAlign: TextAlign.center,
                 style: mainPageTitleStyle,
               ),
@@ -280,7 +281,7 @@ class _MainPageState extends State<MainPage> {
             ),
             Spacer(flex: 2),
             // 나들이 컨셉
-            Text('나들이 컨셉',
+            Text('나들이 테마',
               style: mainPageSubTitleStyle),
             Spacer(flex: 1),
             Wrap(
@@ -393,7 +394,7 @@ class _MainPageState extends State<MainPage> {
                 // Add code to handle the "Let's Go out" button
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const MainLoadingPage()),
+                  MaterialPageRoute(builder: (context) => MainLoadingPage(userRouteData: userRouteData)),
                 );
               },
               style: ElevatedButton.styleFrom(

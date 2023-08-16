@@ -37,6 +37,7 @@ class _SignUpPageState extends State<SignUpPage> {
       appBar: AppBar(
         backgroundColor: Colors.black,
         title: Text('회원가입'),
+        backgroundColor: Colors.black, // AppBar 배경색을 검정색으로 설정
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
@@ -103,23 +104,17 @@ class _SignUpPageState extends State<SignUpPage> {
                   } else {
                     print('회원가입 실패');
                   }
-
-                }
-                    : null,
-                style: ElevatedButton.styleFrom(
-                  primary: Colors.black,
-                  onPrimary: Colors.white,
-                ),
-                child: Text('회원가입'),
+              }
+                  : null,
+              style: ElevatedButton.styleFrom(
+                primary: Colors.black, // 버튼 배경색을 검정색으로 설정
+                onPrimary: Colors.white, // 텍스트 색상을 흰색으로 설정
               ),
-            ],
-          ),
+              child: Text('회원가입'),
+            ),
+          ],
         ),
       ),
     );
   }
 }
-
-
-
-
