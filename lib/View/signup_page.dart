@@ -35,74 +35,75 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.black,
         title: Text('회원가입'),
         backgroundColor: Colors.black, // AppBar 배경색을 검정색으로 설정
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: _emailController,
-              decoration: InputDecoration(labelText: '이메일'),
-              onChanged: (value) {
-                setState(() {
-                  _isEmailValid = value.isNotEmpty;
-                });
-              },
-            ),
-            TextField(
-              controller: _passwordController,
-              decoration: InputDecoration(labelText: '비밀번호'),
-              obscureText: true,
-              onChanged: (value) {
-                setState(() {
-                  _isPasswordValid = value.isNotEmpty;
-                  _isPasswordConditionsMet = value.length >= 8 && value.contains(RegExp(r'\d'));
-                });
-              },
-            ),
-            if (_isEmailValid && _isPasswordValid && !_isPasswordConditionsMet)
-              Text(
-                '비밀번호는 8자 이상이어야 하며, 숫자를 포함해야 합니다.',
-                style: TextStyle(color: Colors.red),
-              ),
-            if (_isEmailValid && _isPasswordValid && _isPasswordConditionsMet)
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
               TextField(
-                controller: _nicknameController,
-                decoration: InputDecoration(labelText: '닉네임'),
+                controller: _emailController,
+                decoration: InputDecoration(labelText: '이메일'),
                 onChanged: (value) {
                   setState(() {
-                    _isNicknameValid = value.isNotEmpty;
+                    _isEmailValid = value.isNotEmpty;
                   });
                 },
               ),
-            SizedBox(height: 20.0),
-            ElevatedButton(
-              onPressed: _isEmailValid &&
-                  _isPasswordValid &&
-                  _isPasswordConditionsMet &&
-                  _isNicknameValid
-                  ? () async {
-                final String email = _emailController.text;
-                final String password = _passwordController.text;
-                final String nickname = _nicknameController.text;
+              TextField(
+                controller: _passwordController,
+                decoration: InputDecoration(labelText: '비밀번호'),
+                obscureText: true,
+                onChanged: (value) {
+                  setState(() {
+                    _isPasswordValid = value.isNotEmpty;
+                    _isPasswordConditionsMet = value.length >= 8 && value.contains(RegExp(r'\d'));
+                  });
+                },
+              ),
+              if (_isEmailValid && _isPasswordValid && !_isPasswordConditionsMet)
+                Text(
+                  '비밀번호는 8자 이상이어야 하며, 숫자를 포함해야 합니다.',
+                  style: TextStyle(color: Colors.red),
+                ),
+              if (_isEmailValid && _isPasswordValid && _isPasswordConditionsMet)
+                TextField(
+                  controller: _nicknameController,
+                  decoration: InputDecoration(labelText: '닉네임'),
+                  onChanged: (value) {
+                    setState(() {
+                      _isNicknameValid = value.isNotEmpty;
+                    });
+                  },
+                ),
+              SizedBox(height: 20.0),
+              ElevatedButton(
+                onPressed: _isEmailValid &&
+                    _isPasswordValid &&
+                    _isPasswordConditionsMet &&
+                    _isNicknameValid
+                    ? () async {
+                  final String email = _emailController.text;
+                  final String password = _passwordController.text;
+                  final String nickname = _nicknameController.text;
 
-                // 회원가입 처리
-                User? user = await _authController.signUpWithEmailAndPassword(email, password, nickname);
-                if (user != null) {
-                  UserModel userModel = UserModel.fromUser(user,nickname);
-                  print('회원가입 성공: ${userModel.email}');
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => SignUpCompletePage(userModel.email, userModel.nickname),
-                    ),
-                  );
-                } else {
-                  print('회원가입 실패');
-                }
-
+                  // 회원가입 처리
+                  User? user = await _authController.signUpWithEmailAndPassword(email, password, nickname);
+                  if (user != null) {
+                    UserModel userModel = UserModel.fromUser(user,nickname);
+                    print('회원가입 성공: ${userModel.email}');
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => SignUpCompletePage(userModel.email, userModel.nickname),
+                      ),
+                    );
+                  } else {
+                    print('회원가입 실패');
+                  }
               }
                   : null,
               style: ElevatedButton.styleFrom(

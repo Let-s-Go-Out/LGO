@@ -23,6 +23,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.black,
         title: Text('로그인'),
         backgroundColor: Colors.black,
       ),
@@ -99,6 +100,3 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
-
-
-
