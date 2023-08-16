@@ -35,7 +35,6 @@ class _SignUpPageState extends State<SignUpPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.black,
         title: Text('회원가입'),
         backgroundColor: Colors.black, // AppBar 배경색을 검정색으로 설정
       ),
@@ -115,6 +114,7 @@ class _SignUpPageState extends State<SignUpPage> {
           ],
         ),
       ),
+     )
     );
-  }
+   }
 }
