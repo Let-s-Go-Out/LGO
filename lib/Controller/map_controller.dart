@@ -38,7 +38,7 @@ class MapController{
           data['results'][0]['formatted_address'] as String?;
           print("myAddress: $myAddress");
 
-          model.selectedPlaceAddress = myAddress;
+          model.selectedPlaceAddress = myAddress!;
           model.selectedPlaceName = "현재 위치";
 
           return myAddress;
@@ -61,8 +61,8 @@ class MapController{
           String? LatLngName = data['results'][0]['address_components'][0]['long_name'] as String?;
           print("LatLngAddress: $LatLngAddress");
 
-          model.selectedPlaceAddress = LatLngAddress;
-          model.selectedPlaceName = LatLngName;
+          model.selectedPlaceAddress = LatLngAddress!;
+          model.selectedPlaceName = LatLngName!;
 
           return LatLngAddress;
         }

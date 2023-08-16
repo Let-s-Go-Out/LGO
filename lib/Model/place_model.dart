@@ -64,52 +64,58 @@ class PlacesApi {
       final List<Place> places = [];
 
       if (data['status'] == 'OK') {
+        int i=0;
         for (var placeData in data['results']) {
-          final placeName = placeData['name'];
-          final placeId = placeData['place_id'];
-          final placeLat = placeData['geometry']['location']['lat'];
-          final placeLng = placeData['geometry']['location']['lng'];
-          final placeTypes = List<String>.from(placeData['types']); // 장소 타입 추출
-          // 사진 정보를 가져오기 위해 Place Details 요청을 보냄
-          final detailsUri = Uri.parse(
-              'https://maps.googleapis.com/maps/api/place/details/json?place_id=$placeId&fields=photos,rating&key=$_apiKey');
-          final detailsResponse = await get(detailsUri);
+          if(i<5) {
+            i++;
+            final placeName = placeData['name'];
+            final placeId = placeData['place_id'];
+            final placeLat = placeData['geometry']['location']['lat'];
+            final placeLng = placeData['geometry']['location']['lng'];
+            final placeTypes = List<String>.from(
+                placeData['types']); // 장소 타입 추출
+            // 사진 정보를 가져오기 위해 Place Details 요청을 보냄
+            final detailsUri = Uri.parse(
+                'https://maps.googleapis.com/maps/api/place/details/json?place_id=$placeId&fields=photos,rating&key=$_apiKey');
+            final detailsResponse = await get(detailsUri);
 
-          if (detailsResponse.statusCode == 200) {
-            final detailsData = json.decode(detailsResponse.body);
-            if (detailsData['status'] == 'OK') {
-              List<String> photoUrls = [];
-              // 평점 정보 가져오기
-              //double rating = detailsData['result']['rating'] ?? 0.0;
-              dynamic ratingData = detailsData['result']['rating'];
+            if (detailsResponse.statusCode == 200) {
+              final detailsData = json.decode(detailsResponse.body);
+              if (detailsData['status'] == 'OK') {
+                List<String> photoUrls = [];
+                // 평점 정보 가져오기
+                //double rating = detailsData['result']['rating'] ?? 0.0;
+                dynamic ratingData = detailsData['result']['rating'];
 
-              double? rating; // Nullable로 선언
+                double? rating; // Nullable로 선언
 
-              if (ratingData is int) {
-                rating = ratingData.toDouble();
-              } else if (ratingData is double) {
-                rating = ratingData;
-              }
-
-              if (detailsData['result']['photos'] != null) {
-                for (var photoData in detailsData['result']['photos']) {
-                  final photoReference = photoData['photo_reference'];
-                  final photoUrl = 'https://maps.googleapis.com/maps/api/place/photo?maxwidth=120&photoreference=$photoReference&key=$_apiKey';
-                  photoUrls.add(photoUrl);
+                if (ratingData is int) {
+                  rating = ratingData.toDouble();
+                } else if (ratingData is double) {
+                  rating = ratingData;
                 }
+
+                if (detailsData['result']['photos'] != null) {
+                  for (var photoData in detailsData['result']['photos']) {
+                    final photoReference = photoData['photo_reference'];
+                    final photoUrl = 'https://maps.googleapis.com/maps/api/place/photo?maxwidth=120&photoreference=$photoReference&key=$_apiKey';
+                    photoUrls.add(photoUrl);
+                  }
+                }
+                places.add(
+                  Place(
+                    name: placeName,
+                    placeId: placeId,
+                    placeLat: placeLat,
+                    placeLng: placeLng,
+                    rating: rating ?? 0.0,
+                    //rating이 null인 경우 기본값 0.0으로 설정
+                    types: placeTypes,
+                    photoUrls: photoUrls,
+                  ),
+                );
+                print(placeName);
               }
-              places.add(
-                Place(
-                  name: placeName,
-                  placeId: placeId,
-                  placeLat: placeLat,
-                  placeLng: placeLng,
-                  rating: rating ?? 0.0, //rating이 null인 경우 기본값 0.0으로 설정
-                  types: placeTypes,
-                  photoUrls: photoUrls,
-                ),
-              );
-              print(placeName);
             }
           }
         }

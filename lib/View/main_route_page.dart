@@ -8,6 +8,11 @@ import 'package:snapping_sheet_2/snapping_sheet.dart';
 import '../Model/place_model.dart';
 import 'package:flutter_rating_stars/flutter_rating_stars.dart';
 
+import 'diary_page.dart';
+import 'home.dart';
+import 'main_page.dart';
+import 'my_page.dart';
+
 class MainRoutePage extends StatefulWidget {
   final LatLng initialLatLng;
   final Map<String, List<Place>> categoryGroupPlaceLists;
@@ -55,6 +60,50 @@ class _MainRoutePageState extends State<MainRoutePage> {
   //DrawRecommendRoute routeDraw = DrawRecommendRoute(selectedCategoryPlaces);
   //routeDraw.drawPolyline();
 
+  int _selectedIndex = 0;
+
+  final List<Widget> _navIndex = [
+    MainPage(),
+    DiaryPage(),
+    MyPage(),
+  ];
+
+  void _onNavTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+    switch (index) {
+      case 0:
+        Navigator.pushReplacement(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (_, __, ___) => MainPage(),
+            transitionDuration: Duration(seconds: 0), // 애니메이션 시간을 0으로 설정
+          ),
+        );
+        break;
+      case 1:
+        Navigator.pushReplacement(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (_, __, ___) => DiaryPage(),
+            transitionDuration: Duration(seconds: 0), // 애니메이션 시간을 0으로 설정
+          ),
+        );
+        break;
+      case 2:
+        Navigator.pushReplacement(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (_, __, ___) => MyPage(),
+            transitionDuration: Duration(seconds: 0), // 애니메이션 시간을 0으로 설정
+          ),
+        );
+        break;
+    // 다른 인덱스에 대한 처리를 추가할 수 있습니다.
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -92,6 +141,28 @@ class _MainRoutePageState extends State<MainRoutePage> {
       child: DefaultTabController(
         length: 2,
         child: Scaffold(
+          bottomNavigationBar: BottomNavigationBar(
+            fixedColor: Colors.black,
+            unselectedItemColor: Colors.blueGrey,
+            showSelectedLabels: true,
+            type: BottomNavigationBarType.fixed,
+            items: const <BottomNavigationBarItem>[
+              BottomNavigationBarItem(
+                icon: Icon(Icons.home),
+                label: 'Home',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.book),
+                label: 'Diary',
+              ),
+              BottomNavigationBarItem(
+                icon: Icon(Icons.person),
+                label: 'Mypage',
+              ),
+            ],
+            currentIndex: _selectedIndex,
+            onTap: _onNavTapped,
+          ),
           appBar: AppBar(
             toolbarHeight: 10,
             automaticallyImplyLeading: false,

@@ -7,6 +7,9 @@ import 'package:nagaja_app/View/widgets/diary_view.dart';
 import 'package:nagaja_app/View/widgets/diary_edit_view.dart';
 import 'package:nagaja_app/View/widgets/action_buttons.dart';
 
+import 'main_page.dart';
+import 'my_page.dart';
+
 class DiaryPage extends StatefulWidget {
   const DiaryPage({super.key});
 
@@ -18,6 +21,50 @@ class _DiaryPageState extends State<DiaryPage> with TickerProviderStateMixin {
   bool isFrontView = true;
 
   late AnimationController controller;
+
+  int _selectedIndex = 1;
+
+  final List<Widget> _navIndex = [
+    MainPage(),
+    DiaryPage(),
+    MyPage(),
+  ];
+
+  void _onNavTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+    switch (index) {
+      case 0:
+        Navigator.pushReplacement(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (_, __, ___) => MainPage(),
+            transitionDuration: Duration(seconds: 0), // 애니메이션 시간을 0으로 설정
+          ),
+        );
+        break;
+      case 1:
+        Navigator.pushReplacement(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (_, __, ___) => DiaryPage(),
+            transitionDuration: Duration(seconds: 0), // 애니메이션 시간을 0으로 설정
+          ),
+        );
+        break;
+      case 2:
+        Navigator.pushReplacement(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (_, __, ___) => MyPage(),
+            transitionDuration: Duration(seconds: 0), // 애니메이션 시간을 0으로 설정
+          ),
+        );
+        break;
+    // 다른 인덱스에 대한 처리를 추가할 수 있습니다.
+    }
+  }
 
   switchView() {
     setState(() {
@@ -39,6 +86,28 @@ class _DiaryPageState extends State<DiaryPage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      bottomNavigationBar: BottomNavigationBar(
+        fixedColor: Colors.black,
+        unselectedItemColor: Colors.blueGrey,
+        showSelectedLabels: true,
+        type: BottomNavigationBarType.fixed,
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.book),
+            label: 'Diary',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Mypage',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        onTap: _onNavTapped,
+      ),
       body: SafeArea(
         child: Column(
           children: [

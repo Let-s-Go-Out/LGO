@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:developer' show log;
 import 'package:flutter/material.dart';
 import 'package:latlng/latlng.dart';
+import 'package:nagaja_app/View/home.dart';
 import 'package:nagaja_app/View/map_browse_screen.dart';
 import 'package:http/http.dart' as http;
 import 'package:syncfusion_flutter_sliders/sliders.dart';
@@ -10,6 +11,9 @@ import 'package:nagaja_app/Controller/user_route_data.dart';
 import 'package:nagaja_app/View/widgets/theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+
+import 'diary_page.dart';
+import 'my_page.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -23,13 +27,57 @@ class _MainPageState extends State<MainPage> {
   String selectedStartTime = '';
 
   String text = '검색어를 입력하세요.';
-  String selectedPlaceAddress='';
-  String selectedPlaceName='';
-  LatLng selectedPlaceLatLng=LatLng(0, 0);
+  String startPlaceAddress='';
+  String startPlaceName='';
+  LatLng startPlaceLatLng=LatLng(0, 0);
 
   // create TimeOfDay variable
   TimeOfDay _timeOfDay = TimeOfDay.now();
   //TimeOfDay _timeOfDay = TimeOfDay(hour: 8, minute: 30);
+
+  int _selectedIndex = 0;
+
+  final List<Widget> _navIndex = [
+    MainPage(),
+    DiaryPage(),
+    MyPage(),
+  ];
+
+  void _onNavTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+    switch (index) {
+      case 0:
+        Navigator.pushReplacement(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (_, __, ___) => MainPage(),
+            transitionDuration: Duration(seconds: 0), // 애니메이션 시간을 0으로 설정
+          ),
+        );
+        break;
+      case 1:
+        Navigator.pushReplacement(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (_, __, ___) => DiaryPage(),
+            transitionDuration: Duration(seconds: 0), // 애니메이션 시간을 0으로 설정
+          ),
+        );
+        break;
+      case 2:
+        Navigator.pushReplacement(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (_, __, ___) => MyPage(),
+            transitionDuration: Duration(seconds: 0), // 애니메이션 시간을 0으로 설정
+          ),
+        );
+        break;
+    // 다른 인덱스에 대한 처리를 추가할 수 있습니다.
+    }
+  }
 
   // show time picker method
   void _showTimePicker() {
@@ -119,9 +167,9 @@ class _MainPageState extends State<MainPage> {
       'picnicConcept': selectedConcept,
       'DepartureTime': _timeOfDay.format(context),
       'placeCount': _value.toStringAsFixed(0),
-      'placeAddress': selectedPlaceAddress,
-      'placeName': selectedPlaceName,
-      'placeGeopoint': GeoPoint(selectedPlaceLatLng.latitude, selectedPlaceLatLng.longitude),
+      'placeAddress': startPlaceAddress,
+      'placeName': startPlaceName,
+      'placeGeopoint': GeoPoint(startPlaceLatLng.latitude, startPlaceLatLng.longitude),
     };
 
     try {
@@ -136,11 +184,38 @@ class _MainPageState extends State<MainPage> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return WillPopScope(
+        onWillPop: () async {
+      // 뒤로가기 버튼 동작을 막음
+      return false;
+    },
+    child: MaterialApp(
       theme: ThemeData(
         primaryColor: Colors.black,
       ),
     home: Scaffold(
+      bottomNavigationBar: BottomNavigationBar(
+        fixedColor: Colors.black,
+        unselectedItemColor: Colors.blueGrey,
+        showSelectedLabels: true,
+        type: BottomNavigationBarType.fixed,
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.book),
+            label: 'Diary',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Mypage',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        onTap: _onNavTapped,
+      ),
         appBar: null,
         body: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
@@ -181,11 +256,11 @@ class _MainPageState extends State<MainPage> {
                   MaterialPageRoute(builder: (context) => MapBrowseScreen()),
                 );
                 if(returnData != null){
-                  selectedPlaceAddress = returnData.address;
-                  selectedPlaceName = returnData.name;
-                  selectedPlaceLatLng = returnData.latlng;
+                  startPlaceAddress = returnData.address;
+                  startPlaceName = returnData.name;
+                  startPlaceLatLng = LatLng(returnData.geoLat,returnData.geoLng);
                   setState(() {
-                    text = returnData.address;
+                    text = startPlaceAddress;
                   });
                 }
               },
@@ -336,6 +411,7 @@ class _MainPageState extends State<MainPage> {
       );
         },
         ),
+    ),
     ),
     );
   }

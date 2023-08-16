@@ -9,7 +9,12 @@ class HomePage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return WillPopScope(
+      onWillPop: () async {
+        // 뒤로가기 버튼 동작을 막음
+        return false;
+      },
+      child:Scaffold(
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -56,6 +61,7 @@ class HomePage extends StatelessWidget {
           ],
         ),
       ),
+    ),
     );
   }
 }
