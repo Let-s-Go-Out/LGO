@@ -68,6 +68,13 @@ class _DiaryEditViewState extends State<DiaryEditView> {
     });
   }
 
+  // 이미지 삭제 함수 (Firebase에는 그대로 남아있음)
+  void _removeSelectedImage() {
+    setState(() {
+      pickedFile = null;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -107,7 +114,7 @@ class _DiaryEditViewState extends State<DiaryEditView> {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 // 첫번째 사진
-                // -- 추가 시작
+
                 // 사진 선택
                 if (pickedFile != null)
                   Container(
@@ -120,7 +127,8 @@ class _DiaryEditViewState extends State<DiaryEditView> {
                       ),
                       borderRadius: BorderRadius.all(Radius.circular(16))
                   ),
-                  child: Center(
+                  child: GestureDetector(
+                    onTap: _removeSelectedImage, // 이미지 누르면 삭제하는 함수 호출
                     child: Image.file(
                       File(pickedFile!.path!),
                       width: 94,
@@ -129,22 +137,7 @@ class _DiaryEditViewState extends State<DiaryEditView> {
                     )
                   ),
                 ),
-                // -- 추가 끝
 
-                /*Container(
-                  width: 95,
-                  height: 95,
-                  decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.grey,
-                        width: 2,
-                      ),
-                      borderRadius: BorderRadius.all(Radius.circular(16))
-                  ),
-                  child: Center(
-                    child: Text('Upload from gallery', style: TextStyle(fontSize: 8)),
-                  ),
-                ),*/
 
                 // 두번째 사진
                 Container(
