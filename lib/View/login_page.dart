@@ -24,6 +24,7 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('로그인'),
+        backgroundColor: Colors.black,
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
@@ -86,6 +87,10 @@ class _LoginPageState extends State<LoginPage> {
                 }
               }
                   : null,
+              style: ElevatedButton.styleFrom(
+                primary: Colors.black, // 버튼 배경색
+                onPrimary: Colors.white, // 텍스트 색상
+              ),
               child: Text('로그인'),
             ),
           ],

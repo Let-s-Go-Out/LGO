@@ -168,9 +168,9 @@ class _MainPageState extends State<MainPage> {
       'picnicConcept': selectedConcept,
       'DepartureTime': _timeOfDay.format(context),
       'placeCount': _value.toStringAsFixed(0),
-      'placeAddress': startPlaceAddress,
-      'placeName': startPlaceName,
-      'placeGeopoint': GeoPoint(startPlaceLatLng.latitude, startPlaceLatLng.longitude),
+      'startPlaceAddress': startPlaceAddress,
+      'startPlaceName': startPlaceName,
+      'startPlaceGeopoint': GeoPoint(startPlaceLatLng.latitude, startPlaceLatLng.longitude),
     };
 
     try {
@@ -233,7 +233,7 @@ class _MainPageState extends State<MainPage> {
             Padding(
               padding: EdgeInsets.symmetric(vertical: verticalSpacing),
               child: Text(
-                '나가자!(Let\'s Go Out!)',
+                '나가자!',
                 textAlign: TextAlign.center,
                 style: mainPageTitleStyle,
               ),
@@ -281,7 +281,7 @@ class _MainPageState extends State<MainPage> {
             ),
             Spacer(flex: 2),
             // 나들이 컨셉
-            Text('나들이 컨셉',
+            Text('나들이 테마',
               style: mainPageSubTitleStyle),
             Spacer(flex: 1),
             Wrap(

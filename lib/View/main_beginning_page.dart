@@ -6,14 +6,15 @@ class MainBeginningPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('나들이 가자'),
+        backgroundColor: Colors.black, // App bar 배경색 검정색으로 수정
+        title: SizedBox.shrink(), // App bar에 있는 텍스트를 없애기
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              '나들이 가자',
+              '나가자!\n시작할까요?',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -29,6 +30,9 @@ class MainBeginningPage extends StatelessWidget {
                   ),
                 );
               },
+              style: ElevatedButton.styleFrom(
+                primary: Colors.black, // 버튼 배경색 검정색으로 수정
+              ),
               child: Text('GO'),
             ),
           ],
@@ -37,3 +41,4 @@ class MainBeginningPage extends StatelessWidget {
     );
   }
 }
+

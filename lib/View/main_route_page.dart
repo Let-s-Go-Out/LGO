@@ -1,11 +1,9 @@
 import 'dart:async';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:nagaja_app/Controller/map_controller.dart';
 import 'package:nagaja_app/Model/draw_recommend_route.dart';
 import 'package:snapping_sheet_2/snapping_sheet.dart';
-
 //import 'package:provider/provider.dart';
 import '../Model/place_model.dart';
 import 'package:flutter_rating_stars/flutter_rating_stars.dart';
@@ -116,7 +114,7 @@ class _MainRoutePageState extends State<MainRoutePage> {
           ),
         );
         break;
-      // 다른 인덱스에 대한 처리를 추가할 수 있습니다.
+    // 다른 인덱스에 대한 처리를 추가할 수 있습니다.
     }
   }
 
@@ -124,10 +122,8 @@ class _MainRoutePageState extends State<MainRoutePage> {
   void initState() {
     super.initState();
     nowP = widget.initialLatLng;
-    selectP = LatLng(widget.selectP.latitude,widget.selectP.longitude);
     categoryGroupPlaceLists = widget.categoryGroupPlaceLists;
     markers = Set<Marker>();
-    recommendPlaces = widget.recommendPlaces;
   }
 
   @override
@@ -222,129 +218,97 @@ class _MainRoutePageState extends State<MainRoutePage> {
 
   Widget _buildAIRecommendationTab() {
     return Scaffold(
-      body: Stack(
-        children: [
-          SnappingSheet(
-            lockOverflowDrag: true,
-            snappingPositions: [
-              SnappingPosition.factor(
-                  positionFactor: 0,
-                  grabbingContentOffset: GrabbingContentOffset.top),
-              SnappingPosition.factor(
-                  positionFactor: 0.5,
-                  snappingCurve: Curves.elasticOut,
-                  snappingDuration: Duration(milliseconds: 1750)),
-              SnappingPosition.factor(
-                positionFactor: 0.9,
-              )
-            ],
-            initialSnappingPosition:
-                SnappingPosition.factor(positionFactor: 0.4),
-            child: _buildAIRecommendationContent(),
-            grabbingHeight: 50,
-            grabbing: GrabbingWidget(),
-            sheetBelow: SnappingSheetContent(
-              draggable: (details) => true,
-              child: Container(
-                color: Colors.white,
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      SizedBox(height: 10),
-                      // 추천 멘트
-                      Text('OO님의 선택에 따른 나들이 추천경로입니다.'),
-                      SizedBox(height: 10),
-                      // 추천 경로
-                      Container(
-                        child: FutureBuilder<void>(
-                          future: addMarkersFromPlacesApi(),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return Center(
-                                child: CircularProgressIndicator(),
-                              );
-                            } else if (snapshot.hasError) {
-                              return Center(
-                                child: Text('Error: ${snapshot.error}'),
-                              );
-                            } else {
-                              List<Place> selectedCategoryPlaces =
-                                  categoryGroupPlaceLists[selectedPlaceType] ??
-                                      [];
-                              return ListView.builder(
-                                  shrinkWrap: true,
-                                  itemCount: 5, // 경로 추천 장소 개수
-                                  itemBuilder: (context, index) {
-                                    return RecommendPlaceCard(
-                                      place: selectedCategoryPlaces[index],
-                                      onTap: () {
-                                        // snapping sheet에서 장소 탭 -> 카메라 위치 - 임의의 좌표 설정
-                                        _updateCameraPosition(
-                                            LatLng(41.40338, 2.17403), 16.0);
-                                        print(
-                                            'PlaceCard tapped: ${selectedCategoryPlaces[index].name}');
-                                      },
-                                    );
-                                  });
-                            }
-                          },
-                        ),
-                      ),
-
-                      /*// 추천 경로 -> 클래스 틀
-                      Container(
-                        height: 50,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            // 장소 이름
-                            Text('스타벅스'),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                // 장소 사진
-                                Text('장소 사진'),
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                  children: [
-                                    // 장소 타입
-                                    Text('type'),
-                                    // 별점
-                                    Text('별점'),
-                                  ],
-                                ),
-                              ],
-                            )
-                          ],
-                        ),
-                      )*/
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-          // 하단 고정 - 다이어리에 저장하기 버튼
-          Positioned(
-            bottom: 10, // 원하는 여백 조정
-            left: 30,
-            right: 30,
-            child: ElevatedButton(
-              child: Text('다이어리에 저장하기'),
-              style: ElevatedButton.styleFrom(
-                primary: Colors.black87,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30)),
-              ),
-              onPressed: () {
-                // 다이어리에 저장하기 로직 구현
-              },
-            ),
-          ),
+      body: SnappingSheet(
+        lockOverflowDrag: true,
+        snappingPositions: [
+          SnappingPosition.factor(
+              positionFactor: 0,
+              grabbingContentOffset: GrabbingContentOffset.top),
+          SnappingPosition.factor(
+              positionFactor: 0.5,
+              snappingCurve: Curves.elasticOut,
+              snappingDuration: Duration(milliseconds: 1750)),
+          SnappingPosition.factor(
+            positionFactor: 0.9,
+          )
         ],
+        initialSnappingPosition: SnappingPosition.factor(positionFactor: 0.4),
+        child: _buildAIRecommendationContent(),
+        grabbingHeight: 50,
+        grabbing: GrabbingWidget(),
+        sheetBelow: SnappingSheetContent(
+          draggable: (details) => true,
+          child: Container(
+            color: Colors.white,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(height: 10),
+                  // 추천 멘트
+                  Text('추천하는 나들이 경로입니다!'),
+                  SizedBox(height: 10),
+                  // 추천 경로
+                  Container(
+                    child: FutureBuilder<void>(
+                      future: addMarkersFromPlacesApi(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        } else if (snapshot.hasError) {
+                          return Center(
+                            child: Text('Error: ${snapshot.error}'),
+                          );
+                        } else {
+                          List<Place> selectedCategoryPlaces = categoryGroupPlaceLists[selectedPlaceType] ?? [];
+                          return SizedBox(
+                            height: 1000, // 리스트뷰 스크롤 가능 높이 길이
+                            child: ListView.builder(
+                                shrinkWrap: true, // 리스트뷰 크기 고정
+                                itemCount: 2, // 경로 추천 장소 개수 설정
+                                itemBuilder: (context, index) {
+                                  int order = index + 1;
+                                  return RecommendPlaceCard(
+                                    place: selectedCategoryPlaces[index],
+                                    order: order, // 순서 표시할 수 있는 매개변수 추가
+                                    onTap: () {
+                                      // snapping sheet에서 장소 탭 -> 카메라 위치 - 임의의 좌표로 설정함
+                                      _updateCameraPosition(LatLng(41.40338, 2.17403), 16.0);
+                                      print('PlaceCard tapped: ${selectedCategoryPlaces[index].name}');
+                                    },
+                                  );
+                                }),
+                          );
+                        }
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
       ),
+      // 다이어리에 저장하기 버튼 - 하단 고정
+      bottomNavigationBar: Container(
+        padding: EdgeInsets.symmetric(horizontal: 50), // 양옆 여백 설정
+        child: ElevatedButton(
+          onPressed: () {
+            // 저장 로직
+          },
+          child: Text('다이어리에 저장하기'),
+          style: ElevatedButton.styleFrom(
+            primary: Colors.black87,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30)
+            ),
+          ),
+        ),
+      ),
+
     );
   }
 
@@ -693,9 +657,10 @@ class PlaceCard extends StatelessWidget {
 
 class RecommendPlaceCard extends StatelessWidget {
   final Place place;
+  final int order;
   final VoidCallback onTap;
 
-  RecommendPlaceCard({required this.place, required this.onTap});
+  RecommendPlaceCard({required this.place, required this.order, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -703,56 +668,110 @@ class RecommendPlaceCard extends StatelessWidget {
     //String firstPlaceType = place.types.isNotEmpty ? place.types[0] : 'Unknown';
     return InkWell(
       onTap: onTap,
-      child: Row(
-        children: [
-          // 순서 원 + 실선 표시
-          SizedBox(width: 50),
-          Container(
-            height: 120,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                // 장소 사진
-                Container(
-                  width: 95,
-                  height: 95,
-                  decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.grey,
-                        width: 2,
-                      ),
-                      borderRadius: BorderRadius.all(Radius.circular(16))),
-                  // 사진 1개 불러오기
-                  /*child: ListView.builder(
-                        //scrollDirection: Axis.horizontal,
-                        itemCount: 1, // 사진 1개만 불러오기
-                        //itemCount: place.photoUrls.length,
-                        itemBuilder: (context, index) {
-                          return Container(
-                            margin: EdgeInsets.only(right: 5),
-                            child: Image.network(
-                              place.photoUrls[index],
-                              width: 100,
-                              height: 150,
-                              fit: BoxFit.cover,
+      child: Container(
+        margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
+        child: Container(
+          height: 100,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              // 순서 원 + 실선 표시
+              Flexible(
+                  flex: 2,
+                  child: Container(
+                    child: Column(
+                      children: [
+                        // 원
+                        Flexible(
+                          flex: 2,
+                          child: Column(
+                              children: [
+                                SizedBox(height: 10,),
+                                Container(
+                                  width: 30,
+                                  height: 30,
+                                  decoration: BoxDecoration(
+                                    color: Color(0xffff7b7b),
+                                    shape: BoxShape.circle,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.withOpacity(0.7),
+                                          blurRadius: 2.0,
+                                          spreadRadius: 0.0,
+                                          offset: const Offset(0,7),
+                                        )
+                                      ]
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      // 순서 출력(추천 경로 개수 반영)
+                                      '$order',
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.black87,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                          );
-                        },
-                      ),*/
-                ),
-                SizedBox(
-                  width: 13,
-                ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 22),
-                    // 장소 이름
-                    Text(
+                        ),
+                        //Spacer(),
+                        // 실선
+                        Flexible(
+                          flex: 3,
+                          child: Container(
+                              height: 65,
+                              width: 3.5,
+                              color: Colors.grey,
+                            ),
+                        ),
+                      ],
+                    ),
+                  )
+              ),
+              // 장소 사진
+              Flexible(
+                flex: 3,
+                child: Container(
+                    width: 95,
+                    height: 95,
+                    decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey,
+                          width: 2,
+                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(16))
+                    ),
+                    // 사진 1개 불러오기
+                    /*child: ListView.builder(
+                            //scrollDirection: Axis.horizontal,
+                            itemCount: 1, // 사진 1개만 불러오기
+                            //itemCount: place.photoUrls.length,
+                            itemBuilder: (context, index) {
+                              return Container(
+                                margin: EdgeInsets.only(right: 5),
+                                child: Image.network(
+                                  place.photoUrls[index],
+                                  width: 100,
+                                  height: 150,
+                                  fit: BoxFit.cover,
+                                ),
+                              );
+                            },
+                          ),*/
+                  ),
+              ),
+              // 장소이름 + 타입 + 별점
+              Flexible(
+                flex: 5,
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
                       // 장소 이름 불러오기
                       place.name,
-                      style:
-                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                     ),
                     SizedBox(height: 7),
                     // 장소 타입
@@ -779,7 +798,8 @@ class RecommendPlaceCard extends StatelessWidget {
                           fontFamily: 'WorkSans',
                           fontWeight: FontWeight.w400,
                           fontStyle: FontStyle.normal,
-                          fontSize: 12.0),
+                          fontSize: 12.0
+                      ),
                       valueLabelRadius: 10,
                       starSpacing: 2,
                       maxValueVisibility: false,
