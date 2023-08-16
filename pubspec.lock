@@ -800,6 +800,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.0"
+  simple_animations:
+    dependency: "direct main"
+    description:
+      name: simple_animations
+      sha256: "1ea7b93fb98e2a611b6865d632de55607b766328d14700143353129ee0559d3a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.0.2"
   simple_gesture_detector:
     dependency: transitive
     description:
@@ -865,18 +873,18 @@ packages:
     dependency: transitive
     description:
       name: syncfusion_flutter_core
-      sha256: "33a2e8a86ac013c7929ed2cffa83c44f45ff256e38122de97f3154cb04324a74"
+      sha256: d3a978d926919a90065ddd492d1a2eba1e9cd15eec6ac2a127157f1e042c79ef
       url: "https://pub.dev"
     source: hosted
-    version: "22.2.8"
+    version: "22.2.9"
   syncfusion_flutter_sliders:
     dependency: "direct main"
     description:
       name: syncfusion_flutter_sliders
-      sha256: "59e677363cb9fafcbd716a3f1bd4ca25f9ff5b7554110b2efa264e4a0e99e3db"
+      sha256: "25ae0f87e7c74b2ab7c522df6e7e4d0308f2249fd7f37004926190ef60bc540a"
       url: "https://pub.dev"
     source: hosted
-    version: "22.2.8"
+    version: "22.2.9"
   table_calendar:
     dependency: "direct main"
     description:
