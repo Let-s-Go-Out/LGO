@@ -84,7 +84,7 @@ class _MainLoadingPageState extends State<MainLoadingPage> {
         .where((place) => categoryBar.contains(place.types[0]))
         .toList();
     categoryGroupPlaceLists['문화'] = placeInfo
-        .where((place) => categoryBar.contains(place.types[0]))
+        .where((place) => categoryCulture.contains(place.types[0]))
         .toList();
     categoryGroupPlaceLists['어트랙션'] = placeInfo
         .where((place) => categoryAttraction.contains(place.types[0]))

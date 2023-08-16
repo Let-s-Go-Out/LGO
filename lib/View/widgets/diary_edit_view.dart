@@ -131,32 +131,7 @@ class _DiaryEditViewState extends State<DiaryEditView> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                /*// 첫번째 사진
-                // 사진 선택
-                if (pickedFile != null)
-                  Container(
-                  width: 95,
-                  height: 95,
-                  decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.grey,
-                        width: 2,
-                      ),
-                      borderRadius: BorderRadius.all(Radius.circular(16))
-                  ),
-                  child: GestureDetector(
-                    onTap: _removeSelectedImage, // 이미지 누르면 삭제하는 함수 호출
-                    child: Image.file(
-                      File(pickedFile!.path!),
-                      width: 94,
-                      height: 94,
-                      fit: BoxFit.cover,
-                    )
-                  ),
-                ),*/
-
                 // 첫 번째 사진
-                // -- 추가 시
                 Container(
                   width: 95,
                   height: 95,
@@ -187,9 +162,6 @@ class _DiaryEditViewState extends State<DiaryEditView> {
                     ),
                   ),
                 ),
-                // -- 추가 끝
-
-                // -- 추가 시작
                 // 두번째 사진
                 Container(
                     width: 95,
@@ -218,24 +190,6 @@ class _DiaryEditViewState extends State<DiaryEditView> {
                       ),
                     ),
                   ),
-                // -- 추가 끝
-
-                // 두번째 사진
-               /* Container(
-                  width: 95,
-                  height: 95,
-                  decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.grey,
-                        width: 2,
-                      ),
-                      borderRadius: BorderRadius.all(Radius.circular(16))
-                  ),
-                  child: Center(
-                    child: Text('Upload from gallery', style: TextStyle(fontSize: 8),),
-                  ),
-                ),*/
-
               ],
             ),
             SizedBox(height: 10),
@@ -258,8 +212,9 @@ class _DiaryEditViewState extends State<DiaryEditView> {
                     ),
                   ),
                 ),
-                // 사진 업로드
-                ElevatedButton(
+
+                // 사진 업로드 -> 다이어리 업로드 버튼에 병합
+                /*ElevatedButton(
                   child: Row(
                     children: [
                       Icon(Icons.check),
@@ -272,8 +227,9 @@ class _DiaryEditViewState extends State<DiaryEditView> {
                       borderRadius: BorderRadius.circular(50),
                     ),
                   ),
-                ),
+                ),*/
                 //buildProgress(),
+
                 // 다이어리 업로드
                 ElevatedButton(
                   child: Row(
@@ -282,8 +238,8 @@ class _DiaryEditViewState extends State<DiaryEditView> {
                     ],
                   ),
                   onPressed: () {
-                    uploadFile();
-                    _validateDate();
+                    uploadFile(); // 사진 업로드
+                    _validateDate(); // 다이어리 업로드
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.black87,
