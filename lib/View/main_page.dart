@@ -167,9 +167,9 @@ class _MainPageState extends State<MainPage> {
       'picnicConcept': selectedConcept,
       'DepartureTime': _timeOfDay.format(context),
       'placeCount': _value.toStringAsFixed(0),
-      'placeAddress': startPlaceAddress,
-      'placeName': startPlaceName,
-      'placeGeopoint': GeoPoint(startPlaceLatLng.latitude, startPlaceLatLng.longitude),
+      'startPlaceAddress': startPlaceAddress,
+      'startPlaceName': startPlaceName,
+      'startPlaceGeopoint': GeoPoint(startPlaceLatLng.latitude, startPlaceLatLng.longitude),
     };
 
     try {
