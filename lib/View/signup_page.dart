@@ -36,6 +36,7 @@ class _SignUpPageState extends State<SignUpPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('회원가입'),
+        backgroundColor: Colors.black, // AppBar 배경색을 검정색으로 설정
       ),
       body: Padding(
         padding: EdgeInsets.all(16.0),
@@ -104,6 +105,10 @@ class _SignUpPageState extends State<SignUpPage> {
 
               }
                   : null,
+              style: ElevatedButton.styleFrom(
+                primary: Colors.black, // 버튼 배경색을 검정색으로 설정
+                onPrimary: Colors.white, // 텍스트 색상을 흰색으로 설정
+              ),
               child: Text('회원가입'),
             ),
           ],
@@ -112,7 +117,3 @@ class _SignUpPageState extends State<SignUpPage> {
     );
   }
 }
-
-
-
-
