@@ -133,124 +133,93 @@ class _MainRoutePageState extends State<MainRoutePage> {
 
   Widget _buildAIRecommendationTab() {
     return Scaffold(
-      body: Stack(
-        children: [
-          SnappingSheet(
-            lockOverflowDrag: true,
-            snappingPositions: [
-              SnappingPosition.factor(
-                  positionFactor: 0,
-                  grabbingContentOffset: GrabbingContentOffset.top),
-              SnappingPosition.factor(
-                  positionFactor: 0.5,
-                  snappingCurve: Curves.elasticOut,
-                  snappingDuration: Duration(milliseconds: 1750)),
-              SnappingPosition.factor(
-                positionFactor: 0.9,
-              )
-            ],
-            initialSnappingPosition: SnappingPosition.factor(positionFactor: 0.4),
-            child: _buildAIRecommendationContent(),
-            grabbingHeight: 50,
-            grabbing: GrabbingWidget(),
-            sheetBelow: SnappingSheetContent(
-              draggable: (details) => true,
-              child: Container(
-                color: Colors.white,
-                child: SingleChildScrollView(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      SizedBox(height: 10),
-                      // 추천 멘트
-                      Text('OO님의 선택에 따른 나들이 추천경로입니다.'),
-                      SizedBox(height: 10),
-                      // 추천 경로
-                      Container(
-                        child: FutureBuilder<void>(
-                          future: addMarkersFromPlacesApi(),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return Center(
-                                child: CircularProgressIndicator(),
-                              );
-                            } else if (snapshot.hasError) {
-                              return Center(
-                                child: Text('Error: ${snapshot.error}'),
-                              );
-                            } else {
-                              List<Place> selectedCategoryPlaces = categoryGroupPlaceLists[selectedPlaceType] ?? [];
-                              return ListView.builder(
-                                  shrinkWrap: true,
-                                  itemCount: 5, // 경로 추천 장소 개수
-                                  itemBuilder: (context, index) {
-                                    return RecommendPlaceCard(
-                                      place: selectedCategoryPlaces[index],
-                                      onTap: () {
-                                        // snapping sheet에서 장소 탭 -> 카메라 위치 - 임의의 좌표 설정
-                                        _updateCameraPosition(LatLng(41.40338, 2.17403), 16.0);
-                                        print('PlaceCard tapped: ${selectedCategoryPlaces[index].name}');
-                                      },
-                                    );
-                                  });
-                            }
-                          },
-                        ),
-                      ),
-
-                      /*// 추천 경로 -> 클래스 틀
-                      Container(
-                        height: 50,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            // 장소 이름
-                            Text('스타벅스'),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceAround,
-                              children: [
-                                // 장소 사진
-                                Text('장소 사진'),
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                  children: [
-                                    // 장소 타입
-                                    Text('type'),
-                                    // 별점
-                                    Text('별점'),
-                                  ],
-                                ),
-                              ],
-                            )
-                          ],
-                        ),
-                      )*/
-                    ],
-                  ),
-                ),
-              ),
-            ),
-          ),
-          // 하단 고정 - 다이어리에 저장하기 버튼
-          Positioned(
-            bottom: 10, // 원하는 여백 조정
-            left: 30,
-            right: 30,
-            child: ElevatedButton(
-              child: Text('다이어리에 저장하기'),
-              style: ElevatedButton.styleFrom(
-                primary: Colors.black87,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30)
-                ),
-              ),
-              onPressed: () {
-                // 다이어리에 저장하기 로직 구현
-              },
-            ),
-          ),
+      body: SnappingSheet(
+        lockOverflowDrag: true,
+        snappingPositions: [
+          SnappingPosition.factor(
+              positionFactor: 0,
+              grabbingContentOffset: GrabbingContentOffset.top),
+          SnappingPosition.factor(
+              positionFactor: 0.5,
+              snappingCurve: Curves.elasticOut,
+              snappingDuration: Duration(milliseconds: 1750)),
+          SnappingPosition.factor(
+            positionFactor: 0.9,
+          )
         ],
+        initialSnappingPosition: SnappingPosition.factor(positionFactor: 0.4),
+        child: _buildAIRecommendationContent(),
+        grabbingHeight: 50,
+        grabbing: GrabbingWidget(),
+        sheetBelow: SnappingSheetContent(
+          draggable: (details) => true,
+          child: Container(
+            color: Colors.white,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(height: 10),
+                  // 추천 멘트
+                  Text('OO님의 선택에 따른 나들이 추천경로입니다.'),
+                  SizedBox(height: 10),
+                  // 추천 경로
+                  Container(
+                    child: FutureBuilder<void>(
+                      future: addMarkersFromPlacesApi(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        } else if (snapshot.hasError) {
+                          return Center(
+                            child: Text('Error: ${snapshot.error}'),
+                          );
+                        } else {
+                          List<Place> selectedCategoryPlaces = categoryGroupPlaceLists[selectedPlaceType] ?? [];
+                          return SizedBox(
+                            height: 1000, // 리스트뷰 스크롤 가능 높이 길이
+                            child: ListView.builder(
+                                shrinkWrap: true, // 리스트뷰 크기 고정
+                                itemCount: 2, // 경로 추천 장소 개수
+                                itemBuilder: (context, index) {
+                                  return RecommendPlaceCard(
+                                    place: selectedCategoryPlaces[index],
+                                    onTap: () {
+                                      // snapping sheet에서 장소 탭 -> 카메라 위치 - 임의의 좌표로 설정함
+                                      _updateCameraPosition(LatLng(41.40338, 2.17403), 16.0);
+                                      print('PlaceCard tapped: ${selectedCategoryPlaces[index].name}');
+                                    },
+                                  );
+                                }),
+                          );
+                        }
+                      },
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+      // 다이어리에 저장하기 버튼 - 하단 고정
+      bottomNavigationBar: Container(
+        padding: EdgeInsets.symmetric(horizontal: 50), // 양옆 여백 설정
+        child: ElevatedButton(
+          onPressed: () {
+            // 저장 로직
+          },
+          child: Text('다이어리에 저장하기'),
+          style: ElevatedButton.styleFrom(
+            primary: Colors.black87,
+            shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(30)
+            ),
+          ),
+        ),
       ),
 
     );
@@ -586,99 +555,102 @@ class RecommendPlaceCard extends StatelessWidget{
     //String firstPlaceType = place.types.isNotEmpty ? place.types[0] : 'Unknown';
     return InkWell(
       onTap: onTap,
-      child: Row(
-        children: [
-          // 순서 원 + 실선 표시
-          SizedBox(width: 50),
-          Container(
-            height: 120,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                // 장소 사진
-                Container(
-                  width: 95,
-                  height: 95,
-                  decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.grey,
-                        width: 2,
-                      ),
-                      borderRadius: BorderRadius.all(Radius.circular(16))
+      child: Container(
+        padding: EdgeInsets.only(left: 10, right: 10),
+        child: Row(
+          children: [
+            // 순서 원 + 실선 표시
+            SizedBox(width: 80),
+            Container(
+              height: 120,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  // 장소 사진
+                  Container(
+                    width: 95,
+                    height: 95,
+                    decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey,
+                          width: 2,
+                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(16))
+                    ),
+                    // 사진 1개 불러오기
+                    /*child: ListView.builder(
+                          //scrollDirection: Axis.horizontal,
+                          itemCount: 1, // 사진 1개만 불러오기
+                          //itemCount: place.photoUrls.length,
+                          itemBuilder: (context, index) {
+                            return Container(
+                              margin: EdgeInsets.only(right: 5),
+                              child: Image.network(
+                                place.photoUrls[index],
+                                width: 100,
+                                height: 150,
+                                fit: BoxFit.cover,
+                              ),
+                            );
+                          },
+                        ),*/
                   ),
-                  // 사진 1개 불러오기
-                  /*child: ListView.builder(
-                        //scrollDirection: Axis.horizontal,
-                        itemCount: 1, // 사진 1개만 불러오기
-                        //itemCount: place.photoUrls.length,
-                        itemBuilder: (context, index) {
-                          return Container(
-                            margin: EdgeInsets.only(right: 5),
-                            child: Image.network(
-                              place.photoUrls[index],
-                              width: 100,
-                              height: 150,
-                              fit: BoxFit.cover,
-                            ),
-                          );
-                        },
-                      ),*/
-                ),
-                SizedBox(width: 13,),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: [
-                    SizedBox(height: 22),
-                    // 장소 이름
-                    Text(
-                      // 장소 이름 불러오기
-                      place.name,
-                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(height: 7),
-                    // 장소 타입
-                    Text(
-                      '카페',
-                      style: TextStyle(fontSize: 13, color: Colors.grey),
-                    ),
-                    // 장소 타입 불러오기
-                    /*Text(
-                         '$firstPlaceType',
-                         style: TextStyle(fontSize: 13, color: Colors.grey),
-                       ),*/
-                    SizedBox(height: 20),
-                    // 별점
-                    RatingStars(
-                      // 별점 불러오기
-                      //value: place.rating,
-                      value: 4.3,
-                      starCount: 5,
-                      starSize: 10,
-                      valueLabelColor: const Color(0xff9b9b9b),
-                      valueLabelTextStyle: TextStyle(
-                          color: Colors.white,
-                          fontFamily: 'WorkSans',
-                          fontWeight: FontWeight.w400,
-                          fontStyle: FontStyle.normal,
-                          fontSize: 12.0
+                  SizedBox(width: 13),
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      SizedBox(height: 22),
+                      // 장소 이름
+                      Text(
+                        // 장소 이름 불러오기
+                        place.name,
+                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                       ),
-                      valueLabelRadius: 10,
-                      starSpacing: 2,
-                      maxValueVisibility: false,
-                      valueLabelVisibility: true,
-                      animationDuration: Duration(milliseconds: 1000),
-                      valueLabelPadding: const EdgeInsets.symmetric(
-                          vertical: 1, horizontal: 8),
-                      valueLabelMargin: const EdgeInsets.only(right: 8),
-                      starOffColor: const Color(0xffe7e8ea),
-                      starColor: Colors.yellow,
-                    ),
-                  ],
-                )
-              ],
+                      SizedBox(height: 7),
+                      // 장소 타입
+                      Text(
+                        '카페',
+                        style: TextStyle(fontSize: 13, color: Colors.grey),
+                      ),
+                      // 장소 타입 불러오기
+                      /*Text(
+                           '$firstPlaceType',
+                           style: TextStyle(fontSize: 13, color: Colors.grey),
+                         ),*/
+                      SizedBox(height: 20),
+                      // 별점
+                      RatingStars(
+                        // 별점 불러오기
+                        //value: place.rating,
+                        value: 4.3,
+                        starCount: 5,
+                        starSize: 10,
+                        valueLabelColor: const Color(0xff9b9b9b),
+                        valueLabelTextStyle: TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'WorkSans',
+                            fontWeight: FontWeight.w400,
+                            fontStyle: FontStyle.normal,
+                            fontSize: 12.0
+                        ),
+                        valueLabelRadius: 10,
+                        starSpacing: 2,
+                        maxValueVisibility: false,
+                        valueLabelVisibility: true,
+                        animationDuration: Duration(milliseconds: 1000),
+                        valueLabelPadding: const EdgeInsets.symmetric(
+                            vertical: 1, horizontal: 8),
+                        valueLabelMargin: const EdgeInsets.only(right: 8),
+                        starOffColor: const Color(0xffe7e8ea),
+                        starColor: Colors.yellow,
+                      ),
+                    ],
+                  )
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
