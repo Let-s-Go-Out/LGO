@@ -36,6 +36,7 @@ class _MainPageState extends State<MainPage> {
   //TimeOfDay _timeOfDay = TimeOfDay(hour: 8, minute: 30);
 
   int _selectedIndex = 0;
+  Map<String, dynamic> userRouteData={};
 
   final List<Widget> _navIndex = [
     MainPage(),
@@ -163,7 +164,7 @@ class _MainPageState extends State<MainPage> {
 
     FirebaseFirestore firestore = FirebaseFirestore.instance;
     // 사용자 경로 데이터
-    Map<String, dynamic> userRouteData = {
+    userRouteData = {
       'picnicConcept': selectedConcept,
       'DepartureTime': _timeOfDay.format(context),
       'placeCount': _value.toStringAsFixed(0),
@@ -393,7 +394,7 @@ class _MainPageState extends State<MainPage> {
                 // Add code to handle the "Let's Go out" button
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const MainLoadingPage()),
+                  MaterialPageRoute(builder: (context) => MainLoadingPage(userRouteData: userRouteData)),
                 );
               },
               style: ElevatedButton.styleFrom(

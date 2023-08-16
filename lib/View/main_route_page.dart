@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:nagaja_app/Controller/map_controller.dart';
@@ -17,11 +18,15 @@ import 'my_page.dart';
 class MainRoutePage extends StatefulWidget {
   final LatLng initialLatLng;
   final Map<String, List<Place>> categoryGroupPlaceLists;
+  final List<Place> recommendPlaces;
+  final GeoPoint selectP;
 
   const MainRoutePage(
       {Key? key,
       required this.initialLatLng,
-      required this.categoryGroupPlaceLists})
+      required this.categoryGroupPlaceLists,
+      required this.recommendPlaces,
+      required this.selectP})
       : super(key: key);
 
   @override
@@ -31,10 +36,12 @@ class MainRoutePage extends StatefulWidget {
 class _MainRoutePageState extends State<MainRoutePage> {
   late GoogleMapController mapController;
   MapController controller = MapController();
+  DrawRecommendRoute drawRoute = DrawRecommendRoute();
   bool isExpanded = false;
   ScrollController scrollcontroller = ScrollController();
   List<Place> places = [];
   LatLng nowP = LatLng(37.58638333, 127.0203333);
+  LatLng selectP = LatLng(37.58638333, 127.0203333);
   List<Marker> newMarkers = [];
   Set<Marker> markers = Set<Marker>();
 
@@ -68,6 +75,8 @@ class _MainRoutePageState extends State<MainRoutePage> {
   //routeDraw.drawPolyline();
 
   int _selectedIndex = 0;
+
+  List<Place> recommendPlaces=[];
 
   final List<Widget> _navIndex = [
     MainPage(),
@@ -115,8 +124,10 @@ class _MainRoutePageState extends State<MainRoutePage> {
   void initState() {
     super.initState();
     nowP = widget.initialLatLng;
+    selectP = LatLng(widget.selectP.latitude,widget.selectP.longitude);
     categoryGroupPlaceLists = widget.categoryGroupPlaceLists;
     markers = Set<Marker>();
+    recommendPlaces = widget.recommendPlaces;
   }
 
   @override
@@ -338,28 +349,42 @@ class _MainRoutePageState extends State<MainRoutePage> {
   }
 
   Widget _buildAIRecommendationContent() {
-    return GoogleMap(
-      myLocationEnabled: true,
-      myLocationButtonEnabled: false,
-      onMapCreated: _onMapCreated,
-      initialCameraPosition: CameraPosition(
-        target: nowP,
-        zoom: 15.0,
-      ),
-      markers: {
-        Marker(
-          markerId: MarkerId('marker_id'),
-          position: nowP,
-          infoWindow: InfoWindow(
-            title: '현재 위치',
-            snippet: '',
-          ),
-        ),
-      },
-      //
-      // polylines: Set<Polyline>.of(test.polylineList.values),
+    return FutureBuilder<void>(
+        future: drawRoute.drawPolyline(recommendPlaces),
+    builder: (context, snapshot) {
+    if (snapshot.connectionState == ConnectionState.waiting) {
+    return Center(
+    child: CircularProgressIndicator(),
     );
+    } else if (snapshot.hasError) {
+    return Center(
+    child: Text('Error: ${snapshot.error}'),
+    );
+    } else {
+      return GoogleMap(
+        myLocationEnabled: true,
+        myLocationButtonEnabled: false,
+        onMapCreated: _onMapCreated,
+        initialCameraPosition: CameraPosition(
+          target: selectP,
+          zoom: 15.0,
+        ),
+        markers: {
+          Marker(
+            markerId: MarkerId('marker_id'),
+            position: selectP,
+            infoWindow: InfoWindow(
+              title: '현재 위치',
+              snippet: '',
+            ),
+          ),
+        },
+        //
+        polylines: Set<Polyline>.of(drawRoute.polylineList.values),
+      );
+    }});
   }
+
 
   //임의 변경
   Widget _buildTourTab() {
@@ -548,6 +573,7 @@ class _MainRoutePageState extends State<MainRoutePage> {
           }
         });
   }
+
 }
 
 class GrabbingWidget extends StatelessWidget {

@@ -1,4 +1,5 @@
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 //import 'package:geolocator/geolocator.dart';
@@ -12,7 +13,7 @@ import 'package:nagaja_app/Model/place_model.dart';
 
 //DrawRecommendRoute routeDraw = DrawRecommendRoute(categoryGroupPlaceLists);
 class DrawRecommendRoute {
-  static const String _apiKey = ' ';
+  static const String _apiKey = 'AIzaSyBrK8RWyR1_3P7M7yjNiJ8xyXTAuFpeLlM';
   List<String> categoryRestaurant = ['restaurant'];
   List<String> categoryCafe = ['cafe'];
   List<String> categoryShopping = ['store'];
@@ -21,7 +22,7 @@ class DrawRecommendRoute {
   List<String> categoryAttraction = ['tourist_attraction', 'amusement_park', 'bowling_alley'];
 
   //수정 >> 사용자 설정 현재 위치, 데이터 받아 오기
-  LatLng origin = LatLng(0.0, 0.0);
+  // LatLng origin = LatLng(0.0, 0.0);
 
   //예시 >> 초기 리스트 비어 있음
   // List<Place> recommendPlaces = [
@@ -57,12 +58,12 @@ class DrawRecommendRoute {
 
   Map<int, Polyline> polylineList = {};
   PolylinePoints polylinePoints = PolylinePoints();
-  List<LatLng> polylineCoordinates = [];
   int polylineIdCounter = 0;
+  List<LatLng> polylineCoordinates=[];
 
   //수정 >> 사용자 설정 추천 장소 갯수, 데이터 받아 오기
-  int placesCounter = 3;
-  List<String> userType = ['음식점','문화'];
+  // int placesCounter = 3;
+  // List<String> userType = ['음식점','문화'];
 
 
   //
@@ -72,11 +73,11 @@ class DrawRecommendRoute {
 
   setOriginPlace(LatLng origin) {
     recommendPlaces.insert(0, Place(
-      name: '출발',
-      placeId: ' ',
+      name: '출발 지점',
+      placeId: 'start_place',
       placeLat: origin.latitude,
       placeLng: origin.longitude,
-      types: [''],
+      types: ['start'],
       rating: 0,
       photoUrls: [''],
     ),);
@@ -84,8 +85,8 @@ class DrawRecommendRoute {
 
 
   //categoryGroupPlaceLists['category'], 예시 참고
-  List<Place> setRecommendPlaces(Map<String, List<Place>> categoryGroupPlaceLists) {
-    setOriginPlace(LatLng(0, 0));
+  List<Place> setRecommendPlaces(Map<String, List<Place>> categoryGroupPlaceLists,GeoPoint gp, int placesCounter, String userType) {
+    setOriginPlace(LatLng(gp.latitude, gp.longitude));
     int a=0;
     int b=0;
     int c=0;
@@ -97,8 +98,7 @@ class DrawRecommendRoute {
     List<Place>? cultureList =[];
     List<Place>? attractionList = [];
     for(int i=1;i<placesCounter+1;) {
-      for (var type in userType) {
-        switch (type) {
+        switch (userType) {
           case '음식점':
             if(categoryGroupPlaceLists['음식점'] != null && a < categoryGroupPlaceLists['음식점']!.length){
               if(i<=placesCounter){
@@ -161,7 +161,6 @@ class DrawRecommendRoute {
               }
             }
             break;
-        }
       }
     }
     sortingCloseDistance(recommendPlaces);
@@ -180,18 +179,18 @@ class DrawRecommendRoute {
   }
 
 
-  drawPolyline() async{
+  drawPolyline(List<Place> recommendPlaces) async{
     for(int i = 0; i < recommendPlaces.length - 1; i++) {
       //출발지가 항상 리스트 맨 처음
       LatLng startLocation = recommendPlaces[i].location;
       LatLng endLocation = recommendPlaces[i + 1].location;
 
-      polylineCoordinates = await getPolyline(startLocation, endLocation);
-      addPolyline(polylineCoordinates);
+      List<LatLng> polylineP = await getPolyline(startLocation, endLocation);
+      addPolyline(polylineP);
     }
   }
 
-  getPolyline(LatLng startL, LatLng endL) async{
+  Future<List<LatLng>> getPolyline(LatLng startL, LatLng endL) async{
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
         _apiKey,
 
@@ -204,8 +203,10 @@ class DrawRecommendRoute {
     if (result.points.isNotEmpty) {
       for (var element in result.points) {
         polylineCoordinates.add(LatLng(element.latitude, element.longitude));
+        print(result.points);
       }
     }
+    return polylineCoordinates;
   }
 
   addPolyline(List<LatLng> polylineCoordinates) {
@@ -219,5 +220,4 @@ class DrawRecommendRoute {
 
     polylineList[polylineIdCounter] = newPolyline;
   }
-
 }
