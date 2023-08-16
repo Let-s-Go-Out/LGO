@@ -4,6 +4,7 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:nagaja_app/Controller/map_controller.dart';
 import 'package:nagaja_app/Model/draw_recommend_route.dart';
 import 'package:snapping_sheet_2/snapping_sheet.dart';
+
 //import 'package:provider/provider.dart';
 import '../Model/place_model.dart';
 import 'package:flutter_rating_stars/flutter_rating_stars.dart';
@@ -16,7 +17,12 @@ import 'my_page.dart';
 class MainRoutePage extends StatefulWidget {
   final LatLng initialLatLng;
   final Map<String, List<Place>> categoryGroupPlaceLists;
-  const MainRoutePage({Key? key, required this.initialLatLng, required this.categoryGroupPlaceLists}) : super(key: key);
+
+  const MainRoutePage(
+      {Key? key,
+      required this.initialLatLng,
+      required this.categoryGroupPlaceLists})
+      : super(key: key);
 
   @override
   _MainRoutePageState createState() => _MainRoutePageState();
@@ -31,6 +37,7 @@ class _MainRoutePageState extends State<MainRoutePage> {
   LatLng nowP = LatLng(37.58638333, 127.0203333);
   List<Marker> newMarkers = [];
   Set<Marker> markers = Set<Marker>();
+
   /*List<String> placeTypes = [
     'restaurant',
     'cafe',
@@ -49,7 +56,7 @@ class _MainRoutePageState extends State<MainRoutePage> {
     'amusement_park',
     'bowling_alley'
   ];*/
-  String selectedPlaceType = 'restaurant';// 초기값을 'restaurant'로 설정
+  String selectedPlaceType = 'restaurant'; // 초기값을 'restaurant'로 설정
 
   // 카테고리 그룹명을 변수로 설정
   Map<String, List<Place>> categoryGroupPlaceLists = {};
@@ -100,7 +107,7 @@ class _MainRoutePageState extends State<MainRoutePage> {
           ),
         );
         break;
-    // 다른 인덱스에 대한 처리를 추가할 수 있습니다.
+      // 다른 인덱스에 대한 처리를 추가할 수 있습니다.
     }
   }
 
@@ -220,7 +227,8 @@ class _MainRoutePageState extends State<MainRoutePage> {
                 positionFactor: 0.9,
               )
             ],
-            initialSnappingPosition: SnappingPosition.factor(positionFactor: 0.4),
+            initialSnappingPosition:
+                SnappingPosition.factor(positionFactor: 0.4),
             child: _buildAIRecommendationContent(),
             grabbingHeight: 50,
             grabbing: GrabbingWidget(),
@@ -251,7 +259,9 @@ class _MainRoutePageState extends State<MainRoutePage> {
                                 child: Text('Error: ${snapshot.error}'),
                               );
                             } else {
-                              List<Place> selectedCategoryPlaces = categoryGroupPlaceLists[selectedPlaceType] ?? [];
+                              List<Place> selectedCategoryPlaces =
+                                  categoryGroupPlaceLists[selectedPlaceType] ??
+                                      [];
                               return ListView.builder(
                                   shrinkWrap: true,
                                   itemCount: 5, // 경로 추천 장소 개수
@@ -260,8 +270,10 @@ class _MainRoutePageState extends State<MainRoutePage> {
                                       place: selectedCategoryPlaces[index],
                                       onTap: () {
                                         // snapping sheet에서 장소 탭 -> 카메라 위치 - 임의의 좌표 설정
-                                        _updateCameraPosition(LatLng(41.40338, 2.17403), 16.0);
-                                        print('PlaceCard tapped: ${selectedCategoryPlaces[index].name}');
+                                        _updateCameraPosition(
+                                            LatLng(41.40338, 2.17403), 16.0);
+                                        print(
+                                            'PlaceCard tapped: ${selectedCategoryPlaces[index].name}');
                                       },
                                     );
                                   });
@@ -313,8 +325,7 @@ class _MainRoutePageState extends State<MainRoutePage> {
               style: ElevatedButton.styleFrom(
                 primary: Colors.black87,
                 shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(30)
-                ),
+                    borderRadius: BorderRadius.circular(30)),
               ),
               onPressed: () {
                 // 다이어리에 저장하기 로직 구현
@@ -323,38 +334,37 @@ class _MainRoutePageState extends State<MainRoutePage> {
           ),
         ],
       ),
-
     );
   }
 
   Widget _buildAIRecommendationContent() {
-          return GoogleMap(
-            myLocationEnabled: true,
-            myLocationButtonEnabled: false,
-            onMapCreated: _onMapCreated,
-            initialCameraPosition: CameraPosition(
-              target: nowP,
-              zoom: 15.0,
-            ),
-            markers: {
-              Marker(
-                markerId: MarkerId('marker_id'),
-                position: nowP,
-                infoWindow: InfoWindow(
-                  title: '현재 위치',
-                  snippet: '',
-                ),
-              ),
-            },
-            //
-            // polylines: Set<Polyline>.of(test.polylineList.values),
-          );
+    return GoogleMap(
+      myLocationEnabled: true,
+      myLocationButtonEnabled: false,
+      onMapCreated: _onMapCreated,
+      initialCameraPosition: CameraPosition(
+        target: nowP,
+        zoom: 15.0,
+      ),
+      markers: {
+        Marker(
+          markerId: MarkerId('marker_id'),
+          position: nowP,
+          infoWindow: InfoWindow(
+            title: '현재 위치',
+            snippet: '',
+          ),
+        ),
+      },
+      //
+      // polylines: Set<Polyline>.of(test.polylineList.values),
+    );
   }
 
   //임의 변경
   Widget _buildTourTab() {
-            markers.clear();
-            /*List<Place> filteredPlaces = allPlaces
+    markers.clear();
+    /*List<Place> filteredPlaces = allPlaces
                 .where((place) => place.types.contains(selectedPlaceType))
                 .toList();
             int hue = 0;
@@ -369,165 +379,175 @@ class _MainRoutePageState extends State<MainRoutePage> {
               markers.add(newMarker);
             }
             }*/
-            return Scaffold(
-              body: SnappingSheet(
-                lockOverflowDrag: true,
-                snappingPositions: [
-                  SnappingPosition.factor(
-                      positionFactor: 0,
-                      grabbingContentOffset: GrabbingContentOffset.top),
-                  SnappingPosition.factor(
-                      positionFactor: 0.5,
-                      snappingCurve: Curves.elasticOut,
-                      snappingDuration: Duration(milliseconds: 1750)),
-                  SnappingPosition.factor(
-                    positionFactor: 0.9,
-                  )
-                ],
-                initialSnappingPosition:
-                SnappingPosition.factor(positionFactor: 0.4),
-                child: _buildTourTabContent(),
-                grabbingHeight: 50,
-                grabbing: GrabbingWidget(),
-                sheetBelow: SnappingSheetContent(
-                  draggable: (details) => true,
-                  child: Container(
-                    color: Colors.white,
-                    child: SingleChildScrollView(
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          SizedBox(height: 10),
-                          // 장소 카테고리 버튼
-                          SizedBox(
-                            height: 50.0,
-                            child: ListView.builder(
-                              physics: ClampingScrollPhysics(),
-                              scrollDirection: Axis.horizontal,
-                              shrinkWrap: true,
-                              itemCount: categoryGroupPlaceLists.length,
-                              itemBuilder: (context, index) {
-                                String groupName = categoryGroupPlaceLists.keys.toList()[index];
-                                List<Place> groupCategories = categoryGroupPlaceLists[groupName]!;
-                                bool isSelectedGroup = groupName == selectedPlaceType;
-                                return Center(
-                                  child: Container(
-                                    /*height: 30,
+    return Scaffold(
+      body: SnappingSheet(
+        lockOverflowDrag: true,
+        snappingPositions: [
+          SnappingPosition.factor(
+              positionFactor: 0,
+              grabbingContentOffset: GrabbingContentOffset.top),
+          SnappingPosition.factor(
+              positionFactor: 0.5,
+              snappingCurve: Curves.elasticOut,
+              snappingDuration: Duration(milliseconds: 1750)),
+          SnappingPosition.factor(
+            positionFactor: 0.9,
+          )
+        ],
+        initialSnappingPosition: SnappingPosition.factor(positionFactor: 0.4),
+        child: _buildTourTabContent(),
+        grabbingHeight: 50,
+        grabbing: GrabbingWidget(),
+        sheetBelow: SnappingSheetContent(
+          draggable: (details) => true,
+          child: Container(
+            color: Colors.white,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  SizedBox(height: 10),
+                  // 장소 카테고리 버튼
+                  SizedBox(
+                    height: 50.0,
+                    child: ListView.builder(
+                      physics: ClampingScrollPhysics(),
+                      scrollDirection: Axis.horizontal,
+                      shrinkWrap: true,
+                      itemCount: categoryGroupPlaceLists.length,
+                      itemBuilder: (context, index) {
+                        String groupName =
+                            categoryGroupPlaceLists.keys.toList()[index];
+                        List<Place> groupCategories =
+                            categoryGroupPlaceLists[groupName]!;
+                        bool isSelectedGroup = groupName == selectedPlaceType;
+                        return Center(
+                          child: Container(
+                            /*height: 30,
                                     width: 50,*/
-                                    margin: EdgeInsets.only(left: 10),
-                                    child: ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        primary: Colors.white,
-                                        onPrimary: Colors.black,
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(50),
-                                            side: BorderSide(
-                                              width: 2,
-                                              // 버튼 선택 유무에 따른 버튼 스타일 변경
-                                              color: isSelectedGroup ? Colors.black : Colors.white10,
-                                            )
-                                        ),
-                                        textStyle: const TextStyle(
-                                          fontSize: 10,
-                                          fontWeight: FontWeight.bold,
-                                          //color: Colors.black,
-                                        ),
-                                        padding: EdgeInsets.all(10),
-                                        backgroundColor: Colors.white,
-                                      ),
-                                      onPressed: () {
-                                        setState(() {
-                                          selectedPlaceType = groupName;
-                                          //selectedPlaceType = categoryGroupPlaceLists.keys.elementAt(index);
-                                        });
-                                      },
-                                      child: Text(groupName),
-                                    ),
-                                  ),
-                                );
+                            margin: EdgeInsets.only(left: 10),
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                primary: Colors.white,
+                                onPrimary: Colors.black,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(50),
+                                    side: BorderSide(
+                                      width: 2,
+                                      // 버튼 선택 유무에 따른 버튼 스타일 변경
+                                      color: isSelectedGroup
+                                          ? Colors.black
+                                          : Colors.white10,
+                                    )),
+                                textStyle: const TextStyle(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold,
+                                  //color: Colors.black,
+                                ),
+                                padding: EdgeInsets.all(10),
+                                backgroundColor: Colors.white,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  selectedPlaceType = groupName;
+                                  //selectedPlaceType = categoryGroupPlaceLists.keys.elementAt(index);
+                                });
                               },
+                              child: Text(groupName),
                             ),
                           ),
-                          SizedBox(height: 10),
-                          // 카테고리 별 장소 리스트
-                          Container(
-                            height: MediaQuery.of(context).size.height * 0.5,
-                            child: FutureBuilder<void>(
-                              future: addMarkersFromPlacesApi(),
-                                builder: (context, snapshot) {
-                                  if (snapshot.connectionState ==
-                                      ConnectionState.waiting) {
-                                    return Center(
-                                      child: CircularProgressIndicator(),
-                                    );
-                                  } else if (snapshot.hasError) {
-                                    return Center(
-                                      child: Text('Error: ${snapshot.error}'),
-                                    );
-                                  } else {
-                                    List<Place> selectedCategoryPlaces = categoryGroupPlaceLists[selectedPlaceType] ?? [];
-                                    return ListView.builder(
-                                      shrinkWrap: true,
-                                      itemCount: selectedCategoryPlaces.length,
-                                      itemBuilder: (context, index) {
-                                        return PlaceCard(
-                                            place: selectedCategoryPlaces[index], onTap: () {
-                                          _updateCameraPosition(LatLng(selectedCategoryPlaces[index].placeLat, selectedCategoryPlaces[index].placeLng), 16.0);
-                                          print('PlaceCard tapped: ${selectedCategoryPlaces[index].name}');
-                                        });
-                                      },
-                                    );
-                                  }
-                                },
-                            ),
-                          )
-                        ],
-                      ),
+                        );
+                      },
                     ),
                   ),
-                ),
+                  SizedBox(height: 10),
+                  // 카테고리 별 장소 리스트
+                  Container(
+                    height: MediaQuery.of(context).size.height * 0.5,
+                    child: FutureBuilder<void>(
+                      future: addMarkersFromPlacesApi(),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        } else if (snapshot.hasError) {
+                          return Center(
+                            child: Text('Error: ${snapshot.error}'),
+                          );
+                        } else {
+                          List<Place> selectedCategoryPlaces =
+                              categoryGroupPlaceLists[selectedPlaceType] ?? [];
+                          return ListView.builder(
+                            shrinkWrap: true,
+                            itemCount: selectedCategoryPlaces.length,
+                            itemBuilder: (context, index) {
+                              return PlaceCard(
+                                  place: selectedCategoryPlaces[index],
+                                  onTap: () {
+                                    _updateCameraPosition(
+                                        LatLng(
+                                            selectedCategoryPlaces[index]
+                                                .placeLat,
+                                            selectedCategoryPlaces[index]
+                                                .placeLng),
+                                        16.0);
+                                    print('PlaceCard tapped: ${selectedCategoryPlaces[index].name}');
+                                  });
+                            },
+                          );
+                        }
+                      },
+                    ),
+                  )
+                ],
               ),
-            );
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   Widget _buildTourTabContent() {
-        LatLng target = nowP;
-        return FutureBuilder<void>(
-            future: addMarkersFromPlacesApi(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(
-                  child: CircularProgressIndicator(),
+    LatLng target = nowP;
+    return FutureBuilder<void>(
+        future: addMarkersFromPlacesApi(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (snapshot.hasError) {
+            return Center(
+              child: Text('Error: ${snapshot.error}'),
+            );
+          } else {
+            // 선택된 카테고리 그룹에 해당하는 장소 리스트 가져오기
+            List<Place> selectedCategoryPlaces =
+                categoryGroupPlaceLists[selectedPlaceType] ?? [];
+            return GoogleMap(
+              myLocationEnabled: true,
+              myLocationButtonEnabled: false,
+              onMapCreated: _onMapCreated,
+              initialCameraPosition: CameraPosition(
+                target: target,
+                zoom: 15.0,
+              ),
+              //markers: markers,
+              // 선택된 카테고리 그룹의 장소 리스트로 마커 추가
+              markers: selectedCategoryPlaces.map((place) {
+                return Marker(
+                  markerId: MarkerId(place.placeId),
+                  position: LatLng(place.placeLat, place.placeLng),
+                  infoWindow: InfoWindow(title: place.name),
                 );
-              } else if (snapshot.hasError) {
-                return Center(
-                  child: Text('Error: ${snapshot.error}'),
-                );
-              } else {
-                // 선택된 카테고리 그룹에 해당하는 장소 리스트 가져오기
-                List<Place> selectedCategoryPlaces = categoryGroupPlaceLists[selectedPlaceType] ?? [];
-                return GoogleMap(
-                  myLocationEnabled: true,
-                  myLocationButtonEnabled: false,
-                  onMapCreated: _onMapCreated,
-                  initialCameraPosition: CameraPosition(
-                    target: target,
-                    zoom: 15.0,
-                  ),
-                  //markers: markers,
-                  // 선택된 카테고리 그룹의 장소 리스트로 마커 추가
-                  markers: selectedCategoryPlaces.map((place) {
-                    return Marker(
-                      markerId: MarkerId(place.placeId),
-                      position: LatLng(place.placeLat, place.placeLng),
-                      infoWindow: InfoWindow(title: place.name),
-                    );
-                  }).toSet(),
-                );
-              }
-            }
-                );
-              }
+              }).toSet(),
+            );
+          }
+        });
+  }
 }
 
 class GrabbingWidget extends StatelessWidget {
@@ -574,78 +594,78 @@ class PlaceCard extends StatelessWidget {
   Widget build(BuildContext context) {
     String firstPlaceType = place.types.isNotEmpty ? place.types[0] : 'Unknown';
     return InkWell(
-        onTap: onTap,
-        child: Container(
-      padding: EdgeInsets.fromLTRB(15, 5, 15, 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            place.name,
-            style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          SizedBox(height: 4),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                '$firstPlaceType',
-                style: TextStyle(fontSize: 13, color: Colors.grey),
-              ),
-              // 별점 표시
-              RatingStars(
-                value: place.rating,
-                starCount: 5,
-                starSize: 10,
-                valueLabelColor: const Color(0xff9b9b9b),
-                valueLabelTextStyle: TextStyle(
-                    color: Colors.white,
-                    fontFamily: 'WorkSans',
-                    fontWeight: FontWeight.w400,
-                    fontStyle: FontStyle.normal,
-                    fontSize: 12.0
-                ),
-                valueLabelRadius: 10,
-                starSpacing: 2,
-                maxValueVisibility: false,
-                valueLabelVisibility: true,
-                animationDuration: Duration(milliseconds: 1000),
-                valueLabelPadding: const EdgeInsets.symmetric(
-                    vertical: 1, horizontal: 8),
-                valueLabelMargin: const EdgeInsets.only(right: 8),
-                starOffColor: const Color(0xffe7e8ea),
-                starColor: Colors.yellow,
-              ),
-            ],
-          ),
-          SizedBox(height: 8),
-          // 사진 표시
-          Container(
-            height: 150,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              itemCount: place.photoUrls.length,
-              itemBuilder: (context, index) {
-                return Container(
-                  margin: EdgeInsets.only(right: 5),
-                  child: Image.network(
-                    place.photoUrls[index],
-                    width: 100,
-                    height: 150,
-                    fit: BoxFit.cover,
-                  ),
-                );
-              },
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.fromLTRB(15, 5, 15, 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              place.name,
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
             ),
-          ),
-          SizedBox(height: 10),
-        ],
+            SizedBox(height: 4),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  '$firstPlaceType',
+                  style: TextStyle(fontSize: 13, color: Colors.grey),
+                ),
+                // 별점 표시
+                RatingStars(
+                  value: place.rating,
+                  starCount: 5,
+                  starSize: 10,
+                  valueLabelColor: const Color(0xff9b9b9b),
+                  valueLabelTextStyle: TextStyle(
+                      color: Colors.white,
+                      fontFamily: 'WorkSans',
+                      fontWeight: FontWeight.w400,
+                      fontStyle: FontStyle.normal,
+                      fontSize: 12.0),
+                  valueLabelRadius: 10,
+                  starSpacing: 2,
+                  maxValueVisibility: false,
+                  valueLabelVisibility: true,
+                  animationDuration: Duration(milliseconds: 1000),
+                  valueLabelPadding:
+                      const EdgeInsets.symmetric(vertical: 1, horizontal: 8),
+                  valueLabelMargin: const EdgeInsets.only(right: 8),
+                  starOffColor: const Color(0xffe7e8ea),
+                  starColor: Colors.yellow,
+                ),
+              ],
+            ),
+            SizedBox(height: 8),
+            // 사진 표시
+            Container(
+              height: 150,
+              child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: place.photoUrls.length,
+                itemBuilder: (context, index) {
+                  return Container(
+                    margin: EdgeInsets.only(right: 5),
+                    child: Image.network(
+                      place.photoUrls[index],
+                      width: 100,
+                      height: 150,
+                      fit: BoxFit.cover,
+                    ),
+                  );
+                },
+              ),
+            ),
+            SizedBox(height: 10),
+          ],
+        ),
       ),
-    ),
     );
   }
 }
-class RecommendPlaceCard extends StatelessWidget{
+
+class RecommendPlaceCard extends StatelessWidget {
   final Place place;
   final VoidCallback onTap;
 
@@ -675,8 +695,7 @@ class RecommendPlaceCard extends StatelessWidget{
                         color: Colors.grey,
                         width: 2,
                       ),
-                      borderRadius: BorderRadius.all(Radius.circular(16))
-                  ),
+                      borderRadius: BorderRadius.all(Radius.circular(16))),
                   // 사진 1개 불러오기
                   /*child: ListView.builder(
                         //scrollDirection: Axis.horizontal,
@@ -695,7 +714,9 @@ class RecommendPlaceCard extends StatelessWidget{
                         },
                       ),*/
                 ),
-                SizedBox(width: 13,),
+                SizedBox(
+                  width: 13,
+                ),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
@@ -704,7 +725,8 @@ class RecommendPlaceCard extends StatelessWidget{
                     Text(
                       // 장소 이름 불러오기
                       place.name,
-                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
                     ),
                     SizedBox(height: 7),
                     // 장소 타입
@@ -731,8 +753,7 @@ class RecommendPlaceCard extends StatelessWidget{
                           fontFamily: 'WorkSans',
                           fontWeight: FontWeight.w400,
                           fontStyle: FontStyle.normal,
-                          fontSize: 12.0
-                      ),
+                          fontSize: 12.0),
                       valueLabelRadius: 10,
                       starSpacing: 2,
                       maxValueVisibility: false,
