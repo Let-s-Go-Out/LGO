@@ -67,7 +67,7 @@ class HomePage extends StatelessWidget {
               Positioned(
                 left: 50,
                 right: 50,
-                bottom: 180,
+                bottom: 150,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       primary: Colors.black87,
@@ -87,7 +87,7 @@ class HomePage extends StatelessWidget {
               Positioned(
                 left: 50,
                 right: 50,
-                bottom: 110,
+                bottom: 80,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       primary: Colors.black87,

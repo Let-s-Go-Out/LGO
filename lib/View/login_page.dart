@@ -23,6 +23,7 @@ class _LoginPageState extends State<LoginPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.black,
         title: Text('로그인'),
       ),
       body: Padding(
@@ -86,6 +87,10 @@ class _LoginPageState extends State<LoginPage> {
                 }
               }
                   : null,
+              style: ElevatedButton.styleFrom(
+                primary: Colors.black,
+                onPrimary: Colors.white,
+              ),
               child: Text('로그인'),
             ),
           ],
@@ -94,6 +99,3 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
-
-
-
