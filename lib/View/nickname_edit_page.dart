@@ -12,7 +12,7 @@ class NicknameEdit extends StatefulWidget {
 
 class _NicknameEditState extends State<NicknameEdit> {
 
-  final TextEditingController nicknameController = TextEditingController();
+  String? nicknameFromDB = Get.find<UserController>().userData.value!.userNickname;
 
   GlobalKey<FormState> nicknameFormkey = GlobalKey<FormState>();
 
@@ -92,7 +92,6 @@ class _NicknameEditState extends State<NicknameEdit> {
         onFieldSubmitted: (value)
         => FocusScope.of(context).unfocus(),
 
-        controller: nicknameController,
 
         validator: (value) {
           if(value!.isEmpty) {
@@ -103,7 +102,9 @@ class _NicknameEditState extends State<NicknameEdit> {
           }
         },
 
-        //onSaved: () {},
+        onSaved: (value) {
+          nicknameFromDB = value;
+        },
 
       ),
     );
@@ -143,15 +144,14 @@ class _NicknameEditState extends State<NicknameEdit> {
 
           onPressed: () {
             if (nicknameFormkey.currentState?.validate() == true) {
-              //nicknameFormkey.currentState!.save();
-              String newNicknameToDB = nicknameController.text;
+              nicknameFormkey.currentState!.save();
 
               UserController userController = Get.find();
-              userController.updateNickname(newNicknameToDB);
-              //
-              print('new nickname: $newNicknameToDB');
-              //Get.toNamed('myPage');
-              Navigator.pushNamed(context, 'MyPage');
+              userController.updateNickname(nicknameFromDB!);
+
+              print('new nickname: $nicknameFromDB');
+              Get.toNamed('myPage');
+              //Navigator.pushNamed(context, 'MyPage');
             }
             //validate 확인(후 pw 저장) 후 페이지 이동(변경한 데이터 가지고)
           },

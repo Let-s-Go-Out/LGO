@@ -69,6 +69,18 @@ class AuthController {
       return null;
     }
   }
+
+  //*
+  Future<String?> getUserUid() async {
+    try {
+      final user = _auth.currentUser;
+      return user?.uid;
+    } catch(e) {
+      print('사용자 UID 가져오기 실패: $e');
+      return null;
+    }
+  }
+
 }
 
 
