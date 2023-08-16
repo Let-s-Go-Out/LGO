@@ -30,29 +30,39 @@ class _DiaryEditViewState extends State<DiaryEditView> {
   PlatformFile? pickedFile;
   UploadTask? uploadTask;
 
+  // 갤러리에서 사진 선택
   Future pickImage() async {
     final result = await FilePicker.platform.pickFiles();
     if (result == null) return;
 
     setState(() {
+      // 선택된 파일리스트 중 첫번째 파일의 정보
       pickedFile = result.files.first;
     });
   }
 
+  // 선택한 함수 Firebase Storage에 업로드
   Future uploadFile() async {
+    // 업로드할 파일의 경로 지정 (files 폴더 안에 선택한 파일의 이름으로 저장)
     final path = 'files/${pickedFile!.name}';
+    // 선택한 이미지 파일의 내용
     final file = File(pickedFile!.path!);
 
+    // Firebase Storage에서 사용할 업로드 경로를 나타내는 참조 객체
     final ref = FirebaseStorage.instance.ref().child(path);
     setState(() {
+      // 파일을 업로드하는 작업을 uploadTask 변수에 할당 (이 작업은 ref.putFile(file)을 통해 생성됨)
       uploadTask = ref.putFile(file);
     });
 
+    // uploadTask 작업이 완료될 때까지 기다린 후, 해당 작업의 상태 정보를 저장하는 스냅샷(snapshot)을 얻음
     final snapshot = await uploadTask!.whenComplete(() {});
 
+    // 업로드된 파일의 다운로드 URL을 얻습니다. 이 URL을 통해 나중에 이미지를 표시하거나 다운로드할 수 있습니다.
     final urlDownload = await snapshot.ref.getDownloadURL();
     print('Download Link: $urlDownload');
 
+    // 업로드 작업이 완료되면 uploadTask 변수를 초기화하여 업로드가 끝났음을 나타냅니다.
     setState(() {
       uploadTask = null;
     });
@@ -96,7 +106,32 @@ class _DiaryEditViewState extends State<DiaryEditView> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Container(
+                // 첫번째 사진
+                // -- 추가 시작
+                // 사진 선택
+                if (pickedFile != null)
+                  Container(
+                  width: 95,
+                  height: 95,
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                        width: 2,
+                      ),
+                      borderRadius: BorderRadius.all(Radius.circular(16))
+                  ),
+                  child: Center(
+                    child: Image.file(
+                      File(pickedFile!.path!),
+                      width: 94,
+                      height: 94,
+                      fit: BoxFit.cover,
+                    )
+                  ),
+                ),
+                // -- 추가 끝
+
+                /*Container(
                   width: 95,
                   height: 95,
                   decoration: BoxDecoration(
@@ -109,7 +144,9 @@ class _DiaryEditViewState extends State<DiaryEditView> {
                   child: Center(
                     child: Text('Upload from gallery', style: TextStyle(fontSize: 8)),
                   ),
-                ),
+                ),*/
+
+                // 두번째 사진
                 Container(
                   width: 95,
                   height: 95,
@@ -147,7 +184,7 @@ class _DiaryEditViewState extends State<DiaryEditView> {
                   ),
                 ),
                 // 사진 업로드
-                /*ElevatedButton(
+                ElevatedButton(
                   child: Row(
                     children: [
                       Icon(Icons.check),
@@ -160,7 +197,7 @@ class _DiaryEditViewState extends State<DiaryEditView> {
                       borderRadius: BorderRadius.circular(50),
                     ),
                   ),
-                ),*/
+                ),
                 //buildProgress(),
                 // 다이어리 업로드
                 ElevatedButton(
@@ -169,7 +206,10 @@ class _DiaryEditViewState extends State<DiaryEditView> {
                       Icon(Icons.check)
                     ],
                   ),
-                  onPressed: ()=>_validateDate(),
+                  onPressed: () {
+                    uploadFile();
+                    _validateDate();
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.black87,
                     shape: RoundedRectangleBorder(
