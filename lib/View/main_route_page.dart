@@ -556,16 +556,67 @@ class RecommendPlaceCard extends StatelessWidget{
     return InkWell(
       onTap: onTap,
       child: Container(
-        padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+        margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
         child: Container(
           height: 100,
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               // 순서 원 + 실선 표시
               Flexible(
                   flex: 2,
-                  child: Text('원 + 실선')
+                  child: Container(
+                    child: Column(
+                      children: [
+                        // 원
+                        Flexible(
+                          flex: 2,
+                          child: Column(
+                              children: [
+                                SizedBox(height: 10,),
+                                Container(
+                                  width: 30,
+                                  height: 30,
+                                  decoration: BoxDecoration(
+                                    color: Color(0xffff7b7b),
+                                    shape: BoxShape.circle,
+                                      boxShadow: [
+                                        BoxShadow(
+                                          color: Colors.grey.withOpacity(0.7),
+                                          blurRadius: 2.0,
+                                          spreadRadius: 0.0,
+                                          offset: const Offset(0,7),
+                                        )
+                                      ]
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      // 추천 경로 개수
+                                      '1',
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.black87,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                        ),
+                        //Spacer(),
+                        // 실선
+                        Flexible(
+                          flex: 3,
+                          child: Container(
+                              height: 65,
+                              width: 3.5,
+                              color: Colors.grey,
+                            ),
+                        ),
+                      ],
+                    ),
+                  )
               ),
               // 장소 사진
               Flexible(
