@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:nagaja_app/Controller/map_controller.dart';
 import 'package:nagaja_app/Model/draw_recommend_route.dart';
@@ -34,7 +36,8 @@ class MainRoutePage extends StatefulWidget {
 class _MainRoutePageState extends State<MainRoutePage> {
   late GoogleMapController mapController;
   MapController controller = MapController();
-  DrawRecommendRoute drawRoute = DrawRecommendRoute();
+  // DrawRecommendRoute drawRoute = DrawRecommendRoute();
+  PolylinePoints polylinePoints = PolylinePoints();
   bool isExpanded = false;
   ScrollController scrollcontroller = ScrollController();
   List<Place> places = [];
@@ -75,6 +78,11 @@ class _MainRoutePageState extends State<MainRoutePage> {
   int _selectedIndex = 0;
 
   List<Place> recommendPlaces=[];
+
+  int polylineIdCounter = 0;
+  Map<PolylineId, Polyline> polylineList = {};
+  List<LatLng> polylineCoordinates = [];
+  Set<Polyline> _polylines = {};
 
   final List<Widget> _navIndex = [
     MainPage(),
@@ -122,7 +130,9 @@ class _MainRoutePageState extends State<MainRoutePage> {
   void initState() {
     super.initState();
     nowP = widget.initialLatLng;
+    recommendPlaces = widget.recommendPlaces;
     categoryGroupPlaceLists = widget.categoryGroupPlaceLists;
+    selectP = LatLng(widget.selectP.latitude,widget.selectP.longitude);
     markers = Set<Marker>();
   }
 
@@ -133,6 +143,7 @@ class _MainRoutePageState extends State<MainRoutePage> {
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
+    drawPolyline(widget.recommendPlaces);
   }
 
   Future<void> addMarkersFromPlacesApi() async {
@@ -144,6 +155,47 @@ class _MainRoutePageState extends State<MainRoutePage> {
       LatLng(latlng.latitude, latlng.longitude),
       zoom,
     ));
+  }
+
+  drawPolyline(List<Place> recommendPlaces) async{
+    // for(int i = 0; i < recommendPlaces.length - 1; i++) {
+      //출발지가 항상 리스트 맨 처음
+      LatLng startLocation = LatLng(recommendPlaces[0].placeLat,recommendPlaces[0].placeLng);
+      LatLng endLocation = LatLng(recommendPlaces[1].placeLat, recommendPlaces[1].placeLng);
+
+      await getPolyline(startLocation, endLocation);
+    // }
+  }
+
+  getPolyline(LatLng startL, LatLng endL) async{
+    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+      'AIzaSyBrK8RWyR1_3P7M7yjNiJ8xyXTAuFpeLlM',
+
+      PointLatLng(startL.latitude, startL.longitude),
+      PointLatLng(endL.latitude, endL.longitude),
+
+      travelMode: TravelMode.walking,
+    );
+    polylineCoordinates.addAll(result.points.map(
+          (PointLatLng element) => LatLng(element.latitude, element.longitude),
+    ));
+    for (LatLng latLng in polylineCoordinates) {
+      print('Latitude: ${latLng.latitude}, Longitude: ${latLng.longitude}');
+    }
+    addPolyline();
+  }
+
+  addPolyline() {
+    polylineIdCounter++;
+    PolylineId id = PolylineId('$polylineIdCounter');
+    Polyline newPolyline = Polyline(
+      polylineId: id,
+      points: polylineCoordinates,
+      color: Colors.blue,
+    );
+    polylineList[id] = newPolyline;
+    print('Added polyline: $newPolyline');
+    _polylines.add(newPolyline);
   }
 
   @override
@@ -263,21 +315,21 @@ class _MainRoutePageState extends State<MainRoutePage> {
                             child: Text('Error: ${snapshot.error}'),
                           );
                         } else {
-                          List<Place> selectedCategoryPlaces = categoryGroupPlaceLists[selectedPlaceType] ?? [];
+                          List<Place> selectedCategoryPlaces = recommendPlaces ?? [];
                           return SizedBox(
                             height: 1000, // 리스트뷰 스크롤 가능 높이 길이
                             child: ListView.builder(
                                 shrinkWrap: true, // 리스트뷰 크기 고정
-                                itemCount: 2, // 경로 추천 장소 개수 설정
+                                itemCount: recommendPlaces.length-1, // 경로 추천 장소 개수 설정
                                 itemBuilder: (context, index) {
                                   int order = index + 1;
                                   return RecommendPlaceCard(
-                                    place: selectedCategoryPlaces[index],
+                                    place: recommendPlaces[order],
                                     order: order, // 순서 표시할 수 있는 매개변수 추가
                                     onTap: () {
                                       // snapping sheet에서 장소 탭 -> 카메라 위치 - 임의의 좌표로 설정함
-                                      _updateCameraPosition(LatLng(41.40338, 2.17403), 16.0);
-                                      print('PlaceCard tapped: ${selectedCategoryPlaces[index].name}');
+                                      _updateCameraPosition(recommendPlaces[order].latlng, 16.0);
+                                      print('PlaceCard tapped: ${recommendPlaces[order].name}');
                                     },
                                   );
                                 }),
@@ -313,18 +365,18 @@ class _MainRoutePageState extends State<MainRoutePage> {
   }
 
   Widget _buildAIRecommendationContent() {
-    return FutureBuilder<void>(
-        future: drawRoute.drawPolyline(recommendPlaces),
-    builder: (context, snapshot) {
-    if (snapshot.connectionState == ConnectionState.waiting) {
-    return Center(
-    child: CircularProgressIndicator(),
-    );
-    } else if (snapshot.hasError) {
-    return Center(
-    child: Text('Error: ${snapshot.error}'),
-    );
-    } else {
+    // return FutureBuilder<void>(
+    //     future: drawPolyline(recommendPlaces),
+    // builder: (context, snapshot) {
+    // if (snapshot.connectionState == ConnectionState.waiting) {
+    // return Center(
+    // child: CircularProgressIndicator(),
+    // );
+    // } else if (snapshot.hasError) {
+    // return Center(
+    // child: Text('Error: ${snapshot.error}'),
+    // );
+    // } else {
       return GoogleMap(
         myLocationEnabled: true,
         myLocationButtonEnabled: false,
@@ -338,15 +390,15 @@ class _MainRoutePageState extends State<MainRoutePage> {
             markerId: MarkerId('marker_id'),
             position: selectP,
             infoWindow: InfoWindow(
-              title: '현재 위치',
+              title: '출발 위치',
               snippet: '',
             ),
           ),
         },
         //
-        polylines: Set<Polyline>.of(drawRoute.polylineList.values),
+        polylines:_polylines
       );
-    }});
+    // }});
   }
 
 
@@ -500,7 +552,7 @@ class _MainRoutePageState extends State<MainRoutePage> {
   }
 
   Widget _buildTourTabContent() {
-    LatLng target = nowP;
+    LatLng target = selectP;
     return FutureBuilder<void>(
         future: addMarkersFromPlacesApi(),
         builder: (context, snapshot) {
@@ -685,47 +737,47 @@ class RecommendPlaceCard extends StatelessWidget {
                         Flexible(
                           flex: 2,
                           child: Column(
-                              children: [
-                                SizedBox(height: 10,),
-                                Container(
-                                  width: 30,
-                                  height: 30,
-                                  decoration: BoxDecoration(
+                            children: [
+                              SizedBox(height: 10,),
+                              Container(
+                                width: 30,
+                                height: 30,
+                                decoration: BoxDecoration(
                                     color: Color(0xffff7b7b),
                                     shape: BoxShape.circle,
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.grey.withOpacity(0.7),
-                                          blurRadius: 2.0,
-                                          spreadRadius: 0.0,
-                                          offset: const Offset(0,7),
-                                        )
-                                      ]
-                                  ),
-                                  child: Center(
-                                    child: Text(
-                                      // 순서 출력(추천 경로 개수 반영)
-                                      '$order',
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.black87,
-                                      ),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.grey.withOpacity(0.7),
+                                        blurRadius: 2.0,
+                                        spreadRadius: 0.0,
+                                        offset: const Offset(0,7),
+                                      )
+                                    ]
+                                ),
+                                child: Center(
+                                  child: Text(
+                                    // 순서 출력(추천 경로 개수 반영)
+                                    '$order',
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.black87,
                                     ),
                                   ),
                                 ),
-                              ],
-                            ),
+                              ),
+                            ],
+                          ),
                         ),
                         //Spacer(),
                         // 실선
                         Flexible(
                           flex: 3,
                           child: Container(
-                              height: 65,
-                              width: 3.5,
-                              color: Colors.grey,
-                            ),
+                            height: 65,
+                            width: 3.5,
+                            color: Colors.grey,
+                          ),
                         ),
                       ],
                     ),
@@ -735,17 +787,17 @@ class RecommendPlaceCard extends StatelessWidget {
               Flexible(
                 flex: 3,
                 child: Container(
-                    width: 95,
-                    height: 95,
-                    decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.grey,
-                          width: 2,
-                        ),
-                        borderRadius: BorderRadius.all(Radius.circular(16))
-                    ),
-                    // 사진 1개 불러오기
-                    /*child: ListView.builder(
+                  width: 95,
+                  height: 95,
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                        width: 2,
+                      ),
+                      borderRadius: BorderRadius.all(Radius.circular(16))
+                  ),
+                  // 사진 1개 불러오기
+                  child: ListView.builder(
                             //scrollDirection: Axis.horizontal,
                             itemCount: 1, // 사진 1개만 불러오기
                             //itemCount: place.photoUrls.length,
@@ -760,63 +812,64 @@ class RecommendPlaceCard extends StatelessWidget {
                                 ),
                               );
                             },
-                          ),*/
-                  ),
+                          ),
+                ),
               ),
               // 장소이름 + 타입 + 별점
               Flexible(
                 flex: 5,
                 child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      // 장소 이름 불러오기
-                      place.name,
-                      style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(height: 7),
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // 장소 이름 불러오기
+                    Flexible(
+                      flex: 1,
+                      child: Text(
+                        place.name,
+                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                      ),),
                     // 장소 타입
-                    Text(
-                      '카페',
-                      style: TextStyle(fontSize: 13, color: Colors.grey),
-                    ),
-                    // 장소 타입 불러오기
-                    /*Text(
-                         '$firstPlaceType',
-                         style: TextStyle(fontSize: 13, color: Colors.grey),
-                       ),*/
-                    SizedBox(height: 20),
-                    // 별점
-                    RatingStars(
-                      // 별점 불러오기
-                      //value: place.rating,
-                      value: 4.3,
-                      starCount: 5,
-                      starSize: 10,
-                      valueLabelColor: const Color(0xff9b9b9b),
-                      valueLabelTextStyle: TextStyle(
-                          color: Colors.white,
-                          fontFamily: 'WorkSans',
-                          fontWeight: FontWeight.w400,
-                          fontStyle: FontStyle.normal,
-                          fontSize: 12.0
+                    Flexible(
+                      flex: 1,
+                      child: Text(
+                        place.types[0],
+                        style: TextStyle(fontSize: 13, color: Colors.grey),
                       ),
-                      valueLabelRadius: 10,
-                      starSpacing: 2,
-                      maxValueVisibility: false,
-                      valueLabelVisibility: true,
-                      animationDuration: Duration(milliseconds: 1000),
-                      valueLabelPadding: const EdgeInsets.symmetric(
-                          vertical: 1, horizontal: 8),
-                      valueLabelMargin: const EdgeInsets.only(right: 8),
-                      starOffColor: const Color(0xffe7e8ea),
-                      starColor: Colors.yellow,
+                      // 장소 타입 불러오기
                     ),
+                    // 별점
+                    Flexible(
+                      flex: 2,
+                      child: RatingStars(
+                        // 별점 불러오기
+                        value: place.rating,
+                        starCount: 5,
+                        starSize: 10,
+                        valueLabelColor: const Color(0xff9b9b9b),
+                        valueLabelTextStyle: TextStyle(
+                            color: Colors.white,
+                            fontFamily: 'WorkSans',
+                            fontWeight: FontWeight.w400,
+                            fontStyle: FontStyle.normal,
+                            fontSize: 12.0
+                        ),
+                        valueLabelRadius: 10,
+                        starSpacing: 2,
+                        maxValueVisibility: false,
+                        valueLabelVisibility: true,
+                        animationDuration: Duration(milliseconds: 1000),
+                        valueLabelPadding: const EdgeInsets.symmetric(
+                            vertical: 1, horizontal: 8),
+                        valueLabelMargin: const EdgeInsets.only(right: 8),
+                        starOffColor: const Color(0xffe7e8ea),
+                        starColor: Colors.yellow,
+                      ),),
                   ],
-                )
-              ],
-            ),
+                ),
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

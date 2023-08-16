@@ -56,7 +56,7 @@ class DrawRecommendRoute {
   // ];
   List<Place> recommendPlaces = [];
 
-  Map<int, Polyline> polylineList = {};
+  Map<PolylineId, Polyline> polylineList = {};
   PolylinePoints polylinePoints = PolylinePoints();
   int polylineIdCounter = 0;
   List<LatLng> polylineCoordinates=[];
@@ -86,7 +86,6 @@ class DrawRecommendRoute {
 
   //categoryGroupPlaceLists['category'], 예시 참고
   List<Place> setRecommendPlaces(Map<String, List<Place>> categoryGroupPlaceLists,GeoPoint gp, int placesCounter, String userType) {
-    setOriginPlace(LatLng(gp.latitude, gp.longitude));
     int a=0;
     int b=0;
     int c=0;
@@ -164,6 +163,7 @@ class DrawRecommendRoute {
       }
     }
     sortingCloseDistance(recommendPlaces);
+    setOriginPlace(LatLng(gp.latitude, gp.longitude));
     print('추천장소');
     for(int i =0;i<placesCounter+1&& i < recommendPlaces.length;i++){
       print(recommendPlaces[i].name);
@@ -182,10 +182,11 @@ class DrawRecommendRoute {
   drawPolyline(List<Place> recommendPlaces) async{
     for(int i = 0; i < recommendPlaces.length - 1; i++) {
       //출발지가 항상 리스트 맨 처음
-      LatLng startLocation = recommendPlaces[i].location;
-      LatLng endLocation = recommendPlaces[i + 1].location;
+      LatLng startLocation = LatLng(recommendPlaces[i].placeLat,recommendPlaces[i].placeLng);
+      LatLng endLocation = LatLng(recommendPlaces[i + 1].placeLat, recommendPlaces[i + 1].placeLng);
 
       List<LatLng> polylineP = await getPolyline(startLocation, endLocation);
+      print(polylineP);
       addPolyline(polylineP);
     }
   }
@@ -200,24 +201,21 @@ class DrawRecommendRoute {
       travelMode: TravelMode.walking,
     );
 
-    if (result.points.isNotEmpty) {
-      for (var element in result.points) {
-        polylineCoordinates.add(LatLng(element.latitude, element.longitude));
-        print(result.points);
-      }
-    }
+    polylineCoordinates.addAll(result.points.map(
+          (PointLatLng element) => LatLng(element.latitude, element.longitude),
+    ));
     return polylineCoordinates;
   }
 
   addPolyline(List<LatLng> polylineCoordinates) {
     polylineIdCounter++;
-
+    PolylineId id = PolylineId('$polylineIdCounter');
     Polyline newPolyline = Polyline(
-      polylineId: PolylineId('$polylineIdCounter'),
+      polylineId: id,
       points: polylineCoordinates,
       color: Colors.blue,
     );
-
-    polylineList[polylineIdCounter] = newPolyline;
+    polylineList[id] = newPolyline;
+    print('Added polyline: $newPolyline');
   }
 }

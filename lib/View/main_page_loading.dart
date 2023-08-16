@@ -64,8 +64,8 @@ class _MainLoadingPageState extends State<MainLoadingPage> {
     for (var type in typeList) {
       List<Place> placeInfoFragment;
       placeInfoFragment = await PlacesApi.searchPlaces(
-          userRouteData['placeGeopoint'].latitude,
-          userRouteData['placeGeopoint'].longitude, type);
+          userRouteData['startPlaceGeopoint'].latitude,
+          userRouteData['startPlaceGeopoint'].longitude, type);
       placeInfo.addAll(placeInfoFragment);
     }
 
@@ -103,7 +103,7 @@ class _MainLoadingPageState extends State<MainLoadingPage> {
       '바': categoryGroupPlaceLists['바']!,
       '어트랙션': categoryGroupPlaceLists['어트랙션']!},
         recommendPlaces: recommendPlaces,
-    selectP: userRouteData['placeGeopoint'])));
+    selectP: userRouteData['startPlaceGeopoint'])));
   }
 
 
@@ -114,7 +114,7 @@ class _MainLoadingPageState extends State<MainLoadingPage> {
       getPlaceInfo().then((_){
         int recommendPlacesCount = int.parse(userRouteData['placeCount']);
         recommendPlaces = test.setRecommendPlaces(categoryGroupPlaceLists,
-            userRouteData['placeGeopoint'],
+            userRouteData['startPlaceGeopoint'],
             recommendPlacesCount,
             userRouteData['picnicConcept']);
       });
@@ -142,7 +142,7 @@ class _MainLoadingPageState extends State<MainLoadingPage> {
         '바': categoryGroupPlaceLists['바']!,
         '어트랙션': categoryGroupPlaceLists['어트랙션']!},
         recommendPlaces: recommendPlaces,
-      selectP: userRouteData['placeGeopoint']);
+      selectP: userRouteData['startPlaceGeopoint']);
     }
   }
 }
