@@ -14,8 +14,8 @@ class _ActionButtonsState extends State<ActionButtons> {
 
   @override
   Widget build(BuildContext context) {
-    //var today = new DateTime.now();
-    //String formattedDate = DateFormat('yy MM dd').format(today);
+    var today = DateTime.now(); // 현재 날짜 및 시간 가져오기
+    String formattedDate = DateFormat('yyyy/MM/dd').format(today); // 날짜 형식 지정
 
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -41,7 +41,7 @@ class _ActionButtonsState extends State<ActionButtons> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
+                    children: [
                       Text(
                         'Today',
                         style: TextStyle(
@@ -51,7 +51,8 @@ class _ActionButtonsState extends State<ActionButtons> {
                         ),
                       ),
                       Text(
-                        '2023/08/15',
+                        formattedDate,
+                        //'2023/08/15',
                         style: TextStyle(
                           fontWeight: FontWeight.w500,
                           fontSize: 15,
