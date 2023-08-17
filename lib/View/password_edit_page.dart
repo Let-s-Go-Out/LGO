@@ -12,8 +12,7 @@ class PasswordEdit extends StatefulWidget {
 }
 
 class _PasswordEditState extends State<PasswordEdit> {
-
-  String? passwordFromDB = Get.find<UserController>().userData.value!.userPassword;
+  String? passwordFromDB;
   String? changingPw;
 
   bool visible = true;
@@ -25,7 +24,12 @@ class _PasswordEditState extends State<PasswordEdit> {
   GlobalKey<FormState> pwFormkey = GlobalKey<FormState>();
 
   @override
-  void initState() {}
+  void initState() {
+    super.initState();
+    UserController userController = Get.find(); // UserController 인스턴스 가져오기
+    userController.fetchUserData(); // Firestore에서 사용자 데이터 가져오기
+    passwordFromDB = userController.userData.value?.userPassword;
+  }
 
   FocusNode newFocus = FocusNode();
   FocusNode confirmFocus = FocusNode();

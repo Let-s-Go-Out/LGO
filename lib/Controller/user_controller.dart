@@ -11,12 +11,12 @@ class UserController extends GetxController {
 
   String? uid;
 
-  Future<String?> usingAuth() async {
-    /*
+  /*Future<void> usingAuth() async {
+    *//*
     AuthController authForMyPage = AuthController();
     uid = await authForMyPage.getUserUid();
 
-     */
+     *//*
 
     try {
       var auth = await FirebaseAuth.instance;
@@ -25,18 +25,34 @@ class UserController extends GetxController {
       print('사용자 UID 가져오기 실패: $e');
       return null;
     }
-  }
+  }*/
 
-  //Firestore 안에 사용자 정보 가져오기
+  /*//Firestore 안에 사용자 정보 가져오기
   Future<void> fetchUserData() async{
     try {
+      await usingAuth(); // uid를 설정한 후 Firestore에서 데이터 가져오기
       var snapshot = await FirebaseFirestore.instance.collection('Users')
           .doc(uid).get();
       if (snapshot.exists) {
         userData.value = UserModel.fromSnapshot(snapshot);
       }
     } catch (e) { print('Error fetching userData: $e'); }
+  }*/
+
+  Future<void> fetchUserData() async {
+    try {
+      String? uid = FirebaseAuth.instance.currentUser?.uid;
+      if (uid != null) {
+        var snapshot = await FirebaseFirestore.instance.collection('Users').doc(uid).get();
+        if (snapshot.exists) {
+          userData.value = UserModel.fromSnapshot(snapshot);
+        }
+      }
+    } catch (e) {
+      print('Error fetching userData: $e');
+    }
   }
+
 
 
   //
