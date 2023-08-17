@@ -64,7 +64,7 @@ class _PasswordEditState extends State<PasswordEdit> {
               child: Container(
                 padding: EdgeInsets.all(20),
 
-                width: width * 0.8,
+                width: width * 0.9,
                 height: height * 0.85,
 
                 child: Column(
@@ -145,7 +145,7 @@ class _PasswordEditState extends State<PasswordEdit> {
         onFieldSubmitted: (value)
         //value = 입력값
         => FocusScope.of(context).requestFocus(newFocus),
-        // 확인 >> 수정
+        // 확인
 
         //controller: passwordController,
 
@@ -315,7 +315,6 @@ class _PasswordEditState extends State<PasswordEdit> {
               userController.updatePassword(passwordFromDB!);
 
               print('change user password: $passwordFromDB');
-              //Get.toNamed('myPage');
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => MyPage()),

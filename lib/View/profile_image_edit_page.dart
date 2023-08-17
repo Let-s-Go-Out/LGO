@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -15,7 +16,11 @@ class _ProfileImgEditState extends State<ProfileImgEdit> {
 
   File? profileImg;
   //임시
-  String? uid = 'B5gefuZ8nPPTQatH7GZSKAXR5ns1';
+  String? uid;
+  Future<String?> getUid() async {
+    var auth = await FirebaseAuth.instance;
+    uid = auth.currentUser!.uid;
+  }
 
   Widget defaultImage(double height, double width) {
     return Container(

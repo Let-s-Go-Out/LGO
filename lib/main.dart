@@ -41,14 +41,6 @@ class MyApp extends StatelessWidget {
       getPages: [
         GetPage(name: '/', page: () => HomePage()), // Define routes here
 
-        /*
-        GetPage(name: 'myPage', page: () => MyPage()),
-        GetPage(name: 'pwEdit', page: () => PasswordEdit()),
-        GetPage(name: 'nicknameEdit', page: () => NicknameEdit() ),
-        GetPage(name: 'splash', page: () => Splash()),
-
-         */
-
       ],// Set the main page as the home screen
     );
   }

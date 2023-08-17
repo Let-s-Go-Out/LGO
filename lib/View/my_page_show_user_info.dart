@@ -62,39 +62,6 @@ class _ShowUserInfoState extends State<ShowUserInfo> {
                         ),
 
 
-                        //삭제 >> id
-                        /*
-                        GestureDetector(
-                          onTap: () {},
-                          child: ListTile(
-                            title: Text(
-                              'ID',
-                              style: TextStyle(fontSize:15, fontWeight: FontWeight.bold),
-                            ),
-                            subtitle: Padding(
-                              padding: EdgeInsets.only(top: 8, left: 10),
-                              child: Text(
-                                //수정 >>
-                                '${Get.find<UserController>().userData.value?.userId}',
-                                style: TextStyle(fontSize: 14),
-                              ),
-                            ),
-                            trailing: Icon(
-                              Icons.close,
-                              size: 18,
-                            ),
-                          ),
-                        ),
-                        Divider(
-                          indent: 20,
-                          endIndent: 10,
-                          thickness: 1,
-                          color: Colors.black45,
-                        ),
-
-                         */
-
-
                         //이메일
                         GestureDetector(
                           onTap: () {},
