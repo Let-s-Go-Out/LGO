@@ -95,49 +95,29 @@ class _MyPageState extends State<MyPage> {
         centerTitle: true,
       ),
 
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Center(
-            child: SizedBox(
-              width: width * 0.8,
-              height: height * 0.9,
+      body: Column(
+        mainAxisSize: MainAxisSize.max, // 전체 화면에 모든 위젯이 표시되도록 설정
+        children: [
 
-              child: const Column(
-                children: [
-
-                  //프로필 이미지
-                  Flexible(
-                    flex: 3,
-                    child: ProfileImgEdit(),
-                  ),
-
-
-                  //Title: 내 정보 관리
-                  //사용자 정보
-                  Flexible(
-                    flex: 5,
-                    child:  Padding(
-                      padding: EdgeInsets.all(0),
-                      child: ShowUserInfo(),
-                    ),
-                  ),
-
-
-                  //로그 아웃, 탈퇴 하기 버튼
-                  Flexible(
-                    flex: 3,
-                    child:  Padding(
-                      padding: EdgeInsets.all(0),
-                      child: OutButtons(),
-                    ),
-                  ),
-
-                ],
-              ),
-            ),
-
+          // 프로필 이미지
+          Expanded(
+            flex: 2,
+            child: ProfileImgEdit(),
           ),
-        ),
+
+          // Title: 내 정보 관리
+          // 사용자 정보
+          Expanded(
+            flex: 6,
+            child: ShowUserInfo(),
+          ),
+
+          // 로그아웃, 탈퇴하기
+          Expanded(
+            flex: 2,
+            child: OutButtons(),
+          ),
+        ],
       ),
     );
   }
