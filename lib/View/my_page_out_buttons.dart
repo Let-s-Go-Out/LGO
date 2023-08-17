@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:nagaja_app/View/login_page.dart';
 
 import '../Controller/user_controller.dart';
 
@@ -13,7 +14,7 @@ class OutButtons extends StatelessWidget {
       builder: (BuildContext context, BoxConstraints constraints) {
         final double availableWidth = constraints.maxWidth * 0.5;
         final double availableHeight = constraints.maxHeight * 0.3;
-        //수정 >>
+        //수정
 
         return Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -91,7 +92,7 @@ class _LogOutButtonState extends State<LogOutButton> {
 
     return Center(
       child: Container(
-        width: width * 0.5,
+        width: width * 0.65,
         height: height * 0.3,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
@@ -106,7 +107,11 @@ class _LogOutButtonState extends State<LogOutButton> {
               padding: EdgeInsets.all(15.0),
               child: Text(
                 '로그아웃 하시겠습니까?',
-                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
 
@@ -118,8 +123,12 @@ class _LogOutButtonState extends State<LogOutButton> {
                 UserController userController = Get.find();
                 userController.logout();
                 //로그 아웃 후 처음 화면으로
-                Get.offAll('/');
-                //Get.toNamed('/');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => LoginPage(),
+                  ),
+                );
               },
             ),
 
@@ -163,8 +172,8 @@ class _DeleteButtonState extends State<DeleteButton> {
 
     return Center(
       child: Container(
-        width: width * 0.5,
-        height: height * 0.3,
+        width: width * 0.6,
+        height: height * 0.5,
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(20),
           color: Colors.white,
@@ -178,7 +187,11 @@ class _DeleteButtonState extends State<DeleteButton> {
               padding: EdgeInsets.all(15.0),
               child: Text(
                 '탈퇴 시, \n기존 정보가 모두 소멸됩니다. \n탈퇴 하시겠습니까?',
-                style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                    color: Colors.black,
+                    fontSize: 15,
+                    fontWeight: FontWeight.bold,
+                ),
                 textAlign: TextAlign.center,
               ),
             ),
@@ -191,8 +204,12 @@ class _DeleteButtonState extends State<DeleteButton> {
                 UserController userController = Get.find();
                 userController.deleteAccount();
                 //계정 삭제 후 초기 화면으로
-                Get.offAll('/');
-                //Get.toNamed('/');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => LoginPage(),
+                  ),
+                );
               },
             ),
 

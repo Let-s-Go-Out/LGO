@@ -40,38 +40,39 @@ class _NicknameEditState extends State<NicknameEdit> {
             key: nicknameFormkey,
 
             child:  Center(
-              child: Container(
-                padding: EdgeInsets.all(20),
-                width: width * 0.8,
-                height: height * 0.85,
-                //color: Colors.black26,
+              child: SingleChildScrollView(
+                child: Container(
+                  padding: EdgeInsets.all(20),
+                  width: width * 0.8,
+                  height: height * 0.85,
 
-                child: Column(
-                  children: [
+                  child: Column(
+                    children: [
 
-                    //Title: 닉네임
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(20, 20, 0, 0),
-                      child: SizedBox(
-                        width: double.infinity,
-                        child: Text('새 닉네임',
-                          style: TextStyle(
-                            color: Colors.black45,
-                            fontSize:14, fontWeight: FontWeight.bold,
+                      //Title: 닉네임
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(20, 20, 0, 0),
+                        child: SizedBox(
+                          width: double.infinity,
+                          child: Text('새 닉네임',
+                            style: TextStyle(
+                              color: Colors.black45,
+                              fontSize:14, fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ),
-                    ),
 
-                    //닉네임 변경란
-                    newNickname(),
+                      //닉네임 변경란
+                      newNickname(),
 
-                    //저장 하기
-                    stored(),
+                      //저장 하기
+                      stored(),
 
-                  ],
+                    ],
+                  ),
+
                 ),
-
               ),
             ),
           )
@@ -151,13 +152,12 @@ class _NicknameEditState extends State<NicknameEdit> {
               userController.updateNickname(nicknameFromDB!);
 
               print('new nickname: $nicknameFromDB');
-              //Get.toNamed('myPage');
+
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => MyPage()),
               );
             }
-            //validate 확인(후 pw 저장) 후 페이지 이동(변경한 데이터 가지고)
           },
         ),
       ),
