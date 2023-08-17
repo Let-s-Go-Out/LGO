@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nagaja_app/View/login_page.dart';
@@ -87,7 +88,7 @@ class _LogOutButtonState extends State<LogOutButton> {
   @override
   Widget build(BuildContext context) {
 
-    Get.put(UserController());
+    //Get.put(UserController());
 
     final double width = MediaQuery.of(context).size.width;
     final double height = MediaQuery.of(context).size.height;
@@ -121,9 +122,10 @@ class _LogOutButtonState extends State<LogOutButton> {
               child: const Text(
                 '로그아웃', style: TextStyle(color: Colors.red),
               ),
-              onPressed: () {
-                UserController userController = Get.find();
-                userController.logout();
+              onPressed: () async {
+                //UserController userController = Get.find();
+                //userController.logout();
+                await FirebaseAuth.instance.signOut();
                 //로그 아웃 후 처음 화면으로
                 Navigator.push(
                   context,
