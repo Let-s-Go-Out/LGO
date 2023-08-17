@@ -31,6 +31,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      // 디버그 리본 삭제
+      debugShowCheckedModeBanner: false,
       title: "Let's Go Out",
       theme: ThemeData( // Define the default brightness and colors.
         primaryColor: Colors.black,
