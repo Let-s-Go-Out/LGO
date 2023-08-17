@@ -766,7 +766,7 @@ class RecommendPlaceCard extends StatelessWidget {
               Flexible(
                 flex: 3,
                 child: Container(
-                  width: 95,
+                  width: 85,
                   height: 95,
                   decoration: BoxDecoration(
                       border: Border.all(
@@ -775,23 +775,26 @@ class RecommendPlaceCard extends StatelessWidget {
                       ),
                       borderRadius: BorderRadius.all(Radius.circular(16))
                   ),
+                  // ========= 3차 추가 시작 ===========
                   // 사진 1개 불러오기
-                  child: ListView.builder(
-                            //scrollDirection: Axis.horizontal,
-                            itemCount: 1, // 사진 1개만 불러오기
-                            //itemCount: place.photoUrls.length,
-                            itemBuilder: (context, index) {
-                              return Container(
-                                margin: EdgeInsets.only(right: 5),
-                                child: Image.network(
-                                  place.photoUrls[index],
-                                  width: 100,
-                                  height: 150,
-                                  fit: BoxFit.cover,
-                                ),
-                              );
-                            },
+                  child: place.photoUrls.isNotEmpty
+                      ? ClipRRect(
+                          borderRadius: BorderRadius.all(Radius.circular(14)),
+                          child: Image.network(
+                            place.photoUrls.first,
+                            width: 85,
+                            height: 95,
+                            fit: BoxFit.cover,
                           ),
+                        )
+                      : Container(
+                        width: 85,
+                        height: 95,
+                        child: Center(
+                          child: Text("No Image", style: TextStyle(fontSize: 10)),
+                    ),
+                  ),
+                  // ========= 3차 추가 끝 ===========
                 ),
               ),
               // 장소이름 + 타입 + 별점
