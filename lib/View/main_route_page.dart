@@ -664,17 +664,46 @@ class PlaceCard extends StatelessWidget {
               height: 150,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount: place.photoUrls.length,
+                itemCount: place.photoUrls.isNotEmpty ? place.photoUrls.length : 1,
                 itemBuilder: (context, index) {
-                  return Container(
-                    margin: EdgeInsets.only(right: 5),
-                    child: Image.network(
-                      place.photoUrls[index],
+                  if (place.photoUrls.isEmpty) {
+                    return Container(
+                      margin: EdgeInsets.only(right: 5),
                       width: 100,
                       height: 150,
-                      fit: BoxFit.cover,
-                    ),
-                  );
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey,
+                          width: 2,
+                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(8)),
+                      ),
+                      // 대체 텍스트
+                      child: Center(
+                        child: Text("No Image"),
+                      ),
+                    );
+                  } else {
+                    return Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey, // Border의 색상 설정
+                          width: 2, // Border의 두께 설정
+                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(8)),
+                      ),
+                      margin: EdgeInsets.only(right: 8),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.all(Radius.circular(6)),
+                        child: Image.network(
+                          place.photoUrls[index],
+                          width: 100,
+                          height: 150,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    );
+                  }
                 },
               ),
             ),
