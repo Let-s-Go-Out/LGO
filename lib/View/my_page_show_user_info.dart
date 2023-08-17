@@ -24,8 +24,17 @@ class _ShowUserInfoState extends State<ShowUserInfo> {
 
 
     Get.put(UserController());
-    //확인
     Get.find<UserController>().fetchUserData();
+
+    //hide password
+    String hidePassword() {
+      var hiddenPassword = Get.find<UserController>().userData.value?.userPassword;
+      if (hiddenPassword == null || hiddenPassword.isEmpty) {
+        return '';
+      }
+
+      return '*' * hiddenPassword.length;
+    }
 
 
     return LayoutBuilder(
@@ -133,9 +142,7 @@ class _ShowUserInfoState extends State<ShowUserInfo> {
                           onTap: () {
                             //수정 >>
                             // Get.find<UserController>().userData.value?.userEmail
-                            if(notSocialLogin)
-                            {
-                              //Get.toNamed('pwEdit');
+                            if(notSocialLogin) {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(builder: (context) => PasswordEdit()),
@@ -160,7 +167,7 @@ class _ShowUserInfoState extends State<ShowUserInfo> {
                             subtitle: Padding(
                               padding: EdgeInsets.only(top: 8, left: 10),
                               child: Text(
-                                hidePassword(), //확인 해야 합니다.
+                                hidePassword(), //확인
                                 style: TextStyle(fontSize: 14),
                               ),
                             ),
@@ -187,16 +194,6 @@ class _ShowUserInfoState extends State<ShowUserInfo> {
 
         }
     );
-  }
-
-  //hide password
-  String hidePassword() {
-    var hiddenPassword = Get.find<UserController>().userData.value?.userPassword;
-    if (hiddenPassword == null || hiddenPassword.isEmpty) {
-      return '';
-    }
-
-    return '*' * hiddenPassword.length;
   }
 
 
