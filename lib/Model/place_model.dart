@@ -64,10 +64,7 @@ class PlacesApi {
       final List<Place> places = [];
 
       if (data['status'] == 'OK') {
-        int i=0;
         for (var placeData in data['results']) {
-          if(i<5) {
-            i++;
             final placeName = placeData['name'];
             final placeId = placeData['place_id'];
             final placeLat = placeData['geometry']['location']['lat'];
@@ -118,7 +115,6 @@ class PlacesApi {
               }
             }
           }
-        }
         return places;
       } else {
         return places;

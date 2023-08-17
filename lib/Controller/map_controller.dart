@@ -72,7 +72,7 @@ class MapController{
   }
 
   Future<void> searchPlaces(String keyword) async {
-    String apiKey = 'AIzaSyAIeZMzg3xE5dYXgiWNoIjDE34R0SzTAzE';
+    String apiKey = 'AIzaSyBrK8RWyR1_3P7M7yjNiJ8xyXTAuFpeLlM';
     String baseUrl =
         'https://maps.googleapis.com/maps/api/place/textsearch/json';
 
