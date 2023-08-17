@@ -47,7 +47,7 @@ class _ProfileImgEditState extends State<ProfileImgEdit> {
 
     return LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
-          final double availableWidth = constraints.maxWidth;
+          final double availableWidth = constraints.maxWidth * 0.33;
           final double availableHeight = constraints.maxHeight;
           //수정 >>
 
@@ -69,6 +69,7 @@ class _ProfileImgEditState extends State<ProfileImgEdit> {
                           width: availableWidth * 0.8,
                           height: availableHeight * 0.8,
                           decoration: BoxDecoration(
+                            shape: BoxShape.circle,
                             image: DecorationImage(
                               image: FileImage(File(profileImg!.path)),
                               fit: BoxFit.cover,
