@@ -270,6 +270,9 @@ class _MainRoutePageState extends State<MainRoutePage> {
   }
 
   Widget _buildAIRecommendationTab() {
+    int itemCount = recommendPlaces.length-1;
+    double listViewHeight = 20.0 + 120.0 * itemCount; // 리스트뷰 스크롤 가능 높이
+
     return Scaffold(
       body: SnappingSheet(
         lockOverflowDrag: true,
@@ -318,8 +321,9 @@ class _MainRoutePageState extends State<MainRoutePage> {
                         } else {
                           List<Place> selectedCategoryPlaces = recommendPlaces ?? [];
                           return SizedBox(
-                            height: 1000, // 리스트뷰 스크롤 가능 높이 길이
+                            height: listViewHeight, // 리스트뷰 스크롤 가능 높이 길이
                             child: ListView.builder(
+                                primary: false,
                                 shrinkWrap: true, // 리스트뷰 크기 고정
                                 itemCount: recommendPlaces.length-1, // 경로 추천 장소 개수 설정
                                 itemBuilder: (context, index) {
@@ -483,7 +487,7 @@ class _MainRoutePageState extends State<MainRoutePage> {
                   SizedBox(height: 10),
                   // 카테고리 별 장소 리스트
                   Container(
-                    height: MediaQuery.of(context).size.height * 0.5,
+                    height: MediaQuery.of(context).size.height * 0.8,
                     child: FutureBuilder<void>(
                       future: addMarkersFromPlacesApi(),
                       builder: (context, snapshot) {
