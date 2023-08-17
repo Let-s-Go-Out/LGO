@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:nagaja_app/Controller/auth_controller.dart';
+
 import 'package:nagaja_app/View/nickname_edit_page.dart';
 import 'package:nagaja_app/View/password_edit_page.dart';
 
