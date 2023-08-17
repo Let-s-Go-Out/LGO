@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import './View/home_page.dart';
 import 'package:firebase_core/firebase_core.dart';  // Firebase 초기화를 위해 추가
 import 'firebase_options.dart';
+import 'package:get/get.dart';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:developer';
 import 'package:flutter/material.dart';
@@ -9,11 +11,17 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:nagaja_app/View/home_page.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
 import 'package:nagaja_app/View/home.dart';
 import 'package:nagaja_app/View/main_page.dart';
 import 'package:nagaja_app/View/main_page_loading.dart';
 import 'package:nagaja_app/firebase_options.dart';
+
+// 아래 GetPage 4개
+import 'package:nagaja_app/View/password_edit_page.dart';
+import 'package:nagaja_app/View/my_page.dart';
+import 'package:nagaja_app/View/nickname_edit_page.dart';
+import 'package:nagaja_app/View/temp_splash_screen.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,12 +44,12 @@ class MyApp extends StatelessWidget {
       initialRoute: '/', // Set the initial route
       getPages: [
         GetPage(name: '/', page: () => HomePage()), // Define routes here
-        /*
-        GetPage(name: 'myPage', page: () => MyPage()),
-        GetPage(name: 'pwEdit', page: () => PasswordEdit()),
-        GetPage(name: 'nicknameEdit', page: () => NicknameEdit() ),
-        GetPage(name: 'splash', page: () => Splash()),
-         */
+
+        // GetPage(name: 'myPage', page: () => MyPage()),
+        // GetPage(name: 'pwEdit', page: () => PasswordEdit()),
+        // GetPage(name: 'nicknameEdit', page: () => NicknameEdit() ),
+        // GetPage(name: 'splash', page: () => Splash()),
+
       ],// Set the main page as the home screen
     );
   }
