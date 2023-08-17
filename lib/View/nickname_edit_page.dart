@@ -22,6 +22,7 @@ class _NicknameEditState extends State<NicknameEdit> {
 
     //
     Get.put(UserController());
+    Get.find<UserController>().fetchUserData();
     nicknameFromDB = Get.find<UserController>().userData.value!.userNickname;
 
     final double width = MediaQuery.of(context).size.width;

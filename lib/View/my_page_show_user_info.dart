@@ -22,7 +22,7 @@ class _ShowUserInfoState extends State<ShowUserInfo> {
   @override
   Widget build(BuildContext context) {
 
-    //final UserController userController = Get.put(UserController());
+
     Get.put(UserController());
     //확인
     Get.find<UserController>().fetchUserData();
