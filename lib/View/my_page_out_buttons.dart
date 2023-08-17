@@ -87,6 +87,8 @@ class _LogOutButtonState extends State<LogOutButton> {
   @override
   Widget build(BuildContext context) {
 
+    Get.put(UserController());
+
     final double width = MediaQuery.of(context).size.width;
     final double height = MediaQuery.of(context).size.height;
 
@@ -166,6 +168,8 @@ class DeleteButton extends StatefulWidget {
 class _DeleteButtonState extends State<DeleteButton> {
   @override
   Widget build(BuildContext context) {
+
+    Get.put(UserController());
 
     final double width = MediaQuery.of(context).size.width;
     final double height = MediaQuery.of(context).size.height;
