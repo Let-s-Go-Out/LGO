@@ -34,6 +34,7 @@ class _PasswordEditState extends State<PasswordEdit> {
 
     //
     Get.put(UserController());
+    Get.find<UserController>().fetchUserData();
     passwordFromDB = Get.find<UserController>().userData.value!.userPassword;
 
     final double width = MediaQuery.of(context).size.width;
