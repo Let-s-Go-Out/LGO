@@ -13,12 +13,17 @@ class NicknameEdit extends StatefulWidget {
 
 class _NicknameEditState extends State<NicknameEdit> {
 
-  String? nicknameFromDB = Get.find<UserController>().userData.value!.userNickname;
+  String? nicknameFromDB;
 
   GlobalKey<FormState> nicknameFormkey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
+
+    //
+    Get.put(UserController());
+    Get.find<UserController>().fetchUserData();
+    nicknameFromDB = Get.find<UserController>().userData.value!.userNickname;
 
     final double width = MediaQuery.of(context).size.width;
     final double height = MediaQuery.of(context).size.height;
@@ -105,7 +110,9 @@ class _NicknameEditState extends State<NicknameEdit> {
         },
 
         onSaved: (value) {
-          nicknameFromDB = value;
+          setState(() {
+            nicknameFromDB = value;
+          });
         },
 
       ),
@@ -148,8 +155,9 @@ class _NicknameEditState extends State<NicknameEdit> {
             if (nicknameFormkey.currentState?.validate() == true) {
               nicknameFormkey.currentState!.save();
 
-              UserController userController = Get.find();
-              userController.updateNickname(nicknameFromDB!);
+              //UserController userController = Get.find();
+              //userController.updateNickname(nicknameFromDB!);
+              Get.find<UserController>().updateNickname(nicknameFromDB!);
 
               print('new nickname: $nicknameFromDB');
 

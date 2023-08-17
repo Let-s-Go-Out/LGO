@@ -14,22 +14,9 @@ class PasswordEdit extends StatefulWidget {
 class _PasswordEditState extends State<PasswordEdit> {
   String? passwordFromDB;
   String? changingPw;
-
   bool visible = true;
 
-  //final TextEditingController passwordController = TextEditingController();
-  //final TextEditingController newPwController = TextEditingController();
-  //final TextEditingController newPwConfirmController = TextEditingController();
-
   GlobalKey<FormState> pwFormkey = GlobalKey<FormState>();
-
-  @override
-  void initState() {
-    super.initState();
-    UserController userController = Get.find(); // UserController 인스턴스 가져오기
-    userController.fetchUserData(); // Firestore에서 사용자 데이터 가져오기
-    passwordFromDB = userController.userData.value?.userPassword;
-  }
 
   FocusNode newFocus = FocusNode();
   FocusNode confirmFocus = FocusNode();
@@ -43,6 +30,11 @@ class _PasswordEditState extends State<PasswordEdit> {
 
   @override
   Widget build(BuildContext context) {
+
+    //
+    Get.put(UserController());
+    Get.find<UserController>().fetchUserData();
+    passwordFromDB = Get.find<UserController>().userData.value!.userPassword;
 
     final double width = MediaQuery.of(context).size.width;
     final double height = MediaQuery.of(context).size.height;
@@ -149,9 +141,7 @@ class _PasswordEditState extends State<PasswordEdit> {
         onFieldSubmitted: (value)
         //value = 입력값
         => FocusScope.of(context).requestFocus(newFocus),
-        // 확인
 
-        //controller: passwordController,
 
         validator: (value) {
           if(value!.isEmpty) {
@@ -181,7 +171,6 @@ class _PasswordEditState extends State<PasswordEdit> {
         onFieldSubmitted: (value)
         => FocusScope.of(context).requestFocus(confirmFocus),
 
-        //controller: newPwController,
 
         validator: (value) {
           if(value!.isEmpty) {
@@ -235,7 +224,6 @@ class _PasswordEditState extends State<PasswordEdit> {
         onFieldSubmitted: (value)
         => FocusScope.of(context).unfocus(),
 
-        //controller: newPwConfirmController,
 
         validator: (value) {
           if(value!.isEmpty) {
@@ -253,7 +241,6 @@ class _PasswordEditState extends State<PasswordEdit> {
           }
         },
 
-        //확인
         onSaved: (value) {
           setState(() {
             passwordFromDB = changingPw;
@@ -292,7 +279,6 @@ class _PasswordEditState extends State<PasswordEdit> {
         height: 50,
 
         child: OutlinedButton(
-
           style: OutlinedButton.styleFrom(
             backgroundColor: Colors.white,
             side: BorderSide(
@@ -314,11 +300,14 @@ class _PasswordEditState extends State<PasswordEdit> {
 
           onPressed: () {
             if (pwFormkey.currentState?.validate() == true) {
-              pwFormkey.currentState!.save(); //passwordFormDB = changingPw
-              UserController userController = Get.find();
-              userController.updatePassword(passwordFromDB!);
+              pwFormkey.currentState!.save();
+
+              //UserController userController = Get.find();
+              //userController.updatePassword(passwordFromDB!);
+              Get.find<UserController>().updatePassword(passwordFromDB!);
 
               print('change user password: $passwordFromDB');
+
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => MyPage()),

@@ -11,8 +11,8 @@ class UserController extends GetxController {
 
   String? uid;
 
-  /*Future<void> usingAuth() async {
-    *//*
+  Future<String?> getUid() async {
+
     AuthController authForMyPage = AuthController();
     uid = await authForMyPage.getUserUid();
 
@@ -29,6 +29,7 @@ class UserController extends GetxController {
 
   /*//Firestore 안에 사용자 정보 가져오기
   Future<void> fetchUserData() async{
+    getUid();
     try {
       await usingAuth(); // uid를 설정한 후 Firestore에서 데이터 가져오기
       var snapshot = await FirebaseFirestore.instance.collection('Users')
@@ -57,7 +58,7 @@ class UserController extends GetxController {
 
   //
   void updateNickname(String newNickname) {
-
+    getUid();
     FirebaseFirestore.instance.collection('Users')
         .doc(uid).update({'nickname': newNickname});
 
@@ -66,7 +67,7 @@ class UserController extends GetxController {
 
   //
   void updatePassword(String newPassword) {
-
+    getUid();
     FirebaseFirestore.instance.collection('Users')
         .doc(uid).update({'password': newPassword});
 
@@ -74,6 +75,7 @@ class UserController extends GetxController {
 
 
   void logout() async {
+
     try {
       //실행시 기능 구현 되는 지 확인
       await FirebaseAuth.instance.signOut();
@@ -86,11 +88,12 @@ class UserController extends GetxController {
 
   //firebase Auth, firestore 에서 계정, 정보 삭제
   void deleteAccount() async {
+    getUid();
     try {
       User? user = FirebaseAuth.instance.currentUser;
       if (user != null) { await user.delete(); }
 
-      FirebaseFirestore.instance.collection('Users').doc('uid').delete();
+      FirebaseFirestore.instance.collection('Users').doc(uid).delete();
 
     } catch (e) { print('Error deleting Account; $e'); }
   }
