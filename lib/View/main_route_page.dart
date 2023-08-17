@@ -132,7 +132,8 @@ class _MainRoutePageState extends State<MainRoutePage> {
     recommendPlaces = widget.recommendPlaces;
     categoryGroupPlaceLists = widget.categoryGroupPlaceLists;
     selectP = LatLng(widget.selectP.latitude,widget.selectP.longitude);
-    markers = Set<Marker>();
+    markers = createMarkers(widget.recommendPlaces);
+    drawPolyline(widget.recommendPlaces);
   }
 
   @override
@@ -155,34 +156,36 @@ class _MainRoutePageState extends State<MainRoutePage> {
     ));
   }
 
-  Future<Set<Polyline>> drawPolyline(List<Place> recommendPlaces) async{
+  Set<Marker> createMarkers(List<Place> places) {
+    int hue = 0;
+    return places.map((place) {
+      hue++;
+      return Marker(
+        markerId: MarkerId(place.placeId),
+        position: LatLng(place.placeLat, place.placeLng),
+        icon: BitmapDescriptor.defaultMarkerWithHue(360 - hue * 16),
+        infoWindow: InfoWindow(title: place.name),
+      );
+    }).toSet();
+  }
+
+  void drawPolyline(List<Place> recommendPlaces) async{
     for(int i = 0; i < recommendPlaces.length - 1; i++) {
       //출발지가 항상 리스트 맨 처음
       LatLng startLocation = LatLng(recommendPlaces[i].placeLat,recommendPlaces[i].placeLng);
       LatLng endLocation = LatLng(recommendPlaces[i + 1].placeLat, recommendPlaces[i + 1].placeLng);
+      PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+        'AIzaSyBrK8RWyR1_3P7M7yjNiJ8xyXTAuFpeLlM',
 
-      getPolyline(startLocation, endLocation);
+        PointLatLng(startLocation.latitude, startLocation.longitude),
+        PointLatLng(endLocation.latitude, endLocation.longitude),
+
+        travelMode: TravelMode.walking,
+      );
+      polylineCoordinates.addAll(result.points.map(
+            (PointLatLng element) => LatLng(element.latitude, element.longitude),
+      ));
     }
-    addPolyline(polylineCoordinates);
-    return _polylines;
-  }
-
-  void getPolyline(LatLng startL, LatLng endL) async{
-    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-      'AIzaSyBrK8RWyR1_3P7M7yjNiJ8xyXTAuFpeLlM',
-
-      PointLatLng(startL.latitude, startL.longitude),
-      PointLatLng(endL.latitude, endL.longitude),
-
-      travelMode: TravelMode.walking,
-    );
-    polylineCoordinates.addAll(result.points.map(
-          (PointLatLng element) => LatLng(element.latitude, element.longitude),
-    ));
-    print(polylineCoordinates);
-  }
-
-  void addPolyline(List<LatLng> polylineCoordinates) {
     PolylineId id = PolylineId('poly');
     Polyline newPolyline = Polyline(
       polylineId: id,
@@ -190,9 +193,11 @@ class _MainRoutePageState extends State<MainRoutePage> {
       color: Colors.purpleAccent,
       width: 5,
     );
-    print('Added polyline: $newPolyline');
-    _polylines.add(newPolyline);
+    setState(() {
+      _polylines.add(newPolyline);
+    });
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -361,30 +366,6 @@ class _MainRoutePageState extends State<MainRoutePage> {
   }
 
   Widget _buildAIRecommendationContent() {
-    return FutureBuilder<Set<Polyline>>(
-        future: drawPolyline(widget.recommendPlaces),
-    builder: (context, snapshot) {
-    if (snapshot.connectionState == ConnectionState.waiting) {
-    return Center(
-    child: CircularProgressIndicator(),
-    );
-    } else if (snapshot.hasError) {
-    return Center(
-    child: Text('Error: ${snapshot.error}'),
-    );
-    } else {
-      markers.clear();
-      int hue = 0;
-      for (var place in recommendPlaces) {
-        hue ++;
-        var marker = Marker(
-          icon: BitmapDescriptor.defaultMarkerWithHue(360 - hue * 16),
-          markerId: MarkerId(place.placeId),
-          position: LatLng(place.placeLat, place.placeLng),
-          infoWindow: InfoWindow(title: place.name),
-        );
-        markers.add(marker);
-      }
       return GoogleMap(
         myLocationEnabled: true,
         myLocationButtonEnabled: false,
@@ -394,9 +375,9 @@ class _MainRoutePageState extends State<MainRoutePage> {
           zoom: 15.0,
         ),
         markers: markers,
-        polylines:snapshot.data!
+        polylines:_polylines,
       );
-    }});
+    // }});
   }
 
 
