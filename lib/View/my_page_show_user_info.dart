@@ -30,7 +30,7 @@ class _ShowUserInfoState extends State<ShowUserInfo> {
     String hidePassword() {
       var hiddenPassword = Get.find<UserController>().userData.value?.userPassword;
       if (hiddenPassword == null || hiddenPassword.isEmpty) {
-        return '';
+        return '비밀번호 변경하기';
       }
 
       return '*' * hiddenPassword.length;

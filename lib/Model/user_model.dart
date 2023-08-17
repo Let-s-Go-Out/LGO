@@ -23,7 +23,7 @@ class UserModel {
   Map<String, dynamic> toJson() {
     return {
       'email': email,
-      'passwd': password,
+      'password': password,
       'nickname': nickname,
     };
   }
@@ -34,7 +34,7 @@ class UserModel {
     final data = document.data()!;
     return UserModel(
       email: data['email'],
-      password: data['passwd'],
+      password: data['password'],
       nickname: data['nickname'],
     );
   }
