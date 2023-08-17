@@ -2,6 +2,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nagaja_app/Controller/auth_controller.dart';
+import 'package:nagaja_app/View/nickname_edit_page.dart';
+import 'package:nagaja_app/View/password_edit_page.dart';
 
 import '../Controller/user_controller.dart';
 
@@ -15,16 +17,14 @@ class ShowUserInfo extends StatefulWidget {
 
 class _ShowUserInfoState extends State<ShowUserInfo> {
 
-
   bool notSocialLogin = true;
-
 
   @override
   Widget build(BuildContext context) {
 
     //final UserController userController = Get.put(UserController());
     Get.put(UserController());
-    //확인 해야 합니다.
+    //확인
     Get.find<UserController>().fetchUserData();
 
 
@@ -32,7 +32,7 @@ class _ShowUserInfoState extends State<ShowUserInfo> {
         builder: (BuildContext context, BoxConstraints constraints) {
           final double availableWidth = constraints.maxWidth;
           final double availableHeight = constraints.maxHeight;
-          //확인 해야 합니다.
+          //확인
 
 
           return Obx(() =>
@@ -128,8 +128,11 @@ class _ShowUserInfoState extends State<ShowUserInfo> {
                         //닉네임
                         GestureDetector(
                           onTap: () {
-                            Get.toNamed('nicknameEdit');
-                            //Navigator.pushNamed(context, 'Nickname_Edit_Screen');
+                            //Get.toNamed('nicknameEdit');
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(builder: (context) => NicknameEdit()),
+                            );
                           },
                           //behavior: HitTestBehavior.translucent, //opaque
                           child: ListTile(
@@ -165,8 +168,11 @@ class _ShowUserInfoState extends State<ShowUserInfo> {
                             // Get.find<UserController>().userData.value?.userEmail
                             if(notSocialLogin)
                             {
-                              Get.toNamed('pwEdit');
-                              //Navigator.pushNamed(context, 'Password_Edit_Screen');
+                              //Get.toNamed('pwEdit');
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context) => PasswordEdit()),
+                              );
                             }
                             else {
                               showDialog(
