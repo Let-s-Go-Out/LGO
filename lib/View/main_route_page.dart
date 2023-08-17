@@ -270,6 +270,9 @@ class _MainRoutePageState extends State<MainRoutePage> {
   }
 
   Widget _buildAIRecommendationTab() {
+    int itemCount = recommendPlaces.length-1;
+    double listViewHeight = 20.0 + 110.0 * itemCount; // 리스트뷰 스크롤 가능 높이
+
     return Scaffold(
       body: SnappingSheet(
         lockOverflowDrag: true,
@@ -318,8 +321,9 @@ class _MainRoutePageState extends State<MainRoutePage> {
                         } else {
                           List<Place> selectedCategoryPlaces = recommendPlaces ?? [];
                           return SizedBox(
-                            height: 1000, // 리스트뷰 스크롤 가능 높이 길이
+                            height: listViewHeight, // 리스트뷰 스크롤 가능 높이 길이
                             child: ListView.builder(
+                                primary: false,
                                 shrinkWrap: true, // 리스트뷰 크기 고정
                                 itemCount: recommendPlaces.length-1, // 경로 추천 장소 개수 설정
                                 itemBuilder: (context, index) {
@@ -483,7 +487,7 @@ class _MainRoutePageState extends State<MainRoutePage> {
                   SizedBox(height: 10),
                   // 카테고리 별 장소 리스트
                   Container(
-                    height: MediaQuery.of(context).size.height * 0.5,
+                    height: MediaQuery.of(context).size.height * 0.8,
                     child: FutureBuilder<void>(
                       future: addMarkersFromPlacesApi(),
                       builder: (context, snapshot) {
@@ -664,17 +668,46 @@ class PlaceCard extends StatelessWidget {
               height: 150,
               child: ListView.builder(
                 scrollDirection: Axis.horizontal,
-                itemCount: place.photoUrls.length,
+                itemCount: place.photoUrls.isNotEmpty ? place.photoUrls.length : 1,
                 itemBuilder: (context, index) {
-                  return Container(
-                    margin: EdgeInsets.only(right: 5),
-                    child: Image.network(
-                      place.photoUrls[index],
+                  if (place.photoUrls.isEmpty) {
+                    return Container(
+                      margin: EdgeInsets.only(right: 5),
                       width: 100,
                       height: 150,
-                      fit: BoxFit.cover,
-                    ),
-                  );
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey,
+                          width: 2,
+                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(8)),
+                      ),
+                      // 대체 텍스트
+                      child: Center(
+                        child: Text("No Image"),
+                      ),
+                    );
+                  } else {
+                    return Container(
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey, // Border의 색상 설정
+                          width: 2, // Border의 두께 설정
+                        ),
+                        borderRadius: BorderRadius.all(Radius.circular(8)),
+                      ),
+                      margin: EdgeInsets.only(right: 8),
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.all(Radius.circular(6)),
+                        child: Image.network(
+                          place.photoUrls[index],
+                          width: 100,
+                          height: 150,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    );
+                  }
                 },
               ),
             ),
@@ -700,74 +733,70 @@ class RecommendPlaceCard extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       child: Container(
-        margin: EdgeInsets.fromLTRB(20, 10, 20, 10),
+        margin: EdgeInsets.fromLTRB(20, 0, 20, 0),
         child: Container(
           height: 100,
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               // 순서 원 + 실선 표시
-              Flexible(
-                  flex: 2,
-                  child: Container(
+              Expanded(
+                  flex: 1,
+                  child: Align(
+                    alignment: Alignment.centerLeft, // 왼쪽 정렬
                     child: Column(
                       children: [
                         // 원
-                        Flexible(
-                          flex: 2,
-                          child: Column(
-                            children: [
-                              SizedBox(height: 10,),
-                              Container(
-                                width: 30,
-                                height: 30,
-                                decoration: BoxDecoration(
-                                    color: Color(0xffff7b7b),
-                                    shape: BoxShape.circle,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.grey.withOpacity(0.7),
-                                        blurRadius: 2.0,
-                                        spreadRadius: 0.0,
-                                        offset: const Offset(0,7),
-                                      )
-                                    ]
-                                ),
-                                child: Center(
-                                  child: Text(
-                                    // 순서 출력(추천 경로 개수 반영)
-                                    '$order',
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.black87,
-                                    ),
+                        Column(
+                          children: [
+                            //SizedBox(height: 10,),
+                            Container(
+                              width: 30,
+                              height: 30,
+                              decoration: BoxDecoration(
+                                  color: Color(0xffff7b7b),
+                                  shape: BoxShape.circle,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.7),
+                                      blurRadius: 2.0,
+                                      spreadRadius: 0.0,
+                                      offset: const Offset(0,7),
+                                    )
+                                  ]
+                              ),
+                              child: Center(
+                                child: Text(
+                                  // 순서 출력(추천 경로 개수 반영)
+                                  '$order',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.black87,
                                   ),
                                 ),
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                         //Spacer(),
                         // 실선
-                        Flexible(
-                          flex: 3,
-                          child: Container(
-                            height: 65,
-                            width: 3.5,
-                            color: Colors.grey,
-                          ),
+                        Container(
+                          height: 70,
+                          width: 3.5,
+                          color: Colors.grey,
                         ),
                       ],
                     ),
                   )
               ),
               // 장소 사진
-              Flexible(
-                flex: 3,
+              Expanded(
+                flex: 2,
                 child: Container(
-                  width: 95,
-                  height: 95,
+                  margin: EdgeInsets.only(top: 10, bottom: 10),
+                  width: 85,
+                  height: 100,
                   decoration: BoxDecoration(
                       border: Border.all(
                         color: Colors.grey,
@@ -775,75 +804,85 @@ class RecommendPlaceCard extends StatelessWidget {
                       ),
                       borderRadius: BorderRadius.all(Radius.circular(16))
                   ),
+                  // ========= 3차 추가 시작 ===========
                   // 사진 1개 불러오기
-                  child: ListView.builder(
-                            //scrollDirection: Axis.horizontal,
-                            itemCount: 1, // 사진 1개만 불러오기
-                            //itemCount: place.photoUrls.length,
-                            itemBuilder: (context, index) {
-                              return Container(
-                                margin: EdgeInsets.only(right: 5),
-                                child: Image.network(
-                                  place.photoUrls[index],
-                                  width: 100,
-                                  height: 150,
-                                  fit: BoxFit.cover,
-                                ),
-                              );
-                            },
+                  child: place.photoUrls.isNotEmpty
+                      ? ClipRRect(
+                          borderRadius: BorderRadius.all(Radius.circular(14)),
+                          child: Image.network(
+                            place.photoUrls.first,
+                            width: 85,
+                            height: 100,
+                            fit: BoxFit.cover,
                           ),
+                        )
+                      : Container(
+                        width: 85,
+                        height: 100,
+                        child: Center(
+                          child: Text("No Image", style: TextStyle(fontSize: 10)),
+                    ),
+                  ),
+                  // ========= 3차 추가 끝 ===========
                 ),
               ),
+              SizedBox(width: 3,),
               // 장소이름 + 타입 + 별점
-              Flexible(
-                flex: 5,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    // 장소 이름 불러오기
-                    Flexible(
-                      flex: 1,
-                      child: Text(
-                        place.name,
-                        style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                      ),),
-                    // 장소 타입
-                    Flexible(
-                      flex: 1,
-                      child: Text(
-                        place.types[0],
-                        style: TextStyle(fontSize: 13, color: Colors.grey),
-                      ),
-                      // 장소 타입 불러오기
-                    ),
-                    // 별점
-                    Flexible(
-                      flex: 2,
-                      child: RatingStars(
-                        // 별점 불러오기
-                        value: place.rating,
-                        starCount: 5,
-                        starSize: 10,
-                        valueLabelColor: const Color(0xff9b9b9b),
-                        valueLabelTextStyle: TextStyle(
-                            color: Colors.white,
-                            fontFamily: 'WorkSans',
-                            fontWeight: FontWeight.w400,
-                            fontStyle: FontStyle.normal,
-                            fontSize: 12.0
+              Expanded(
+                flex: 4,
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Container(
+                    padding: EdgeInsets.only(top: 12, bottom: 12),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        // 장소 이름 불러오기
+                        Flexible(
+                          flex: 2,
+                          child: Text(
+                            place.name,
+                            style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                          ),),
+                        // 장소 타입
+                        Flexible(
+                          flex: 1,
+                          child: Text(
+                            place.types[0],
+                            style: TextStyle(fontSize: 13, color: Colors.grey),
+                          ),
+                          // 장소 타입 불러오기
                         ),
-                        valueLabelRadius: 10,
-                        starSpacing: 2,
-                        maxValueVisibility: false,
-                        valueLabelVisibility: true,
-                        animationDuration: Duration(milliseconds: 1000),
-                        valueLabelPadding: const EdgeInsets.symmetric(
-                            vertical: 1, horizontal: 8),
-                        valueLabelMargin: const EdgeInsets.only(right: 8),
-                        starOffColor: const Color(0xffe7e8ea),
-                        starColor: Colors.yellow,
-                      ),),
-                  ],
+                        // 별점
+                        Flexible(
+                          flex: 1,
+                          child: RatingStars(
+                            // 별점 불러오기
+                            value: place.rating,
+                            starCount: 5,
+                            starSize: 10,
+                            valueLabelColor: const Color(0xff9b9b9b),
+                            valueLabelTextStyle: TextStyle(
+                                color: Colors.white,
+                                fontFamily: 'WorkSans',
+                                fontWeight: FontWeight.w400,
+                                fontStyle: FontStyle.normal,
+                                fontSize: 12.0
+                            ),
+                            valueLabelRadius: 10,
+                            starSpacing: 2,
+                            maxValueVisibility: false,
+                            valueLabelVisibility: true,
+                            animationDuration: Duration(milliseconds: 1000),
+                            valueLabelPadding: const EdgeInsets.symmetric(
+                                vertical: 1, horizontal: 8),
+                            valueLabelMargin: const EdgeInsets.only(right: 8),
+                            starOffColor: const Color(0xffe7e8ea),
+                            starColor: Colors.yellow,
+                          ),),
+                      ],
+                    ),
+                  ),
                 ),
               ),
             ],

@@ -13,8 +13,8 @@ class UserController extends GetxController {
 
   Future<String?> usingAuth() async {
     AuthController authForMyPage = AuthController();
-    return uid = await authForMyPage.getUserUid();
-  }
+    uid = await authForMyPage.getUserUid();
+  } //firebaseAuth.currentUser!.uid
 
   //Firestore 안에 사용자 정보 가져오기
   Future<void> fetchUserData() async{

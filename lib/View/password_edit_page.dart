@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:nagaja_app/View/my_page.dart';
 
 import '../Controller/user_controller.dart';
 
@@ -314,8 +315,11 @@ class _PasswordEditState extends State<PasswordEdit> {
               userController.updatePassword(passwordFromDB!);
 
               print('change user password: $passwordFromDB');
-              Get.toNamed('myPage');
-              //Navigator.pushNamed(context, 'MyPage');
+              //Get.toNamed('myPage');
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => MyPage()),
+              );
             }
           },
         ),

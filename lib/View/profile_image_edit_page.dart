@@ -1,10 +1,11 @@
 import 'dart:io';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 
 class ProfileImgEdit extends StatefulWidget {
-  const ProfileImgEdit({super.key});
+  const ProfileImgEdit({Key? key}) : super(key: key);
 
   @override
   State<ProfileImgEdit> createState() => _ProfileImgEditState();
@@ -12,7 +13,9 @@ class ProfileImgEdit extends StatefulWidget {
 
 class _ProfileImgEditState extends State<ProfileImgEdit> {
 
-  XFile? file;
+  File? profileImg;
+  //임시
+  String? uid = 'B5gefuZ8nPPTQatH7GZSKAXR5ns1';
 
   Widget defaultImage(double height, double width) {
     return Container(
@@ -48,7 +51,8 @@ class _ProfileImgEditState extends State<ProfileImgEdit> {
             child: Center(
               child: Column(
                 children: [
-                  if (file == null)
+
+                  if (profileImg == null)
                     defaultImage(availableHeight, availableWidth)
 
                   else
@@ -61,7 +65,7 @@ class _ProfileImgEditState extends State<ProfileImgEdit> {
                           height: availableHeight * 0.8,
                           decoration: BoxDecoration(
                             image: DecorationImage(
-                              image: FileImage(File(file!.path)),
+                              image: FileImage(File(profileImg!.path)),
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -148,10 +152,8 @@ class _ProfileImgEditState extends State<ProfileImgEdit> {
                     style: TextStyle(fontSize: 15, color: Colors.red,),
                   ),
                   onPressed: () {
+                    removeProfileImg();
                     Get.back();
-                    setState(() {
-                      file == null;
-                    });
                   },
                 ),
               ],
@@ -163,13 +165,65 @@ class _ProfileImgEditState extends State<ProfileImgEdit> {
 
 
   Future getImage(ImageSource source) async {
-    XFile? tempFile = await ImagePicker().pickImage(source:source);
-    if (tempFile != null) {
-      setState(() {
-        file = tempFile;
+    XFile? tempImgFile = await ImagePicker().pickImage(source:source);
+    if (tempImgFile == null) { return; }
+    //image cropper
+    /*
+    else {
+      ImageCropper().cropImage(
+        sourcePath: tempImgFile!.path,
+        cropStyle: CropStyle.circle,
+        aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
+        //
+        uiSettings: [
+          AndroidUiSettings(
+            toolbarTitle: '사진 선택',
+            //?
+            initAspectRatio: CropAspectRatioPreset.original,
+            lockAspectRatio: true,
+          )
+        ],
+      ).then((croppedImg) {
+        if(croppedImg != null) {
+          setState(() {
+            profileImg = File(croppedImg!.path);
+            uploadFile(profileImg!);
+          });
+        }
       });
-      //Get.back();
-    }
+
+     */
+
+    setState(() {
+      profileImg = File(tempImgFile.path);
+      uploadFile(tempImgFile);
+    });
+
+  }
+
+
+  Future uploadFile(XFile img) async {
+    //${firebaseAuth.currentUser!.uid}
+    final path = '/user_profile_image/$uid';
+    final file = File(img.path);
+
+    Reference storageRef = FirebaseStorage.instance.ref().child(path);
+    await storageRef.putFile(file);
+  }
+
+
+  Future removeProfileImg() async {
+    setState(() {
+      profileImg = null;
+    });
+
+    //${firebaseAuth.currentUser!.uid}
+    final path = 'user_profile_image/$uid';
+
+    Reference storageRef = FirebaseStorage.instance.ref().child(path);
+
+    try {await storageRef.delete();}
+    catch (e) { print('Error while deleting profile image: $e'); }
   }
 
 }

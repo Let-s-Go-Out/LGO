@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:nagaja_app/View/my_page.dart';
 
 import '../Controller/user_controller.dart';
 
@@ -150,8 +151,11 @@ class _NicknameEditState extends State<NicknameEdit> {
               userController.updateNickname(nicknameFromDB!);
 
               print('new nickname: $nicknameFromDB');
-              Get.toNamed('myPage');
-              //Navigator.pushNamed(context, 'MyPage');
+              //Get.toNamed('myPage');
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => MyPage()),
+              );
             }
             //validate 확인(후 pw 저장) 후 페이지 이동(변경한 데이터 가지고)
           },
