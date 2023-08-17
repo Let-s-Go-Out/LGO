@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
+import '../Controller/user_controller.dart';
+
 class OutButtons extends StatelessWidget {
   const OutButtons({super.key});
 
@@ -40,7 +42,7 @@ class OutButtons extends StatelessWidget {
               ),
             ),
 
-            SizedBox(height: 5,),
+            //SizedBox(height: 5,),
 
             //탈퇴 하기
             SizedBox(
@@ -113,8 +115,10 @@ class _LogOutButtonState extends State<LogOutButton> {
                 '로그아웃', style: TextStyle(color: Colors.red),
               ),
               onPressed: () {
-                //Auth.auth().signOut();
-                Get.toNamed('/');
+                UserController userController = Get.find();
+                userController.logout();
+                Get.offAll('/');
+                //Get.toNamed('/');
               },
             ),
 
@@ -183,8 +187,10 @@ class _DeleteButtonState extends State<DeleteButton> {
                 '탈퇴하기', style: TextStyle(color: Colors.red),
               ),
               onPressed: () {
-                //UserController.deleteAccount();
-                Get.toNamed('/');
+                UserController userController = Get.find();
+                userController.deleteAccount();
+                Get.offAll('/');
+                //Get.toNamed('/');
               },
             ),
 

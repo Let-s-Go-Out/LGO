@@ -12,8 +12,27 @@ class ProfileImgEdit extends StatefulWidget {
 
 class _ProfileImgEditState extends State<ProfileImgEdit> {
 
-  //수정 >> 기본 이미지로 돌아가기, 앱 종료 후에도 유지
-  XFile? pickedFile;
+  XFile? file;
+
+  Widget defaultImage(double height, double width) {
+    return Container(
+      constraints: BoxConstraints(
+        minHeight: height * 0.8,
+        minWidth: width * 0.8,
+      ),
+
+      child: GestureDetector(
+        onTap: () { showBottomSheet(); },
+        child: Center(
+          child: Icon(
+            Icons.account_circle,
+            size: height * 0.8,
+            color: Colors.black45,
+          ),
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -29,32 +48,12 @@ class _ProfileImgEditState extends State<ProfileImgEdit> {
             child: Center(
               child: Column(
                 children: [
-                  if(pickedFile == null)
-                    Container(
-                      constraints: BoxConstraints(
-                        minHeight: availableHeight * 0.8,
-                        minWidth: availableWidth * 0.8,
-                      ),
-                      child: GestureDetector(
-                        onTap: () {
-                          showBottomSheet();
-                        },
-
-                        child: Center(
-                          child: Icon(
-                            Icons.account_circle,
-                            size: availableHeight * 0.8,
-                            color: Colors.black45,
-                          ),
-                        ),
-                      ),
-                    )
+                  if (file == null)
+                    defaultImage(availableHeight, availableWidth)
 
                   else
                     GestureDetector(
-                      onTap: () {
-                        showBottomSheet();
-                      },
+                      onTap: () { showBottomSheet(); },
 
                       child: Center(
                         child: Container(
@@ -62,7 +61,7 @@ class _ProfileImgEditState extends State<ProfileImgEdit> {
                           height: availableHeight * 0.8,
                           decoration: BoxDecoration(
                             image: DecorationImage(
-                              image: FileImage(File(pickedFile!.path)),
+                              image: FileImage(File(file!.path)),
                               fit: BoxFit.cover,
                             ),
                           ),
@@ -79,7 +78,7 @@ class _ProfileImgEditState extends State<ProfileImgEdit> {
   }
 
 
-  void showBottomSheet() {
+  showBottomSheet() {
     showModalBottomSheet(
         context: context,
 
@@ -96,7 +95,6 @@ class _ProfileImgEditState extends State<ProfileImgEdit> {
               children: [
                 SizedBox(height: 30,),
 
-                //버튼 터치 범위 수정 >>
                 //갤러리
                 TextButton(
                   child: Text(
@@ -104,9 +102,8 @@ class _ProfileImgEditState extends State<ProfileImgEdit> {
                     style: TextStyle(fontSize: 15,),
                   ),
                   onPressed: () {
-                    getGallery();
+                    getImage(ImageSource.gallery);
                     Get.back();
-                    //Navigator.pop(context);
                   },
                 ),
 
@@ -128,7 +125,7 @@ class _ProfileImgEditState extends State<ProfileImgEdit> {
                     style: TextStyle(fontSize: 15,),
                   ),
                   onPressed: () {
-                    getCamera();
+                    getImage(ImageSource.camera);
                     Get.back();
                   },
                 ),
@@ -151,14 +148,12 @@ class _ProfileImgEditState extends State<ProfileImgEdit> {
                     style: TextStyle(fontSize: 15, color: Colors.red,),
                   ),
                   onPressed: () {
-                    //Navigator.pop(context);
                     Get.back();
                     setState(() {
-                      pickedFile == null;
+                      file == null;
                     });
                   },
                 ),
-                //SizedBox(height: 20,),
               ],
             ),
           );
@@ -167,29 +162,14 @@ class _ProfileImgEditState extends State<ProfileImgEdit> {
   }
 
 
-
-  Future getGallery() async {
-    pickedFile =
-    await ImagePicker().pickImage(source: ImageSource.camera);
-    if (pickedFile != null) {
+  Future getImage(ImageSource source) async {
+    XFile? tempFile = await ImagePicker().pickImage(source:source);
+    if (tempFile != null) {
       setState(() {
-        pickedFile = pickedFile;
+        file = tempFile;
       });
+      //Get.back();
     }
-    else { print('pickedFile == null'); }
-  }
-
-
-  Future getCamera() async {
-    pickedFile =
-    await ImagePicker().pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        pickedFile = pickedFile;
-      });
-    }
-    else { print('pickedFile == null'); }
   }
 
 }
-
