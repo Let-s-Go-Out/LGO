@@ -79,7 +79,6 @@ class _MainRoutePageState extends State<MainRoutePage> {
 
   List<Place> recommendPlaces=[];
 
-  int polylineIdCounter = 0;
   Map<PolylineId, Polyline> polylineList = {};
   List<LatLng> polylineCoordinates = [];
   Set<Polyline> _polylines = {};
@@ -133,7 +132,8 @@ class _MainRoutePageState extends State<MainRoutePage> {
     recommendPlaces = widget.recommendPlaces;
     categoryGroupPlaceLists = widget.categoryGroupPlaceLists;
     selectP = LatLng(widget.selectP.latitude,widget.selectP.longitude);
-    markers = Set<Marker>();
+    markers = createMarkers(widget.recommendPlaces);
+    drawPolyline(widget.recommendPlaces);
   }
 
   @override
@@ -143,7 +143,6 @@ class _MainRoutePageState extends State<MainRoutePage> {
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
-    drawPolyline(widget.recommendPlaces);
   }
 
   Future<void> addMarkersFromPlacesApi() async {
@@ -157,46 +156,48 @@ class _MainRoutePageState extends State<MainRoutePage> {
     ));
   }
 
-  drawPolyline(List<Place> recommendPlaces) async{
-    // for(int i = 0; i < recommendPlaces.length - 1; i++) {
+  Set<Marker> createMarkers(List<Place> places) {
+    int hue = 0;
+    return places.map((place) {
+      hue++;
+      return Marker(
+        markerId: MarkerId(place.placeId),
+        position: LatLng(place.placeLat, place.placeLng),
+        icon: BitmapDescriptor.defaultMarkerWithHue(360 - hue * 16),
+        infoWindow: InfoWindow(title: place.name),
+      );
+    }).toSet();
+  }
+
+  void drawPolyline(List<Place> recommendPlaces) async{
+    for(int i = 0; i < recommendPlaces.length - 1; i++) {
       //출발지가 항상 리스트 맨 처음
-      LatLng startLocation = LatLng(recommendPlaces[0].placeLat,recommendPlaces[0].placeLng);
-      LatLng endLocation = LatLng(recommendPlaces[1].placeLat, recommendPlaces[1].placeLng);
+      LatLng startLocation = LatLng(recommendPlaces[i].placeLat,recommendPlaces[i].placeLng);
+      LatLng endLocation = LatLng(recommendPlaces[i + 1].placeLat, recommendPlaces[i + 1].placeLng);
+      PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+        'AIzaSyBrK8RWyR1_3P7M7yjNiJ8xyXTAuFpeLlM',
 
-      await getPolyline(startLocation, endLocation);
-    // }
-  }
+        PointLatLng(startLocation.latitude, startLocation.longitude),
+        PointLatLng(endLocation.latitude, endLocation.longitude),
 
-  getPolyline(LatLng startL, LatLng endL) async{
-    PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-      'AIzaSyBrK8RWyR1_3P7M7yjNiJ8xyXTAuFpeLlM',
-
-      PointLatLng(startL.latitude, startL.longitude),
-      PointLatLng(endL.latitude, endL.longitude),
-
-      travelMode: TravelMode.walking,
-    );
-    polylineCoordinates.addAll(result.points.map(
-          (PointLatLng element) => LatLng(element.latitude, element.longitude),
-    ));
-    for (LatLng latLng in polylineCoordinates) {
-      print('Latitude: ${latLng.latitude}, Longitude: ${latLng.longitude}');
+        travelMode: TravelMode.walking,
+      );
+      polylineCoordinates.addAll(result.points.map(
+            (PointLatLng element) => LatLng(element.latitude, element.longitude),
+      ));
     }
-    addPolyline();
-  }
-
-  addPolyline() {
-    polylineIdCounter++;
-    PolylineId id = PolylineId('$polylineIdCounter');
+    PolylineId id = PolylineId('poly');
     Polyline newPolyline = Polyline(
       polylineId: id,
       points: polylineCoordinates,
-      color: Colors.blue,
+      color: Colors.purpleAccent,
+      width: 5,
     );
-    polylineList[id] = newPolyline;
-    print('Added polyline: $newPolyline');
-    _polylines.add(newPolyline);
+    setState(() {
+      _polylines.add(newPolyline);
+    });
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -365,18 +366,6 @@ class _MainRoutePageState extends State<MainRoutePage> {
   }
 
   Widget _buildAIRecommendationContent() {
-    // return FutureBuilder<void>(
-    //     future: drawPolyline(recommendPlaces),
-    // builder: (context, snapshot) {
-    // if (snapshot.connectionState == ConnectionState.waiting) {
-    // return Center(
-    // child: CircularProgressIndicator(),
-    // );
-    // } else if (snapshot.hasError) {
-    // return Center(
-    // child: Text('Error: ${snapshot.error}'),
-    // );
-    // } else {
       return GoogleMap(
         myLocationEnabled: true,
         myLocationButtonEnabled: false,
@@ -385,18 +374,8 @@ class _MainRoutePageState extends State<MainRoutePage> {
           target: selectP,
           zoom: 15.0,
         ),
-        markers: {
-          Marker(
-            markerId: MarkerId('marker_id'),
-            position: selectP,
-            infoWindow: InfoWindow(
-              title: '출발 위치',
-              snippet: '',
-            ),
-          ),
-        },
-        //
-        polylines:_polylines
+        markers: markers,
+        polylines:_polylines,
       );
     // }});
   }
