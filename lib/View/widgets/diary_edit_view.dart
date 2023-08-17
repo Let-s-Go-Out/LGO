@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:nagaja_app/View/widgets/diary_view.dart';
 import '../diary_page.dart';
@@ -23,6 +24,8 @@ class DiaryEditView extends StatefulWidget {
 
 class _DiaryEditViewState extends State<DiaryEditView> {
   final TextEditingController _noteController = TextEditingController();
+  final TextEditingController _dateController = TextEditingController();
+
   DateTime _selectedDate = DateTime.now();
   String _startTime = DateFormat("hh:mm a").format(DateTime.now()).toString();
   String _endTime="9:30 PM";
@@ -239,7 +242,8 @@ class _DiaryEditViewState extends State<DiaryEditView> {
                   ),
                   onPressed: () {
                     uploadFile(); // 사진 업로드
-                    _validateDate(); // 다이어리 업로드
+                    _validDate();
+                    createPicnicDiary(shortDiary: _noteController.text);// 다이어리 업로드
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.black87,
@@ -273,12 +277,31 @@ class _DiaryEditViewState extends State<DiaryEditView> {
     );
   }
 
-  _validateDate(){
-    if(_noteController.text.isNotEmpty){
-      //add to database
+  // 사용자 입력의 유효성을 검증 함수
+  _validDate() async {
+    if (_noteController.text.isNotEmpty) {
+      try {
+        await createPicnicDiary(shortDiary: _noteController.text);
+        print('다이어리 업로드 성공!');
+        //Get.back();
+      } catch (error) {
+        print('Error uploading diary: $error');
+        Get.snackbar(
+          "Error",
+          "다이어리를 업로드하는 도중 오류가 발생했습니다.",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.white,
+          colorText: Colors.pinkAccent,
+          icon: Icon(
+            Icons.warning_amber_rounded,
+            color: Colors.red,
+          ),
+        );
+      }
+      // 데이터 제출 후, 전 페이지로 돌아감
       Get.back();
     }else if(_noteController.text.isEmpty){
-      Get.snackbar("Required", "All fields are required !",
+      Get.snackbar("Error", "다이어리를 완성해주세요.",
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.white,
         colorText: Colors.pinkAccent,
@@ -286,6 +309,23 @@ class _DiaryEditViewState extends State<DiaryEditView> {
             color: Colors.red),
       );
     }
+  }
+
+  // 데이터를 Firebase에 업로드
+  Future createPicnicDiary({required String shortDiary}) async {
+    // id 생성
+    final docPicnicDiary = FirebaseFirestore.instance.collection('PicnicDiary').doc();
+
+    final picnicDiary = PicnicDiary(
+      id : docPicnicDiary.id,
+      shortDiary: shortDiary,
+      picnicDate: _selectedDate,
+    );
+    final json = picnicDiary.toJson();
+
+    // create document and write data to Firebase
+    await docPicnicDiary.set(json);
+    // Create document and write data to Firebase
   }
 
   _getDataFromUser() async {
@@ -363,4 +403,21 @@ class _DiaryEditViewState extends State<DiaryEditView> {
           return const SizedBox(height: 50);
         }
       });*/
+}
+
+class PicnicDiary {
+  String id;
+  final String shortDiary;
+  final DateTime picnicDate;
+
+  PicnicDiary({
+    this.id = '',
+    required this.shortDiary,
+    required this.picnicDate,
+});
+  Map<String, dynamic> toJson() => {
+    'id': id,
+    'shortDiary': shortDiary,
+    'picnicDate': picnicDate,
+  };
 }
