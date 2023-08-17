@@ -163,10 +163,17 @@ class _MainPageState extends State<MainPage> {
     }
 
     FirebaseFirestore firestore = FirebaseFirestore.instance;
-    // 사용자 경로 데이터
-    userRouteData = {
+
+    // UserRouteData 컬렉션에 자동생성된 문서 추가
+    CollectionReference userRouteDataCollection =
+    firestore.collection('PicnicRecord').doc(user.uid).collection('UserRouteData');
+
+    // 새 문서를 생성하고 데이터 저장
+    DocumentReference userRouteDocRef = userRouteDataCollection.doc();
+
+    Map<String, dynamic> userRouteData = {
       'picnicConcept': selectedConcept,
-      'DepartureTime': _timeOfDay.format(context),
+      'departureTime': _timeOfDay.format(context),
       'placeCount': _value.toStringAsFixed(0),
       'startPlaceAddress': startPlaceAddress,
       'startPlaceName': startPlaceName,
@@ -174,12 +181,13 @@ class _MainPageState extends State<MainPage> {
     };
 
     try {
-      await firestore.collection('PicnicRecord').doc(user.uid).set(userRouteData);
+      await userRouteDocRef.set(userRouteData);
       print('사용자 경로 정보 저장 성공');
     } catch (e) {
       print('사용자 경로 정보 저장 실패: $e');
     }
   }
+
 
 
 
