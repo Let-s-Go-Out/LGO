@@ -107,7 +107,7 @@ class _MyPageState extends State<MyPage> {
 
                   //프로필 이미지
                   Flexible(
-                    flex: 4,
+                    flex: 3,
                     child: ProfileImgEdit(),
                   ),
 
@@ -125,7 +125,7 @@ class _MyPageState extends State<MyPage> {
 
                   //로그 아웃, 탈퇴 하기 버튼
                   Flexible(
-                    flex: 2,
+                    flex: 3,
                     child:  Padding(
                       padding: EdgeInsets.all(0),
                       child: OutButtons(),
@@ -142,4 +142,3 @@ class _MyPageState extends State<MyPage> {
     );
   }
 }
-

@@ -12,13 +12,14 @@ class PasswordEdit extends StatefulWidget {
 
 class _PasswordEditState extends State<PasswordEdit> {
 
-  String? passwordFromDB = Get.find<UserController>().userData.value!.password;
+  String? passwordFromDB = Get.find<UserController>().userData.value!.userPassword;
+  String? changingPw;
 
   bool visible = true;
 
-  final TextEditingController passwordController = TextEditingController();
-  final TextEditingController newPwController = TextEditingController();
-  final TextEditingController newPwConfirmController = TextEditingController();
+  //final TextEditingController passwordController = TextEditingController();
+  //final TextEditingController newPwController = TextEditingController();
+  //final TextEditingController newPwConfirmController = TextEditingController();
 
   GlobalKey<FormState> pwFormkey = GlobalKey<FormState>();
 
@@ -61,7 +62,7 @@ class _PasswordEditState extends State<PasswordEdit> {
             child: SingleChildScrollView(
               child: Container(
                 padding: EdgeInsets.all(20),
-                //color: Colors.black26,
+
                 width: width * 0.8,
                 height: height * 0.85,
 
@@ -143,16 +144,15 @@ class _PasswordEditState extends State<PasswordEdit> {
         onFieldSubmitted: (value)
         //value = 입력값
         => FocusScope.of(context).requestFocus(newFocus),
-        // 다시
+        // 확인 >> 수정
 
-        controller: passwordController,
+        //controller: passwordController,
 
-        validator: (passwordController) {
-          if(passwordController!.isEmpty) {
+        validator: (value) {
+          if(value!.isEmpty) {
             return '현재 비밀번호를 입력해주세요.';
           }
-          else if(passwordFromDB != passwordController) {
-            //수정 >>
+          else if(passwordFromDB != value) {
             return '비밀번호가 틀립니다.';
           }
           else { return null; }
@@ -176,21 +176,22 @@ class _PasswordEditState extends State<PasswordEdit> {
         onFieldSubmitted: (value)
         => FocusScope.of(context).requestFocus(confirmFocus),
 
-        controller: newPwController,
+        //controller: newPwController,
 
-        validator: (newPwController) {
-          if(newPwController!.isEmpty) {
+        validator: (value) {
+          if(value!.isEmpty) {
             return '새 비밀번호를 입력해주세요.';
           }
           else {
             String pattern =
                 r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?~^<>,.&+=])[A-Za-z\d$@$!%*#?~^<>,.&+=]{8,15}$';
             RegExp regExp = RegExp(pattern);
-            if (!regExp.hasMatch(newPwController)) {
+            if (!regExp.hasMatch(value)) {
               return '특수 문자, 영문, 숫자 포함 8자~15자 이내로 입력해주세요.';
             }
-            else {
-              print('new password: $newPwController');
+            else if (regExp.hasMatch(value)) {
+              changingPw = value;
+              print('new password: $changingPw');
               return null;
             }
           }
@@ -229,28 +230,28 @@ class _PasswordEditState extends State<PasswordEdit> {
         onFieldSubmitted: (value)
         => FocusScope.of(context).unfocus(),
 
-        controller: newPwConfirmController,
+        //controller: newPwConfirmController,
 
-        validator: (newPwConfirmController) {
-          if(newPwConfirmController!.isEmpty) {
+        validator: (value) {
+          if(value!.isEmpty) {
             return '새 비밀번호를 입력해주세요.';
           }
           else {
-            if(newPwController != newPwConfirmController) {
+            if(changingPw != value) {
               // 변경한 pw 값과 비교
               return "새로운 비밀번호와 다릅니다.";
             }
             else {
-              print('confirm password: $newPwConfirmController');
+              print('confirm password: $value');
               return null;
             }
           }
         },
 
-        onSaved: (newPwConfirmController) {
+        //확인
+        onSaved: (value) {
           setState(() {
-            //수정
-            passwordFromDB = newPwConfirmController as String;
+            passwordFromDB = changingPw;
           });
         },
 
@@ -308,17 +309,14 @@ class _PasswordEditState extends State<PasswordEdit> {
 
           onPressed: () {
             if (pwFormkey.currentState?.validate() == true) {
-              pwFormkey.currentState!.save();
-
-              passwordFromDB = newPwConfirmController.text;
+              pwFormkey.currentState!.save(); //passwordFormDB = changingPw
               UserController userController = Get.find();
-              userController.updatePassword(passwordFromDB);
+              userController.updatePassword(passwordFromDB!);
 
               print('change user password: $passwordFromDB');
-              //Get.toNamed('myPage');
-              Navigator.pushNamed(context, 'MyPage');
+              Get.toNamed('myPage');
+              //Navigator.pushNamed(context, 'MyPage');
             }
-            //validate 확인(후 pw 저장) 후 페이지 이동(변경한 데이터 가지고)
           },
         ),
       ),

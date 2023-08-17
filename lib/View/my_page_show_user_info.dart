@@ -1,5 +1,7 @@
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:nagaja_app/Controller/auth_controller.dart';
 
 import '../Controller/user_controller.dart';
 
@@ -13,8 +15,8 @@ class ShowUserInfo extends StatefulWidget {
 
 class _ShowUserInfoState extends State<ShowUserInfo> {
 
-  String? uid; //수정
-  String socialLogin = 'no';
+
+  bool notSocialLogin = true;
 
 
   @override
@@ -22,25 +24,23 @@ class _ShowUserInfoState extends State<ShowUserInfo> {
 
     //final UserController userController = Get.put(UserController());
     Get.put(UserController());
-    //수정 >> userData 의 value 넣기
-    //userController.fetchUserData('uid');
-    Get.find<UserController>().fetchUserData('hRH8bW3OHSGlYZ0wPAAv');
+    //확인 해야 합니다.
+    Get.find<UserController>().fetchUserData();
 
 
     return LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
           final double availableWidth = constraints.maxWidth;
           final double availableHeight = constraints.maxHeight;
-          //수정 >> Flexible 6 안에서 반응
+          //확인 해야 합니다.
 
-          // ??
+
           return Obx(() =>
               Padding(
                 padding: const EdgeInsets.only(top: 15),
                 child: Container(
                   width: availableWidth,
                   height: availableHeight,
-                  //color: Colors.black12,
 
                   //수정
                   child: SingleChildScrollView(
@@ -62,7 +62,7 @@ class _ShowUserInfoState extends State<ShowUserInfo> {
                         ),
 
 
-                        //id
+                        //삭제 >> id
                         /*
                         GestureDetector(
                           onTap: () {},
@@ -106,8 +106,7 @@ class _ShowUserInfoState extends State<ShowUserInfo> {
                             subtitle: Padding(
                               padding: EdgeInsets.only(top: 8, left: 10),
                               child: Text(
-                                '${Get.find<UserController>().userData.value?.userEmail}',
-                                // DB 사용
+                                '${Get.find<UserController>().userData.value?.userEmail}', // DB 사용
                                 style: TextStyle(fontSize: 14),
                               ),
                             ),
@@ -129,10 +128,10 @@ class _ShowUserInfoState extends State<ShowUserInfo> {
                         //닉네임
                         GestureDetector(
                           onTap: () {
-                            //Get.toNamed('nicknameEdit');
-                            Navigator.pushNamed(context, 'Nickname_Edit_Screen');
+                            Get.toNamed('nicknameEdit');
+                            //Navigator.pushNamed(context, 'Nickname_Edit_Screen');
                           },
-                          //behavior: HitTestBehavior.translucent, //opaque?
+                          //behavior: HitTestBehavior.translucent, //opaque
                           child: ListTile(
                             title: Text(
                               '닉네임',
@@ -141,8 +140,7 @@ class _ShowUserInfoState extends State<ShowUserInfo> {
                             subtitle: Padding(
                               padding: EdgeInsets.only(top: 8, left: 10),
                               child: Text(
-                                '${Get.find<UserController>().userData.value?.userNickname}',
-                                //DB 사용
+                                '${Get.find<UserController>().userData.value?.userNickname}', //DB 사용
                                 style: TextStyle(fontSize: 14),
                               ),
                             ),
@@ -164,12 +162,11 @@ class _ShowUserInfoState extends State<ShowUserInfo> {
                         GestureDetector(
                           onTap: () {
                             //수정 >>
-                            // if(Get.find<UserController>().userData.value?.userID
-                            // == Get.find<UserController>().userData.value?.userEmail)
-                            if(socialLogin == 'no')
+                            // Get.find<UserController>().userData.value?.userEmail
+                            if(notSocialLogin)
                             {
-                              //Get.toNamed('pwEdit');
-                              Navigator.pushNamed(context, 'Password_Edit_Screen');
+                              Get.toNamed('pwEdit');
+                              //Navigator.pushNamed(context, 'Password_Edit_Screen');
                             }
                             else {
                               showDialog(
@@ -190,8 +187,7 @@ class _ShowUserInfoState extends State<ShowUserInfo> {
                             subtitle: Padding(
                               padding: EdgeInsets.only(top: 8, left: 10),
                               child: Text(
-                                hidePassword(),
-                                //수정 >> 확인
+                                hidePassword(), //확인 해야 합니다.
                                 style: TextStyle(fontSize: 14),
                               ),
                             ),
