@@ -92,6 +92,9 @@ flutter:
   assets:
    - assets/images/login_background.jpg
    - assets/images/map_marker.png
+   - assets/images/background_1.png
+   - assets/images/lets_go_out.png
+   - assets/images/shall_we_go_out.png
 
   #   - assets/
   #   - images/a_dot_ham.jpeg

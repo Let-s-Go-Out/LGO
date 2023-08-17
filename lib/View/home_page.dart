@@ -22,47 +22,15 @@ class HomePage extends StatelessWidget {
             alignment: Alignment.bottomCenter,
             children: [
               Container(
-                // 글자 포함한 배경 이미지
                 height: height,
-                color: Colors.white,
                 child: Image.asset(
-                    'assets/images/login_background.jpg', height: height),
+                    'assets/images/background_1.png', height: height),
               ),
-              // 마커-1 이미지
-              /*Positioned(
-                // 마커-1 위치
-                left: 30,
-                bottom: 260,
+              Container(
+                height: height,
                 child: Image.asset(
-                  'assets/images/map_marker.png',
-                  width: 50,
-                  height: 100,
-                ),
+                    'assets/images/lets_go_out.png', height: height),
               ),
-              // 마커-2 이미지
-              Positioned(
-                // 마커 이미지
-                // 마커-2 위치
-                left: 100,
-                bottom: 280,
-                child: Image.asset(
-                  'assets/images/map_marker.png',
-                  width: 50,
-                  height: 100,
-                ),
-              ),
-              // 마커-3 이미지
-              Positioned(
-                // 마커 이미지
-                // 마커-3 위치
-                left: 200,
-                bottom: 310,
-                child: Image.asset(
-                  'assets/images/map_marker.png',
-                  width: 50,
-                  height: 100,
-                ),
-              ),*/
               // 로그인
               Positioned(
                 left: 50,
