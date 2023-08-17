@@ -117,6 +117,7 @@ class _LogOutButtonState extends State<LogOutButton> {
               onPressed: () {
                 UserController userController = Get.find();
                 userController.logout();
+                //로그 아웃 후 처음 화면으로
                 Get.offAll('/');
                 //Get.toNamed('/');
               },
@@ -189,6 +190,7 @@ class _DeleteButtonState extends State<DeleteButton> {
               onPressed: () {
                 UserController userController = Get.find();
                 userController.deleteAccount();
+                //계정 삭제 후 초기 화면으로
                 Get.offAll('/');
                 //Get.toNamed('/');
               },
