@@ -349,10 +349,9 @@ class _MainRoutePageState extends State<MainRoutePage> {
     // }});
   }
 
-
-  //임의 변경
   Widget _buildTourTab() {
     markers.clear();
+    
     return Scaffold(
       body: SnappingSheet(
         lockOverflowDrag: true,
@@ -752,7 +751,7 @@ class RecommendPlaceCard extends StatelessWidget {
                       ),
                       borderRadius: BorderRadius.all(Radius.circular(16))
                   ),
-                  // ========= 3차 추가 시작 ===========
+
                   // 사진 1개 불러오기
                   child: place.photoUrls.isNotEmpty
                       ? ClipRRect(
@@ -771,7 +770,6 @@ class RecommendPlaceCard extends StatelessWidget {
                           child: Text("No Image", style: TextStyle(fontSize: 10)),
                     ),
                   ),
-                  // ========= 3차 추가 끝 ===========
                 ),
               ),
               SizedBox(width: 3,),

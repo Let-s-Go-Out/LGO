@@ -127,7 +127,6 @@ class _DiaryEditViewState extends State<DiaryEditView> {
                 },
               ),
             ),
-            // 추가
             SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -155,10 +154,10 @@ class _DiaryEditViewState extends State<DiaryEditView> {
                         fit: BoxFit.cover,
                       )
                           : InkWell(
-                        onTap: pickImage, // 이미지를 누르면 _uploadSecondImage() 함수 호출
-                        child: Center(
-                          child: Text('사진', style: TextStyle(fontSize: 10)),
-                        ),
+                            onTap: pickImage, // 이미지를 누르면 _uploadSecondImage() 함수 호출
+                            child: Center(
+                              child: Text('사진', style: TextStyle(fontSize: 10)),
+                            ),
                       ),
                     ),
                   ),
@@ -213,7 +212,6 @@ class _DiaryEditViewState extends State<DiaryEditView> {
                     ),
                   ),
                 ),
-
                 // 다이어리 업로드
                 ElevatedButton(
                   child: Row(
@@ -238,8 +236,6 @@ class _DiaryEditViewState extends State<DiaryEditView> {
                           color: Colors.green,
                         ),
                       );
-                      //Navigator.pop(context);
-                      //_noteController.clear();
                       setState(() {});
                     }
                   },
@@ -300,8 +296,8 @@ class _DiaryEditViewState extends State<DiaryEditView> {
         shortDiary: shortDiary,
         picnicDate: _selectedDate,
       );
+
       await docPicnicDiary.set(picnicDiary.toJson());
-      // Create document and write data to Firebase
 
       print('다이어리 저장 성공!');
     } catch (e) {
@@ -314,7 +310,6 @@ class _DiaryEditViewState extends State<DiaryEditView> {
     DateTime? _pickerDate = await showDatePicker(
         context: context,
         initialDate: _selectedDate, // 기존 선택한 날짜로 초기값 설정
-        //initialDate: DateTime.now(),
         firstDate: DateTime(2020),
         lastDate: DateTime(2030)
     );
