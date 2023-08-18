@@ -387,6 +387,7 @@ class _DiaryEditViewState extends State<DiaryEditView> {
     }
   }
 
+
   _getTimeFromUser({required bool isStartTime}) async {
     var pickedTime = await _showTimePicker();
     String _formatedTime = pickedTime.format(context);
