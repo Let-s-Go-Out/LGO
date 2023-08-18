@@ -142,11 +142,7 @@ class _PasswordEditState extends State<PasswordEdit> {
 
         textInputAction: TextInputAction.next,
         onFieldSubmitted: (value) //value = 입력값
-          {
-            if(pwFormkey.currentState?.validate() == true) {
-              FocusScope.of(context).requestFocus(newFocus);
-            } else { currentFocus.requestFocus(); }
-          },
+         => FocusScope.of(context).requestFocus(newFocus),
 
 
         validator: (value) {
@@ -174,11 +170,8 @@ class _PasswordEditState extends State<PasswordEdit> {
 
         focusNode: newFocus,
         textInputAction: TextInputAction.next,
-        onFieldSubmitted: (value) {
-          if (pwFormkey.currentState?.validate() == true) {
-            FocusScope.of(context).requestFocus(confirmFocus);
-          } else { newFocus.requestFocus(); }
-        },
+        onFieldSubmitted: (value)
+          => FocusScope.of(context).requestFocus(confirmFocus),
 
         onChanged: (value) {
           setState(() {
@@ -199,7 +192,9 @@ class _PasswordEditState extends State<PasswordEdit> {
             }
             else if (regExp.hasMatch(value)) {
               //
-              newPassword = value;
+              setState(() {
+                newPassword = value;
+              });
               return null;
             }
           }
@@ -235,11 +230,8 @@ class _PasswordEditState extends State<PasswordEdit> {
 
         focusNode: confirmFocus,
         textInputAction: TextInputAction.done,
-        onFieldSubmitted: (value) {
-          if (pwFormkey.currentState?.validate() == true) {
-            FocusScope.of(context).unfocus();
-          } else { confirmFocus.requestFocus(); }
-        },
+        onFieldSubmitted: (value)
+          => FocusScope.of(context).unfocus(),
 
         onChanged: (value) {
           setState(() {
