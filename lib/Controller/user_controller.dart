@@ -73,7 +73,6 @@ class UserController extends GetxController {
 
 
   void logout() async {
-
     try {
       //실행시 기능 구현 되는 지 확인
       await FirebaseAuth.instance.signOut();
@@ -86,14 +85,12 @@ class UserController extends GetxController {
 
   //firebase Auth, firestore 에서 계정, 정보 삭제
   void deleteAccount() async {
-    getUid();
     try {
-      User? user = FirebaseAuth.instance.currentUser;
-      if (user != null) { await user.delete(); }
-
-      FirebaseFirestore.instance.collection('Users').doc(uid).delete();
+      FirebaseFirestore.instance.collection('Users').doc(await FirebaseAuth.instance.currentUser!.uid).delete();
+      await FirebaseAuth.instance.currentUser!.delete();
 
     } catch (e) { print('Error deleting Account; $e'); }
+
   }
 
 }
