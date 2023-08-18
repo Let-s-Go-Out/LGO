@@ -2,6 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nagaja_app/View/login_page.dart';
+import 'package:nagaja_app/View/home_page.dart';
+
 import '../Controller/user_controller.dart';
 
 class OutButtons extends StatelessWidget {
@@ -207,7 +209,7 @@ class _DeleteButtonState extends State<DeleteButton> {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                    builder: (context) => LoginPage(),
+                    builder: (context) => HomePage(),
                   ),
                 );
               },
