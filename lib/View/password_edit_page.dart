@@ -250,6 +250,9 @@ class _PasswordEditState extends State<PasswordEdit> {
               return "새로운 비밀번호와 다릅니다.";
             }
             else {
+              setState(() {
+                confirmNew = newPassword;
+              });
               return null;
             }
           }
