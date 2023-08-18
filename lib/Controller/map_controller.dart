@@ -18,6 +18,7 @@ class MapController{
   LatLng get selectedPlaceLatLng => model.selectedPlaceLatLng;
 
   Future<Position> getPosition() async {
+    LocationPermission permission = await Geolocator.requestPermission();
     Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high);
     model.nowPosition = position;
