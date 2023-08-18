@@ -328,8 +328,6 @@ class _DiaryEditViewState extends State<DiaryEditView> {
     return true; // _noteController.text가 비어있을 경우에는 true 반환
   }
 
-
-
   // 데이터 제출 후, 전 페이지로 돌아감
   // Get.back();
   // }else if(_noteController.text.isEmpty){

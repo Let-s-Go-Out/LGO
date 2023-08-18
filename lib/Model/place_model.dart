@@ -24,24 +24,8 @@ class Place {
     required this.types,
     required this.photoUrls}) {
 
-    distance = distanceCalculation(placeLat, placeLng);
     latlng = LatLng(placeLat, placeLng);
   }
-
-  double distanceCalculation(double lat, double lng) {
-    final geo = GeolocatorPlatform.instance;
-
-    //사용자 설정 출발지 위치 좌표 >> controller.model.nowPLatLng 값
-    //수정
-    double originLat = 37.591054;
-    double originLng = 127.022626;
-
-    double result = geo.distanceBetween(originLat, originLng, lat, lng);
-
-    return result;
-  }
-
-  get distanceFromOrigin => distance;
   get location => latlng;
 }
 
@@ -68,7 +52,7 @@ class PlacesApi {
         if (data['status'] == 'OK') {
           int i =0;
           for (var placeData in data['results']) {
-            if(i<10) {
+            if(i<5) {
               i++;
               final placeName = placeData['name'];
               final placeId = placeData['place_id'];
@@ -98,10 +82,16 @@ class PlacesApi {
                   }
 
                   if (detailsData['result']['photos'] != null) {
-                    for (var photoData in detailsData['result']['photos']) {
-                      final photoReference = photoData['photo_reference'];
-                      final photoUrl = 'https://maps.googleapis.com/maps/api/place/photo?maxwidth=120&photoreference=$photoReference&key=$_apiKey';
-                      photoUrls.add(photoUrl);
+                    int j =0;
+                      for (var photoData in detailsData['result']['photos']) {
+                        if(j<3) {
+                          j++;
+                        final photoReference = photoData['photo_reference'];
+                        final photoUrl = 'https://maps.googleapis.com/maps/api/place/photo?maxwidth=120&photoreference=$photoReference&key=$_apiKey';
+                        photoUrls.add(photoUrl);
+                      }else {
+                          break;
+                    }
                     }
                   }
                   places.add(
@@ -124,16 +114,13 @@ class PlacesApi {
             }
           }
           return places;
+        } else if (data['status'] == 'ZERO_RESULTS') {
+          // Return an empty list when there are no results
+          return [];
         } else {
           print('API response status is not OK: ${data['status']}');
-          if('${data['status']}' == 'ZERO_RESULTS'){
-            Future.delayed(Duration(seconds: 1), () {
-              print('Delayed print after 1 second');
-            });
             return[];
           }
-          return [];
-        }
       } else {
         print('API request failed with status code: ${response.statusCode}');
         return [];
