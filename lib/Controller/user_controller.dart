@@ -48,11 +48,18 @@ class UserController extends GetxController {
 
 
   //
-  void updatePassword(String newPassword) {
+  void updatePassword(String newPassword) async{
     getUid();
+
+    try {
+      await FirebaseAuth.instance.currentUser?.updatePassword(newPassword);
+    } catch (e) {
+      print('Error updating password in Firebase Authentication: $e');
+      return;
+    }
+
     FirebaseFirestore.instance.collection('Users')
         .doc(uid).update({'password': newPassword});
-
   }
 
 
