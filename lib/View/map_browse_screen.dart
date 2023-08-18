@@ -1,11 +1,6 @@
-import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:http/http.dart';
-
-import 'package:nagaja_app/Model/map_model.dart';
 import 'package:nagaja_app/Controller/map_controller.dart';
 
 class MapBrowseScreen extends StatefulWidget {
@@ -20,8 +15,6 @@ class _MapBrowseScreenState extends State<MapBrowseScreen> {
   late TextEditingController textController;
   MapController controller = MapController();
   bool _isPlaceSelected = false;
-
-  final LatLng _center = const LatLng(37.58638333, 127.0203333);
 
   void _onMapCreated(GoogleMapController controller) {
     setState(() {
