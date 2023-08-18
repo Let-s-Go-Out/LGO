@@ -167,32 +167,32 @@ class _DiaryEditViewState extends State<DiaryEditView> {
                 ),
                 // 두번째 사진
                 Container(
-                    width: 95,
-                    height: 95,
-                    decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.grey,
-                          width: 2,
-                        ),
-                        borderRadius: BorderRadius.all(Radius.circular(16))
-                    ),
-                    child: GestureDetector(
-                      onTap: pickedSecondFile != null ? _removeSecondImage : _uploadSecondImage,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.all(Radius.circular(16)),
-                        child: pickedSecondFile != null
-                            ? Image.file(
-                          File(pickedSecondFile!.path!),
-                          width: 95,
-                          height: 95,
-                          fit: BoxFit.cover,
-                        )
-                            : Center(
-                                child: Text('사진', style: TextStyle(fontSize: 10)),
-                        ),
+                  width: 95,
+                  height: 95,
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                        width: 2,
+                      ),
+                      borderRadius: BorderRadius.all(Radius.circular(16))
+                  ),
+                  child: GestureDetector(
+                    onTap: pickedSecondFile != null ? _removeSecondImage : _uploadSecondImage,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.all(Radius.circular(16)),
+                      child: pickedSecondFile != null
+                          ? Image.file(
+                        File(pickedSecondFile!.path!),
+                        width: 95,
+                        height: 95,
+                        fit: BoxFit.cover,
+                      )
+                          : Center(
+                        child: Text('사진', style: TextStyle(fontSize: 10)),
                       ),
                     ),
                   ),
+                ),
               ],
             ),
             SizedBox(height: 10),
@@ -211,7 +211,7 @@ class _DiaryEditViewState extends State<DiaryEditView> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.black87,
                     shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(50),
+                      borderRadius: BorderRadius.circular(50),
                     ),
                   ),
                 ),
@@ -383,7 +383,7 @@ class _DiaryEditViewState extends State<DiaryEditView> {
     }
   }
 
-  /*_getTimeFromUser({required bool isStartTime}) async {
+/*_getTimeFromUser({required bool isStartTime}) async {
     var pickedTime = await _showTimePicker();
     String _formatedTime = pickedTime.format(context);
     if(pickedTime==null){
@@ -399,7 +399,7 @@ class _DiaryEditViewState extends State<DiaryEditView> {
     }
   }*/
 
-  /*_showTimePicker(){
+/*_showTimePicker(){
     return showTimePicker(
         initialEntryMode: TimePickerEntryMode.input,
         context: context,
@@ -411,7 +411,7 @@ class _DiaryEditViewState extends State<DiaryEditView> {
     );
   }*/
 
-  /*Widget buildProgress() => StreamBuilder<TaskSnapshot>(
+/*Widget buildProgress() => StreamBuilder<TaskSnapshot>(
       stream: uploadTask?.snapshotEvents,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
@@ -452,7 +452,7 @@ class PicnicDiary {
     this.id = '',
     required this.shortDiary,
     required this.picnicDate,
-});
+  });
   Map<String, dynamic> toJson() => {
     'id': id,
     'shortDiary': shortDiary,

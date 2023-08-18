@@ -302,7 +302,13 @@ class _MainRoutePageState extends State<MainRoutePage> {
                 children: [
                   SizedBox(height: 10),
                   // 추천 멘트
-                  Text('추천하는 나들이 경로입니다!'),
+                  Text(
+                    '추천하는 나들이 경로입니다.',
+                    style: TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w800,
+                    ),
+                  ),
                   SizedBox(height: 10),
                   // 추천 경로
                   Container(
@@ -349,23 +355,6 @@ class _MainRoutePageState extends State<MainRoutePage> {
           ),
         ),
       ),
-      // 다이어리에 저장하기 버튼 - 하단 고정
-      bottomNavigationBar: Container(
-        padding: EdgeInsets.symmetric(horizontal: 50), // 양옆 여백 설정
-        child: ElevatedButton(
-          onPressed: () {
-            // 저장 로직
-          },
-          child: Text('다이어리에 저장하기'),
-          style: ElevatedButton.styleFrom(
-            primary: Colors.black87,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30)
-            ),
-          ),
-        ),
-      ),
-
     );
   }
 
