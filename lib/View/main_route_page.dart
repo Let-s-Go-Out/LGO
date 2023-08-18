@@ -6,7 +6,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:nagaja_app/Controller/map_controller.dart';
 import 'package:nagaja_app/Model/draw_recommend_route.dart';
 import 'package:snapping_sheet_2/snapping_sheet.dart';
-//import 'package:provider/provider.dart';
 import '../Model/place_model.dart';
 import 'package:flutter_rating_stars/flutter_rating_stars.dart';
 
@@ -46,34 +45,12 @@ class _MainRoutePageState extends State<MainRoutePage> {
   List<Marker> newMarkers = [];
   Set<Marker> markers = Set<Marker>();
 
-  /*List<String> placeTypes = [
-    'restaurant',
-    'cafe',
-    'bakery',
-    'clothing_store',
-    'department_store',
-    'shopping_mall',
-    'jewelry_store',
-    'shoe_store',
-    'store',
-    'museum',
-    'movie_theater',
-    'library',
-    'bar',
-    'tourist_attraction',
-    'amusement_park',
-    'bowling_alley'
-  ];*/
   String selectedPlaceType = 'restaurant'; // 초기값을 'restaurant'로 설정
 
   // 카테고리 그룹명을 변수로 설정
   Map<String, List<Place>> categoryGroupPlaceLists = {};
 
   List<Place> allPlaces = [];
-
-  //List<Place> selectedCategoryPlaces = categoryGroupPlaceLists[selectedPlaceType] ?? [];
-  //DrawRecommendRoute routeDraw = DrawRecommendRoute(selectedCategoryPlaces);
-  //routeDraw.drawPolyline();
 
   int _selectedIndex = 0;
 
@@ -375,25 +352,9 @@ class _MainRoutePageState extends State<MainRoutePage> {
     // }});
   }
 
-
-  //임의 변경
   Widget _buildTourTab() {
     markers.clear();
-    /*List<Place> filteredPlaces = allPlaces
-                .where((place) => place.types.contains(selectedPlaceType))
-                .toList();
-            int hue = 0;
-            for (var place in filteredPlaces) {
-              hue ++;
-              var newMarker = Marker(
-                icon: BitmapDescriptor.defaultMarkerWithHue(360-hue*16),
-                markerId: MarkerId(place.placeId),
-                position: LatLng(place.placeLat, place.placeLng),
-                infoWindow: InfoWindow(title: place.name),
-              );
-              markers.add(newMarker);
-            }
-            }*/
+
     return Scaffold(
       body: SnappingSheet(
         lockOverflowDrag: true,
@@ -795,7 +756,7 @@ class RecommendPlaceCard extends StatelessWidget {
                       ),
                       borderRadius: BorderRadius.all(Radius.circular(16))
                   ),
-                  // ========= 3차 추가 시작 ===========
+
                   // 사진 1개 불러오기
                   child: place.photoUrls.isNotEmpty
                       ? ClipRRect(
@@ -814,7 +775,6 @@ class RecommendPlaceCard extends StatelessWidget {
                           child: Text("No Image", style: TextStyle(fontSize: 10)),
                     ),
                   ),
-                  // ========= 3차 추가 끝 ===========
                 ),
               ),
               SizedBox(width: 3,),
