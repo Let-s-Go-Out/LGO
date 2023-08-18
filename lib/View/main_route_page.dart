@@ -4,14 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:nagaja_app/Controller/map_controller.dart';
-import 'package:nagaja_app/Model/draw_recommend_route.dart';
 import 'package:snapping_sheet_2/snapping_sheet.dart';
-//import 'package:provider/provider.dart';
 import '../Model/place_model.dart';
 import 'package:flutter_rating_stars/flutter_rating_stars.dart';
-
 import 'diary_page.dart';
-import 'home.dart';
 import 'main_page.dart';
 import 'my_page.dart';
 
@@ -46,34 +42,12 @@ class _MainRoutePageState extends State<MainRoutePage> {
   List<Marker> newMarkers = [];
   Set<Marker> markers = Set<Marker>();
 
-  /*List<String> placeTypes = [
-    'restaurant',
-    'cafe',
-    'bakery',
-    'clothing_store',
-    'department_store',
-    'shopping_mall',
-    'jewelry_store',
-    'shoe_store',
-    'store',
-    'museum',
-    'movie_theater',
-    'library',
-    'bar',
-    'tourist_attraction',
-    'amusement_park',
-    'bowling_alley'
-  ];*/
   String selectedPlaceType = 'restaurant'; // 초기값을 'restaurant'로 설정
 
   // 카테고리 그룹명을 변수로 설정
   Map<String, List<Place>> categoryGroupPlaceLists = {};
 
   List<Place> allPlaces = [];
-
-  //List<Place> selectedCategoryPlaces = categoryGroupPlaceLists[selectedPlaceType] ?? [];
-  //DrawRecommendRoute routeDraw = DrawRecommendRoute(selectedCategoryPlaces);
-  //routeDraw.drawPolyline();
 
   int _selectedIndex = 0;
 
@@ -132,7 +106,7 @@ class _MainRoutePageState extends State<MainRoutePage> {
     recommendPlaces = widget.recommendPlaces;
     categoryGroupPlaceLists = widget.categoryGroupPlaceLists;
     selectP = LatLng(widget.selectP.latitude,widget.selectP.longitude);
-    markers = createMarkers(widget.recommendPlaces);
+    createMarkers(widget.recommendPlaces);
     drawPolyline(widget.recommendPlaces);
   }
 
@@ -156,17 +130,19 @@ class _MainRoutePageState extends State<MainRoutePage> {
     ));
   }
 
-  Set<Marker> createMarkers(List<Place> places) {
+  void createMarkers(List<Place> places) {
     int hue = 0;
-    return places.map((place) {
+    for(var place in places){
       hue++;
-      return Marker(
+      Marker marker = Marker(
         markerId: MarkerId(place.placeId),
         position: LatLng(place.placeLat, place.placeLng),
-        icon: BitmapDescriptor.defaultMarkerWithHue(360 - hue * 16),
+        icon: BitmapDescriptor.defaultMarkerWithHue(360 - hue * 35),
         infoWindow: InfoWindow(title: place.name),
       );
-    }).toSet();
+        newMarkers.add(marker);
+  }
+    markers.addAll(newMarkers);
   }
 
   void drawPolyline(List<Place> recommendPlaces) async{
@@ -302,7 +278,13 @@ class _MainRoutePageState extends State<MainRoutePage> {
                 children: [
                   SizedBox(height: 10),
                   // 추천 멘트
-                  Text('추천하는 나들이 경로입니다!'),
+                  Text(
+                    '추천하는 나들이 경로입니다.',
+                    style: TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w800,
+                    ),
+                  ),
                   SizedBox(height: 10),
                   // 추천 경로
                   Container(
@@ -349,23 +331,6 @@ class _MainRoutePageState extends State<MainRoutePage> {
           ),
         ),
       ),
-      // 다이어리에 저장하기 버튼 - 하단 고정
-      bottomNavigationBar: Container(
-        padding: EdgeInsets.symmetric(horizontal: 50), // 양옆 여백 설정
-        child: ElevatedButton(
-          onPressed: () {
-            // 저장 로직
-          },
-          child: Text('다이어리에 저장하기'),
-          style: ElevatedButton.styleFrom(
-            primary: Colors.black87,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(30)
-            ),
-          ),
-        ),
-      ),
-
     );
   }
 
@@ -384,25 +349,9 @@ class _MainRoutePageState extends State<MainRoutePage> {
     // }});
   }
 
-
-  //임의 변경
   Widget _buildTourTab() {
     markers.clear();
-    /*List<Place> filteredPlaces = allPlaces
-                .where((place) => place.types.contains(selectedPlaceType))
-                .toList();
-            int hue = 0;
-            for (var place in filteredPlaces) {
-              hue ++;
-              var newMarker = Marker(
-                icon: BitmapDescriptor.defaultMarkerWithHue(360-hue*16),
-                markerId: MarkerId(place.placeId),
-                position: LatLng(place.placeLat, place.placeLng),
-                infoWindow: InfoWindow(title: place.name),
-              );
-              markers.add(newMarker);
-            }
-            }*/
+    
     return Scaffold(
       body: SnappingSheet(
         lockOverflowDrag: true,
@@ -466,7 +415,6 @@ class _MainRoutePageState extends State<MainRoutePage> {
                                 textStyle: const TextStyle(
                                   fontSize: 10,
                                   fontWeight: FontWeight.bold,
-                                  //color: Colors.black,
                                 ),
                                 padding: EdgeInsets.all(10),
                                 backgroundColor: Colors.white,
@@ -474,7 +422,6 @@ class _MainRoutePageState extends State<MainRoutePage> {
                               onPressed: () {
                                 setState(() {
                                   selectedPlaceType = groupName;
-                                  //selectedPlaceType = categoryGroupPlaceLists.keys.elementAt(index);
                                 });
                               },
                               child: Text(groupName),
@@ -804,7 +751,7 @@ class RecommendPlaceCard extends StatelessWidget {
                       ),
                       borderRadius: BorderRadius.all(Radius.circular(16))
                   ),
-                  // ========= 3차 추가 시작 ===========
+
                   // 사진 1개 불러오기
                   child: place.photoUrls.isNotEmpty
                       ? ClipRRect(
@@ -823,7 +770,6 @@ class RecommendPlaceCard extends StatelessWidget {
                           child: Text("No Image", style: TextStyle(fontSize: 10)),
                     ),
                   ),
-                  // ========= 3차 추가 끝 ===========
                 ),
               ),
               SizedBox(width: 3,),

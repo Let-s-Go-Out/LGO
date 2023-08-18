@@ -1,9 +1,7 @@
 import 'dart:convert';
-import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart';
 
-//place model 수정
 class Place {
   final String name;
   final String placeId;
@@ -24,29 +22,13 @@ class Place {
     required this.types,
     required this.photoUrls}) {
 
-    distance = distanceCalculation(placeLat, placeLng);
     latlng = LatLng(placeLat, placeLng);
   }
-
-  double distanceCalculation(double lat, double lng) {
-    final geo = GeolocatorPlatform.instance;
-
-    //사용자 설정 출발지 위치 좌표 >> controller.model.nowPLatLng 값
-    //수정
-    double originLat = 37.591054;
-    double originLng = 127.022626;
-
-    double result = geo.distanceBetween(originLat, originLng, lat, lng);
-
-    return result;
-  }
-
-  get distanceFromOrigin => distance;
   get location => latlng;
 }
 
 class PlacesApi {
-  static const String _apiKey = 'AIzaSyBrK8RWyR1_3P7M7yjNiJ8xyXTAuFpeLlM';
+  static const String _apiKey = 'AIzaSyARTEVA-q6Nnuxlcnlf4hzSUus3SFUOxkI';
   static const String _baseUrl =
       'https://maps.googleapis.com/maps/api/place/nearbysearch/json';
 
@@ -66,10 +48,7 @@ class PlacesApi {
         final List<Place> places = [];
 
         if (data['status'] == 'OK') {
-          int i =0;
           for (var placeData in data['results']) {
-            if(i<10) {
-              i++;
               final placeName = placeData['name'];
               final placeId = placeData['place_id'];
               final placeLat = placeData['geometry']['location']['lat'];
@@ -98,10 +77,16 @@ class PlacesApi {
                   }
 
                   if (detailsData['result']['photos'] != null) {
-                    for (var photoData in detailsData['result']['photos']) {
-                      final photoReference = photoData['photo_reference'];
-                      final photoUrl = 'https://maps.googleapis.com/maps/api/place/photo?maxwidth=120&photoreference=$photoReference&key=$_apiKey';
-                      photoUrls.add(photoUrl);
+                    int j =0;
+                      for (var photoData in detailsData['result']['photos']) {
+                        if(j<3) {
+                          j++;
+                        final photoReference = photoData['photo_reference'];
+                        final photoUrl = 'https://maps.googleapis.com/maps/api/place/photo?maxwidth=120&photoreference=$photoReference&key=$_apiKey';
+                        photoUrls.add(photoUrl);
+                      }else {
+                          break;
+                    }
                     }
                   }
                   places.add(
@@ -119,21 +104,15 @@ class PlacesApi {
                   print(placeName);
                 }
               }
-            }else{
-              break;
-            }
           }
           return places;
+        } else if (data['status'] == 'ZERO_RESULTS') {
+          // Return an empty list when there are no results
+          return [];
         } else {
           print('API response status is not OK: ${data['status']}');
-          if('${data['status']}' == 'ZERO_RESULTS'){
-            Future.delayed(Duration(seconds: 1), () {
-              print('Delayed print after 1 second');
-            });
             return[];
           }
-          return [];
-        }
       } else {
         print('API request failed with status code: ${response.statusCode}');
         return [];

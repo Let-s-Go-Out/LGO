@@ -38,7 +38,7 @@ class UserController extends GetxController {
 
 
 
-  //
+  
   void updateNickname(String newNickname) {
     getUid();
     FirebaseFirestore.instance.collection('Users')
@@ -47,8 +47,8 @@ class UserController extends GetxController {
   }
 
 
-  //
-  void updatePassword(String newPassword) async{
+  
+  void updatePassword(String newPassword) async {
     getUid();
 
     try {
