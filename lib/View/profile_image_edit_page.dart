@@ -15,8 +15,8 @@ class ProfileImgEdit extends StatefulWidget {
 class _ProfileImgEditState extends State<ProfileImgEdit> {
 
   File? profileImg;
-  //임시
   String? uid;
+
   Future<String?> getUid() async {
     var auth = await FirebaseAuth.instance;
     uid = auth.currentUser!.uid;
@@ -30,7 +30,9 @@ class _ProfileImgEditState extends State<ProfileImgEdit> {
       ),
 
       child: GestureDetector(
-        onTap: () { showBottomSheet(); },
+        onTap: () {
+          showBottomSheet();
+        },
         child: Center(
           child: Icon(
             Icons.account_circle,
@@ -43,13 +45,18 @@ class _ProfileImgEditState extends State<ProfileImgEdit> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
+    getUid();
+    loadProfileImg();
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
           final double availableWidth = constraints.maxWidth * 0.33;
           final double availableHeight = constraints.maxHeight;
-          //수정 >>
 
           return Padding(
             padding: EdgeInsets.only(top: 15,),
@@ -62,14 +69,15 @@ class _ProfileImgEditState extends State<ProfileImgEdit> {
 
                   else
                     GestureDetector(
-                      onTap: () { showBottomSheet(); },
+                      onTap: () {
+                        showBottomSheet();
+                      },
 
                       child: Center(
                         child: Container(
                           width: availableWidth * 0.8,
                           height: availableHeight * 0.8,
                           decoration: BoxDecoration(
-                            shape: BoxShape.circle,
                             image: DecorationImage(
                               image: FileImage(File(profileImg!.path)),
                               fit: BoxFit.cover,
@@ -92,7 +100,7 @@ class _ProfileImgEditState extends State<ProfileImgEdit> {
     showModalBottomSheet(
         context: context,
 
-        constraints: BoxConstraints( maxHeight: 220 ),
+        constraints: BoxConstraints(maxHeight: 220),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
               topLeft: Radius.circular(20), topRight: Radius.circular(20)
@@ -171,8 +179,10 @@ class _ProfileImgEditState extends State<ProfileImgEdit> {
 
 
   Future getImage(ImageSource source) async {
-    XFile? tempImgFile = await ImagePicker().pickImage(source:source);
-    if (tempImgFile == null) { return; }
+    XFile? tempImgFile = await ImagePicker().pickImage(source: source);
+    if (tempImgFile == null) {
+      return;
+    }
     //image cropper
     /*
     else {
@@ -204,17 +214,29 @@ class _ProfileImgEditState extends State<ProfileImgEdit> {
       profileImg = File(tempImgFile.path);
       uploadFile(tempImgFile);
     });
-
   }
 
 
   Future uploadFile(XFile img) async {
-    //${firebaseAuth.currentUser!.uid}
     final path = '/user_profile_image/$uid';
     final file = File(img.path);
 
     Reference storageRef = FirebaseStorage.instance.ref().child(path);
     await storageRef.putFile(file);
+  }
+
+  //추가
+  Future loadProfileImg() async {
+    final path = '/user_profile_image/$uid';
+    Reference storageRef = FirebaseStorage.instance.ref().child(path);
+
+    try {
+      String imgUrl = await storageRef.getDownloadURL();
+      setState(() {
+        profileImg = File(imgUrl);
+      });
+    } catch (e) { //프로필 사진 없음 }
+    }
   }
 
 
@@ -223,13 +245,16 @@ class _ProfileImgEditState extends State<ProfileImgEdit> {
       profileImg = null;
     });
 
-    //${firebaseAuth.currentUser!.uid}
     final path = 'user_profile_image/$uid';
 
     Reference storageRef = FirebaseStorage.instance.ref().child(path);
 
-    try {await storageRef.delete();}
-    catch (e) { print('Error while deleting profile image: $e'); }
+    try {
+      await storageRef.delete();
+    }
+    catch (e) {
+      print('Error while deleting profile image: $e');
+    }
   }
 
 }
