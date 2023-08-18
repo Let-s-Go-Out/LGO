@@ -10,12 +10,17 @@ import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:nagaja_app/View/widgets/action_buttons.dart';
 
 class DiaryEditView extends StatefulWidget {
   final int monthIndex;
+  final User user; // User 객체를 인자로 받아옴
+
   const DiaryEditView({
     Key? key,
     required this.monthIndex,
+    required this.user, // User 객체를 전달받음
   }) : super(key: key);
 
   @override
@@ -167,32 +172,32 @@ class _DiaryEditViewState extends State<DiaryEditView> {
                 ),
                 // 두번째 사진
                 Container(
-                    width: 95,
-                    height: 95,
-                    decoration: BoxDecoration(
-                        border: Border.all(
-                          color: Colors.grey,
-                          width: 2,
-                        ),
-                        borderRadius: BorderRadius.all(Radius.circular(16))
-                    ),
-                    child: GestureDetector(
-                      onTap: pickedSecondFile != null ? _removeSecondImage : _uploadSecondImage,
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.all(Radius.circular(16)),
-                        child: pickedSecondFile != null
-                            ? Image.file(
-                          File(pickedSecondFile!.path!),
-                          width: 95,
-                          height: 95,
-                          fit: BoxFit.cover,
-                        )
-                            : Center(
-                                child: Text('사진', style: TextStyle(fontSize: 10)),
-                        ),
+                  width: 95,
+                  height: 95,
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.grey,
+                        width: 2,
+                      ),
+                      borderRadius: BorderRadius.all(Radius.circular(16))
+                  ),
+                  child: GestureDetector(
+                    onTap: pickedSecondFile != null ? _removeSecondImage : _uploadSecondImage,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.all(Radius.circular(16)),
+                      child: pickedSecondFile != null
+                          ? Image.file(
+                        File(pickedSecondFile!.path!),
+                        width: 95,
+                        height: 95,
+                        fit: BoxFit.cover,
+                      )
+                          : Center(
+                        child: Text('사진', style: TextStyle(fontSize: 10)),
                       ),
                     ),
                   ),
+                ),
               ],
             ),
             SizedBox(height: 10),
@@ -211,7 +216,7 @@ class _DiaryEditViewState extends State<DiaryEditView> {
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.black87,
                     shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(50),
+                      borderRadius: BorderRadius.circular(50),
                     ),
                   ),
                 ),
@@ -242,9 +247,33 @@ class _DiaryEditViewState extends State<DiaryEditView> {
                   ),
                   onPressed: () async {
                     uploadFile(); // 사진 업로드
-                    _validDate();
-                    createPicnicDiary(shortDiary: _noteController.text);
-                  },// 다이어리 업로드
+
+                    bool isValid = await _validDate();
+                    if (isValid) {
+                      await createPicnicDiary(
+                          shortDiary: _noteController.text); // 다이어리 업로드
+                      Get.snackbar(
+                        "Success",
+                        "다이어리 저장 완료!",
+                        snackPosition: SnackPosition.BOTTOM,
+                        backgroundColor: Colors.black,
+                        colorText: Colors.white,
+                        icon: Icon(
+                          Icons.check_circle_outline,
+                          color: Colors.green,
+                        ),
+                      );
+
+                      // 새로고침
+                      //_savedDiary.add(_noteController.text);
+                      //_noteController.clear();
+                      setState(() {}); // 화면 새로고침?
+
+                      //Navigator.pop(context);
+                    }
+                  },
+
+                   
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.black87,
                     shape: RoundedRectangleBorder(
@@ -277,9 +306,9 @@ class _DiaryEditViewState extends State<DiaryEditView> {
     );
   }
 
-  // 사용자 입력의 유효성을 검증 함수
-  /*// -- 추가 시작
-  _validDate() async {
+
+// 사용자 입력의 유효성을 검증 함수
+  Future<bool> _validDate() async {
     if (_noteController.text.isNotEmpty) {
       try {
 
@@ -322,7 +351,9 @@ class _DiaryEditViewState extends State<DiaryEditView> {
         createPicnicDiary(shortDiary: _noteController.text);
         // await createPicnicDiary(shortDiary: _noteController.text);
         print('다이어리 업로드 성공!');
-        //Get.back();
+        // 데이터 제출 후 전 페이지로 돌아감
+        Get.back();
+        return true; // 유효성 검사 통과
       } catch (error) {
         print('Error uploading diary: $error');
         Get.snackbar(
@@ -336,35 +367,55 @@ class _DiaryEditViewState extends State<DiaryEditView> {
             color: Colors.red,
           ),
         );
+        return false; // 유효성 검사 실패
       }
-      // 데이터 제출 후, 전 페이지로 돌아감
-      Get.back();
-    }else if(_noteController.text.isEmpty){
-      Get.snackbar("Error", "다이어리를 완성해주세요.",
-        snackPosition: SnackPosition.BOTTOM,
-        backgroundColor: Colors.white,
-        colorText: Colors.pinkAccent,
-        icon: Icon(Icons.warning_amber_rounded,
-            color: Colors.red),
-      );
     }
+    return true; // _noteController.text가 비어있을 경우에는 true 반환
   }
+
+
+
+  // 데이터 제출 후, 전 페이지로 돌아감
+  // Get.back();
+  // }else if(_noteController.text.isEmpty){
+  //   Get.snackbar("Error", "다이어리를 완성해주세요.",
+  //     snackPosition: SnackPosition.BOTTOM,
+  //     backgroundColor: Colors.white,
+  //     colorText: Colors.pinkAccent,
+  //     icon: Icon(Icons.warning_amber_rounded,
+  //         color: Colors.red),
+  //   );
+  //   }
+  // }
 
   // 데이터를 Firebase에 업로드
   Future createPicnicDiary({required String shortDiary}) async {
-    // 문서 ID 생성
-    final docPicnicDiary = FirebaseFirestore.instance.collection('PicnicDiary').doc();
+    try {
+      // id 생성
+      final docPicnicDiary = FirebaseFirestore.instance.collection('PicnicRecord')
+          .doc(widget.user.uid)
+          .collection('Diary')
+          .doc();
 
-    final picnicDiary = PicnicDiary(
-      id : docPicnicDiary.id,
-      shortDiary: shortDiary,
-      picnicDate: _selectedDate,
-    );
-    final json = picnicDiary.toJson();
+      final picnicDiary = PicnicDiary(
+        //id : docPicnicDiary.id,
+        //uid: user.uid,
+        shortDiary: shortDiary,
+        picnicDate: _selectedDate,
+      );
+      //final json = picnicDiary.toJson();
 
-    // 문서 생성하고 데이터를 Firebase에 생성
-    await docPicnicDiary.set(json);
+      // create document and write data to Firebase
+      //  await docPicnicDiary.set(json);
+      await docPicnicDiary.set(picnicDiary.toJson());
+      // Create document and write data to Firebase
+
+      print('다이어리 저장 성공!');
+    } catch (e) {
+      print('다이어리 저장 실패: $e');
+    }
   }
+
 
   _getDataFromUser() async {
     DateTime? _pickerDate = await showDatePicker(
@@ -411,7 +462,7 @@ class _DiaryEditViewState extends State<DiaryEditView> {
     );
   }*/
 
-  /*Widget buildProgress() => StreamBuilder<TaskSnapshot>(
+/*Widget buildProgress() => StreamBuilder<TaskSnapshot>(
       stream: uploadTask?.snapshotEvents,
       builder: (context, snapshot) {
         if (snapshot.hasData) {
@@ -444,17 +495,21 @@ class _DiaryEditViewState extends State<DiaryEditView> {
 }
 
 class PicnicDiary {
-  String id;
+  //String id;
+  //final String uid;
   final String shortDiary;
   final DateTime picnicDate;
 
   PicnicDiary({
-    this.id = '',
+    //this.id = '',
+    //required this.uid,
     required this.shortDiary,
     required this.picnicDate,
-});
+  });
+
   Map<String, dynamic> toJson() => {
-    'id': id,
+    //'id': id,
+    //'uid': uid,
     'shortDiary': shortDiary,
     'picnicDate': picnicDate,
   };
