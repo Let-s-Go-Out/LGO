@@ -1,17 +1,23 @@
 import 'package:flutter/material.dart';
 import '../diary_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:nagaja_app/View/widgets/diary_edit_view.dart';
 
 class DiaryView extends StatelessWidget {
   final int monthIndex;
-  //final DateTime selectedDate;
+  //final DateTime selectedDate; // 사용자가 선택한 날짜
+  //final String? imageUrl; // 이미지 표시할 URL 변수
+
   const DiaryView({
     Key? key,
     required this.monthIndex,
     //required this.selectedDate,
+    //required this.imageUrl,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
       child: Container(
@@ -29,6 +35,16 @@ class DiaryView extends StatelessWidget {
           children: [
             // 날짜
             Text(
+              'Diary를 작성해주세요',
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 30,
+                fontWeight: FontWeight.w900,
+              ),
+            ),
+
+           /* // 날짜
+            Text(
               '2023.08.14',
               //textScaleFactor: 3.5,
               style: const TextStyle(
@@ -36,12 +52,10 @@ class DiaryView extends StatelessWidget {
                 fontSize: 25,
                 fontWeight: FontWeight.w500,
               ),
-            ),
-            const Spacer(),
-            // 나들이 경로
+            ),*/
 
-            const Spacer(),
-            // 사진
+
+            /*// 사진
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -55,9 +69,7 @@ class DiaryView extends StatelessWidget {
                       ),
                       borderRadius: BorderRadius.all(Radius.circular(16))
                   ),
-                  child: Center(
-                    child: Text('Upload from gallery', style: TextStyle(fontSize: 8)),
-                  ),
+                  child: Center(child: Text('Upload from gallery', style: TextStyle(fontSize: 8)),)
                 ),
                 Container(
                   width: 95,
@@ -74,10 +86,10 @@ class DiaryView extends StatelessWidget {
                   ),
                 ),
               ],
-            ),
-            const Spacer(),
+            ),*/
+
             // 한 줄 일기
-            Container(
+            /*Container(
               width: 250,
               height: 30,
               decoration: BoxDecoration(
@@ -90,7 +102,7 @@ class DiaryView extends StatelessWidget {
               child: Center(
                   child: Text('한 줄 일기', style: TextStyle(fontSize: 8))
               ),
-            ),
+            ),*/
           ],
         ),
       ),

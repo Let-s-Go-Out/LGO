@@ -58,12 +58,9 @@ class _DiaryEditViewState extends State<DiaryEditView> {
 
   // 선택한 함수 Firebase Storage에 업로드
   Future uploadFile() async {
-    // 업로드할 파일의 경로 지정 (files 폴더 안에 선택한 파일의 이름으로 저장)
     final path = 'files/${pickedFile!.name}';
-    // 선택한 이미지 파일의 내용
     final file = File(pickedFile!.path!);
 
-    // Firebase Storage에서 사용할 업로드 경로를 나타내는 참조 객체
     final ref = FirebaseStorage.instance.ref().child(path);
     setState(() {
       // 파일을 업로드하는 작업을 uploadTask 변수에 할당 (이 작업은 ref.putFile(file)을 통해 생성됨)
@@ -73,11 +70,11 @@ class _DiaryEditViewState extends State<DiaryEditView> {
     // uploadTask 작업이 완료될 때까지 기다린 후, 해당 작업의 상태 정보를 저장하는 스냅샷(snapshot)을 얻음
     final snapshot = await uploadTask!.whenComplete(() {});
 
-    // 업로드된 파일의 다운로드 URL을 얻습니다. 이 URL을 통해 나중에 이미지를 표시하거나 다운로드할 수 있습니다.
+    // 업로드된 파일의 다운로드 URL을 얻음. 이 URL을 통해 나중에 이미지를 표시/다운로드 가능
     final urlDownload = await snapshot.ref.getDownloadURL();
     print('Download Link: $urlDownload');
 
-    // 업로드 작업이 완료되면 uploadTask 변수를 초기화하여 업로드가 끝났음을 나타냅니다.
+    // 업로드 작업이 완료 - uploadTask 변수를 초기화
     setState(() {
       uploadTask = null;
     });
@@ -112,7 +109,10 @@ class _DiaryEditViewState extends State<DiaryEditView> {
         ),
         child: Column(
           children: [
-            // New
+            // 상단 - 입력한 날짜
+            Text(DateFormat('yyyy년 MM월 dd일').format(_selectedDate), style: TextStyle(fontSize: 16, fontWeight: FontWeight.w800),),
+
+            // 한 줄 일기
             MyInputFieldMessage(
               title: "한 줄 일기",
               hint: "한 줄 일기를 작성해주세요.\n오늘의 나들이는 어땠나요?",
@@ -313,17 +313,18 @@ class _DiaryEditViewState extends State<DiaryEditView> {
   _getDataFromUser() async {
     DateTime? _pickerDate = await showDatePicker(
         context: context,
-        initialDate: DateTime.now(),
+        initialDate: _selectedDate, // 기존 선택한 날짜로 초기값 설정
+        //initialDate: DateTime.now(),
         firstDate: DateTime(2020),
         lastDate: DateTime(2030)
     );
 
     if(_pickerDate!=null){
       setState(() {
-        _selectedDate = _pickerDate;
+        _selectedDate = _pickerDate; // 선택한 날짜로 업데이트
       });
     }else{
-      print("it's null or something is wrong");
+      print("error");
     }
   }
 
