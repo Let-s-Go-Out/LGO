@@ -8,7 +8,7 @@ class PlacesSearchScreen extends StatefulWidget {
 }
 
 class _PlacesSearchScreenState extends State<PlacesSearchScreen> {
-  String _apiKey = 'AIzaSyBrK8RWyR1_3P7M7yjNiJ8xyXTAuFpeLlM';
+  String _apiKey = 'AIzaSyARTEVA-q6Nnuxlcnlf4hzSUus3SFUOxkI';
   String _searchQuery = '';
   List<dynamic> _searchResults = [];
 

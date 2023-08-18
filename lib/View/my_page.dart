@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-
 import 'diary_page.dart';
 import 'main_page.dart';
 import 'my_page_out_buttons.dart';
 import 'my_page_show_user_info.dart';
 import 'profile_image_edit_page.dart';
+
 class MyPage extends StatefulWidget {
   const MyPage({Key? key}) : super(key: key);
 
