@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import '../Controller/auth_controller.dart';
-import '../View/signup_page.dart';
-import '../View/signup_completed_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../View/main_beginning_page.dart';
 

@@ -1,9 +1,6 @@
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:nagaja_app/View/widgets/diary_view.dart';
-import '../diary_page.dart';
-import 'package:nagaja_app/View/widgets/theme.dart';
 import 'package:nagaja_app/View/widgets/input_field.dart';
 import 'package:nagaja_app/View/widgets/input_field_message.dart';
 import 'package:file_picker/file_picker.dart';
@@ -11,7 +8,6 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:nagaja_app/View/widgets/action_buttons.dart';
 
 class DiaryEditView extends StatefulWidget {
   final int monthIndex;
@@ -286,6 +282,7 @@ class _DiaryEditViewState extends State<DiaryEditView> {
     }
     return true; // _noteController.text가 비어있을 경우에는 true 반환
   }
+
   // 데이터를 Firebase에 업로드
   Future createPicnicDiary({required String shortDiary}) async {
     try {

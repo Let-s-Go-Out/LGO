@@ -1,15 +1,11 @@
 import 'dart:math';
-import 'package:date_picker_timeline/date_picker_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:nagaja_app/View/widgets/theme.dart';
 import 'package:nagaja_app/View/widgets/diary_view.dart';
 import 'package:nagaja_app/View/widgets/diary_edit_view.dart';
 import 'package:nagaja_app/View/widgets/action_buttons.dart';
-
 import 'main_page.dart';
 import 'my_page.dart';
-
 import 'package:firebase_auth/firebase_auth.dart';
 
 class DiaryPage extends StatefulWidget {

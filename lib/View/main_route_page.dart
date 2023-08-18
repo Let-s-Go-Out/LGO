@@ -4,13 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:nagaja_app/Controller/map_controller.dart';
-import 'package:nagaja_app/Model/draw_recommend_route.dart';
 import 'package:snapping_sheet_2/snapping_sheet.dart';
 import '../Model/place_model.dart';
 import 'package:flutter_rating_stars/flutter_rating_stars.dart';
-
 import 'diary_page.dart';
-import 'home.dart';
 import 'main_page.dart';
 import 'my_page.dart';
 
@@ -354,7 +351,7 @@ class _MainRoutePageState extends State<MainRoutePage> {
 
   Widget _buildTourTab() {
     markers.clear();
-
+    
     return Scaffold(
       body: SnappingSheet(
         lockOverflowDrag: true,
@@ -418,7 +415,6 @@ class _MainRoutePageState extends State<MainRoutePage> {
                                 textStyle: const TextStyle(
                                   fontSize: 10,
                                   fontWeight: FontWeight.bold,
-                                  //color: Colors.black,
                                 ),
                                 padding: EdgeInsets.all(10),
                                 backgroundColor: Colors.white,
@@ -426,7 +422,6 @@ class _MainRoutePageState extends State<MainRoutePage> {
                               onPressed: () {
                                 setState(() {
                                   selectedPlaceType = groupName;
-                                  //selectedPlaceType = categoryGroupPlaceLists.keys.elementAt(index);
                                 });
                               },
                               child: Text(groupName),

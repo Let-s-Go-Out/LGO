@@ -1,9 +1,7 @@
 import 'dart:convert';
-import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:http/http.dart';
 
-//place model 수정
 class Place {
   final String name;
   final String placeId;
@@ -30,7 +28,7 @@ class Place {
 }
 
 class PlacesApi {
-  static const String _apiKey = 'AIzaSyBrK8RWyR1_3P7M7yjNiJ8xyXTAuFpeLlM';
+  static const String _apiKey = 'AIzaSyARTEVA-q6Nnuxlcnlf4hzSUus3SFUOxkI';
   static const String _baseUrl =
       'https://maps.googleapis.com/maps/api/place/nearbysearch/json';
 

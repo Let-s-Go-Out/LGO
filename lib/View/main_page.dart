@@ -1,17 +1,11 @@
-import 'dart:async';
-import 'dart:developer' show log;
 import 'package:flutter/material.dart';
 import 'package:latlng/latlng.dart';
-import 'package:nagaja_app/View/home.dart';
 import 'package:nagaja_app/View/map_browse_screen.dart';
-import 'package:http/http.dart' as http;
 import 'package:syncfusion_flutter_sliders/sliders.dart';
 import 'package:nagaja_app/View/main_page_loading.dart';
-import 'package:nagaja_app/Controller/user_route_data.dart';
 import 'package:nagaja_app/View/widgets/theme.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
 import 'diary_page.dart';
 import 'my_page.dart';
 
@@ -171,16 +165,6 @@ class _MainPageState extends State<MainPage> {
     // 새 문서를 생성하고 데이터 저장
     DocumentReference userRouteDocRef = userRouteDataCollection.doc();
 
-    /*Map<String, dynamic> userRouteData = {
-      'picnicConcept': selectedConcept,
-      'departureTime': _timeOfDay.format(context),
-      'placeCount': _value.toStringAsFixed(0),
-      'startPlaceAddress': startPlaceAddress,
-      'startPlaceName': startPlaceName,
-      'startPlaceGeopoint': GeoPoint(startPlaceLatLng.latitude, startPlaceLatLng.longitude),
-    };*/
-
-    // -- 수정 추가
     userRouteData = {
       'picnicConcept': selectedConcept,
       'departureTime': _timeOfDay.format(context),
@@ -189,7 +173,6 @@ class _MainPageState extends State<MainPage> {
       'startPlaceName': startPlaceName,
       'startPlaceGeopoint': GeoPoint(startPlaceLatLng.latitude, startPlaceLatLng.longitude),
     };
-    // -- 수정 끝
 
     try {
       await userRouteDocRef.set(userRouteData);
@@ -400,21 +383,6 @@ class _MainPageState extends State<MainPage> {
                   });
                 },
               ),
-              // 슬라이더 ver.2
-              /*child: Slider(
-                value: _value,
-                onChanged: (dynamic value) {
-                  setState(() {
-                    _value = value;
-                  });
-                },
-                activeColor: Colors.black,
-                inactiveColor: Colors.grey,
-                min: 0.0,
-                max: 5.0,
-                divisions: 5,
-                label: _value.toString(),
-              ),*/
             ),
             // 버튼
             Spacer(flex: 2),

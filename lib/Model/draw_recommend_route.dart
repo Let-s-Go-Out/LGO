@@ -1,18 +1,10 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:geolocator/geolocator.dart';
-//import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-//import 'package:nagaja_app/Controller/map_controller.dart';
 import 'package:nagaja_app/Model/place_model.dart';
 
-
-//나들이 컨셉 - 장소 리스트 연결
-//만약 하나의 컨셉에 여러 개의 장소 리스트를 매칭하다면 합쳐진 컨셉-장소 리스트 생성
-
-//DrawRecommendRoute routeDraw = DrawRecommendRoute(categoryGroupPlaceLists);
 class DrawRecommendRoute {
   static const String _apiKey = 'AIzaSyBrK8RWyR1_3P7M7yjNiJ8xyXTAuFpeLlM';
   List<String> categoryRestaurant = ['restaurant'];
@@ -21,56 +13,12 @@ class DrawRecommendRoute {
   List<String> categoryCulture = ['museum', 'library'];
   List<String> categoryBar = ['bar'];
   List<String> categoryAttraction = ['tourist_attraction', 'amusement_park', 'bowling_alley'];
-
-  //수정 >> 사용자 설정 현재 위치, 데이터 받아 오기
-  // LatLng origin = LatLng(0.0, 0.0);
-
-  //예시 >> 초기 리스트 비어 있음
-  // List<Place> recommendPlaces = [
-  //   Place(
-  //   name: '스타벅스 성신여대점',
-  //   placeId: 'A',
-  //   placeLat: 37.591054,
-  //   placeLng: 127.022626,
-  //   types: ['cafe'],
-  //   rating: 0,
-  //   photoUrls: [''],
-  // ),
-  //   Place(
-  //   name: '이디야 카페 성신여대점',
-  //   placeId: 'B',
-  //   placeLat: 37.591776,
-  //   placeLng: 127.021206,
-  //   types: ['cafe'],
-  //     rating: 0,
-  //   photoUrls: [''],
-  // ),
-  //   Place(
-  //   name: '메가커피 성신여대점',
-  //   placeId: 'C',
-  //   placeLat: 37.590641,
-  //   placeLng: 127.021988,
-  //   types: ['cafe'],
-  //     rating: 0,
-  //   photoUrls: [''],
-  // ),
-  // ];
   List<Place> recommendPlaces = [];
 
   Map<PolylineId, Polyline> polylineList = {};
   PolylinePoints polylinePoints = PolylinePoints();
   int polylineIdCounter = 0;
   List<LatLng> polylineCoordinates=[];
-
-  //수정 >> 사용자 설정 추천 장소 갯수, 데이터 받아 오기
-  // int placesCounter = 3;
-  // List<String> userType = ['음식점','문화'];
-
-
-  //
-  // DrawRecommendRoute(Map<String, List<Place>> categoryGroupPlaceLists) {
-  //   setRecommendPlaces(categoryGroupPlaceLists);
-  // }
 
   setOriginPlace(LatLng origin) {
     recommendPlaces.insert(0, Place(
@@ -83,7 +31,6 @@ class DrawRecommendRoute {
       photoUrls: [''],
     ),);
   }
-
 
   //categoryGroupPlaceLists['category'], 예시 참고
   List<Place> setRecommendPlaces(Map<String, List<Place>> categoryGroupPlaceLists,GeoPoint gp, int placesCounter, String userType) {
