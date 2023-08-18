@@ -2,6 +2,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:geolocator/geolocator.dart';
 //import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 //import 'package:nagaja_app/Controller/map_controller.dart';
@@ -162,7 +163,7 @@ class DrawRecommendRoute {
             break;
       }
     }
-    sortingCloseDistance(recommendPlaces);
+    sortingCloseDistance(gp, recommendPlaces);
     setOriginPlace(LatLng(gp.latitude, gp.longitude));
     print('추천장소');
     for(int i =0;i<placesCounter+1&& i < recommendPlaces.length;i++){
@@ -172,10 +173,18 @@ class DrawRecommendRoute {
   }
 
 
-  sortingCloseDistance(List<Place> recommendPlaces) {
+  sortingCloseDistance(GeoPoint gp, List<Place> recommendPlaces) {
     recommendPlaces.sort((a,b) {
-      return a.distanceFromOrigin.compareTo(b.distanceFromOrigin);
+      double distanceA = distanceCalculation(gp.latitude, gp.longitude, a.placeLat, a.placeLng);
+      double distanceB = distanceCalculation(gp.latitude, gp.longitude, b.placeLat, b.placeLng);
+      return distanceA.compareTo(distanceB);
     });
+  }
+
+  double distanceCalculation(double originLat, double originLng, double lat, double lng) {
+    final geo = GeolocatorPlatform.instance;
+    double result = geo.distanceBetween(originLat, originLng, lat, lng);
+    return result;
   }
 
 

@@ -132,7 +132,7 @@ class _MainRoutePageState extends State<MainRoutePage> {
     recommendPlaces = widget.recommendPlaces;
     categoryGroupPlaceLists = widget.categoryGroupPlaceLists;
     selectP = LatLng(widget.selectP.latitude,widget.selectP.longitude);
-    markers = createMarkers(widget.recommendPlaces);
+    createMarkers(widget.recommendPlaces);
     drawPolyline(widget.recommendPlaces);
   }
 
@@ -156,17 +156,19 @@ class _MainRoutePageState extends State<MainRoutePage> {
     ));
   }
 
-  Set<Marker> createMarkers(List<Place> places) {
+  void createMarkers(List<Place> places) {
     int hue = 0;
-    return places.map((place) {
+    for(var place in places){
       hue++;
-      return Marker(
+      Marker marker = Marker(
         markerId: MarkerId(place.placeId),
         position: LatLng(place.placeLat, place.placeLng),
-        icon: BitmapDescriptor.defaultMarkerWithHue(360 - hue * 16),
+        icon: BitmapDescriptor.defaultMarkerWithHue(360 - hue * 35),
         infoWindow: InfoWindow(title: place.name),
       );
-    }).toSet();
+        newMarkers.add(marker);
+  }
+    markers.addAll(newMarkers);
   }
 
   void drawPolyline(List<Place> recommendPlaces) async{

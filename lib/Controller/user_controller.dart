@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
 
 import '../Model/user_model.dart';
-import 'auth_controller.dart';
 
 class UserController extends GetxController {
 
@@ -12,10 +11,6 @@ class UserController extends GetxController {
   String? uid;
 
   Future<String?> getUid() async {
-
-    AuthController authForMyPage = AuthController();
-    uid = await authForMyPage.getUserUid();
-
     try {
       var auth = await FirebaseAuth.instance;
       uid = auth.currentUser!.uid;
@@ -73,9 +68,8 @@ class UserController extends GetxController {
 
 
   void logout() async {
-
     try {
-      //실행시 기능 구현 되는 지 확인
+      //
       await FirebaseAuth.instance.signOut();
     } catch (e) {
       print('Error logging out: $e');
@@ -83,17 +77,16 @@ class UserController extends GetxController {
   }
 
 
-
-  //firebase Auth, firestore 에서 계정, 정보 삭제
+  //firebase Auth, firestore 에서 계정 삭제
   void deleteAccount() async {
     getUid();
     try {
-      User? user = FirebaseAuth.instance.currentUser;
-      if (user != null) { await user.delete(); }
-
-      FirebaseFirestore.instance.collection('Users').doc(uid).delete();
+      FirebaseFirestore.instance.collection('Users')
+          .doc(uid).delete();
+      await FirebaseAuth.instance.currentUser!.delete();
 
     } catch (e) { print('Error deleting Account; $e'); }
+
   }
 
 }

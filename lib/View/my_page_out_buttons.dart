@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nagaja_app/View/login_page.dart';
@@ -14,7 +15,6 @@ class OutButtons extends StatelessWidget {
       builder: (BuildContext context, BoxConstraints constraints) {
         final double availableWidth = constraints.maxWidth * 0.5;
         final double availableHeight = constraints.maxHeight * 0.3;
-        //수정
 
         return Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -86,9 +86,6 @@ class LogOutButton extends StatefulWidget {
 class _LogOutButtonState extends State<LogOutButton> {
   @override
   Widget build(BuildContext context) {
-
-    Get.put(UserController());
-
     final double width = MediaQuery.of(context).size.width;
     final double height = MediaQuery.of(context).size.height;
 
@@ -121,10 +118,9 @@ class _LogOutButtonState extends State<LogOutButton> {
               child: const Text(
                 '로그아웃', style: TextStyle(color: Colors.red),
               ),
-              onPressed: () {
-                UserController userController = Get.find();
-                userController.logout();
-                //로그 아웃 후 처음 화면으로
+              onPressed: () async {
+                //
+                await FirebaseAuth.instance.signOut();
                 Navigator.push(
                   context,
                   MaterialPageRoute(
@@ -205,9 +201,10 @@ class _DeleteButtonState extends State<DeleteButton> {
                 '탈퇴하기', style: TextStyle(color: Colors.red),
               ),
               onPressed: () {
-                UserController userController = Get.find();
-                userController.deleteAccount();
-                //계정 삭제 후 초기 화면으로
+                //UserController userController = Get.find();
+                //userController.deleteAccount();
+                Get.find<UserController>().deleteAccount();
+                //
                 Navigator.push(
                   context,
                   MaterialPageRoute(
