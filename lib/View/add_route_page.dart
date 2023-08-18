@@ -52,18 +52,6 @@ class _AddRoutePageState extends State<AddRoutePage> {
      });
    }
 
-   /*Future pickImage() async {
-     try {
-       final image = await ImagePicker().pickImage(source: ImageSource.gallery);
-       if (image == null) return;
-
-       final imageTemporary = File(image.path);
-       setState(() => this.image = imageTemporary);
-     } on PlatformException catch (e) {
-       print('Failed to pick image: $e');
-     }
-   }*/
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

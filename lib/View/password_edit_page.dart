@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nagaja_app/View/my_page.dart';
-
 import '../Controller/user_controller.dart';
 
 class PasswordEdit extends StatefulWidget {

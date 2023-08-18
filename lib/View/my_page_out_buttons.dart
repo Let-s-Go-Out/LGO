@@ -2,7 +2,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:nagaja_app/View/login_page.dart';
-
 import '../Controller/user_controller.dart';
 
 class OutButtons extends StatelessWidget {
