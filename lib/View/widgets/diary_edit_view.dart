@@ -247,6 +247,7 @@ class _DiaryEditViewState extends State<DiaryEditView> {
                   ),
                   onPressed: () async {
                     uploadFile(); // 사진 업로드
+
                     bool isValid = await _validDate();
                     if (isValid) {
                       await createPicnicDiary(
@@ -272,6 +273,7 @@ class _DiaryEditViewState extends State<DiaryEditView> {
                     }
                   },
 
+                   
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.black87,
                     shape: RoundedRectangleBorder(
@@ -304,11 +306,50 @@ class _DiaryEditViewState extends State<DiaryEditView> {
     );
   }
 
+
 // 사용자 입력의 유효성을 검증 함수
   Future<bool> _validDate() async {
     if (_noteController.text.isNotEmpty) {
       try {
-        await createPicnicDiary(shortDiary: _noteController.text);
+
+        await createPicnicDiary(shortDiary: _noteController.text).then((value) => print('성공'));
+        print('다이어리 업로드 성공!');
+        //Get.back();
+      } catch (error) {
+        print('Error uploading diary: $error');
+        Get.snackbar(
+          "Error",
+          "다이어리를 업로드하는 도중 오류가 발생했습니다.",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.white,
+          colorText: Colors.pinkAccent,
+          icon: Icon(
+            Icons.warning_amber_rounded,
+            color: Colors.red,
+          ),
+        );
+      }
+      // 데이터 제출 후, 전 페이지로 돌아감
+      Get.back();
+    }else if(_noteController.text.isEmpty){
+      Get.snackbar("Error", "다이어리를 완성해주세요.",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.white,
+        colorText: Colors.pinkAccent,
+        icon: Icon(Icons.warning_amber_rounded,
+            color: Colors.red),
+      );
+    }
+  }
+
+
+  // -- 추가 끝*/
+  _validDate() async {
+    if (_noteController.text.isNotEmpty) {
+      try {
+        // _noteController.text 값을 shortDiary 필드로 설정
+        createPicnicDiary(shortDiary: _noteController.text);
+        // await createPicnicDiary(shortDiary: _noteController.text);
         print('다이어리 업로드 성공!');
         // 데이터 제출 후 전 페이지로 돌아감
         Get.back();
@@ -393,7 +434,7 @@ class _DiaryEditViewState extends State<DiaryEditView> {
     }
   }
 
-  _getTimeFromUser({required bool isStartTime}) async {
+  /*_getTimeFromUser({required bool isStartTime}) async {
     var pickedTime = await _showTimePicker();
     String _formatedTime = pickedTime.format(context);
     if(pickedTime==null){
@@ -407,9 +448,9 @@ class _DiaryEditViewState extends State<DiaryEditView> {
         _endTime=_formatedTime;
       });
     }
-  }
+  }*/
 
-  _showTimePicker(){
+  /*_showTimePicker(){
     return showTimePicker(
         initialEntryMode: TimePickerEntryMode.input,
         context: context,
@@ -419,7 +460,7 @@ class _DiaryEditViewState extends State<DiaryEditView> {
           minute: int.parse(_startTime.split(":")[1].split(" ")[0]),
         )
     );
-  }
+  }*/
 
 /*Widget buildProgress() => StreamBuilder<TaskSnapshot>(
       stream: uploadTask?.snapshotEvents,

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -15,7 +16,11 @@ class _ProfileImgEditState extends State<ProfileImgEdit> {
 
   File? profileImg;
   //임시
-  String? uid = 'B5gefuZ8nPPTQatH7GZSKAXR5ns1';
+  String? uid;
+  Future<String?> getUid() async {
+    var auth = await FirebaseAuth.instance;
+    uid = auth.currentUser!.uid;
+  }
 
   Widget defaultImage(double height, double width) {
     return Container(
@@ -42,7 +47,7 @@ class _ProfileImgEditState extends State<ProfileImgEdit> {
 
     return LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
-          final double availableWidth = constraints.maxWidth;
+          final double availableWidth = constraints.maxWidth * 0.33;
           final double availableHeight = constraints.maxHeight;
           //수정 >>
 
@@ -64,6 +69,7 @@ class _ProfileImgEditState extends State<ProfileImgEdit> {
                           width: availableWidth * 0.8,
                           height: availableHeight * 0.8,
                           decoration: BoxDecoration(
+                            shape: BoxShape.circle,
                             image: DecorationImage(
                               image: FileImage(File(profileImg!.path)),
                               fit: BoxFit.cover,

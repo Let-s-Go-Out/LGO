@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:nagaja_app/Controller/auth_controller.dart';
+
 import 'package:nagaja_app/View/nickname_edit_page.dart';
 import 'package:nagaja_app/View/password_edit_page.dart';
 
@@ -22,10 +22,19 @@ class _ShowUserInfoState extends State<ShowUserInfo> {
   @override
   Widget build(BuildContext context) {
 
-    //final UserController userController = Get.put(UserController());
+
     Get.put(UserController());
-    //확인
     Get.find<UserController>().fetchUserData();
+
+    //hide password
+    String hidePassword() {
+      var hiddenPassword = Get.find<UserController>().userData.value?.userPassword;
+      if (hiddenPassword == null || hiddenPassword.isEmpty) {
+        return '비밀번호 변경하기';
+      }
+
+      return '*' * hiddenPassword.length;
+    }
 
 
     return LayoutBuilder(
@@ -43,10 +52,11 @@ class _ShowUserInfoState extends State<ShowUserInfo> {
                   height: availableHeight,
 
                   //수정
-                  child: SingleChildScrollView(
+                  child: Flexible(
+                    flex: 5,
                     child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      //mainAxisAlignment: MainAxisAlignment.center,
+                      //crossAxisAlignment: CrossAxisAlignment.start,
 
                       children: [
 
@@ -61,156 +71,121 @@ class _ShowUserInfoState extends State<ShowUserInfo> {
                           ),
                         ),
 
-
-                        //삭제 >> id
-                        /*
-                        GestureDetector(
-                          onTap: () {},
-                          child: ListTile(
-                            title: Text(
-                              'ID',
-                              style: TextStyle(fontSize:15, fontWeight: FontWeight.bold),
-                            ),
-                            subtitle: Padding(
-                              padding: EdgeInsets.only(top: 8, left: 10),
-                              child: Text(
-                                //수정 >>
-                                '${Get.find<UserController>().userData.value?.userId}',
-                                style: TextStyle(fontSize: 14),
+                        Expanded(
+                          child: Column(
+                            children: [
+                              //이메일
+                              GestureDetector(
+                                onTap: () {},
+                                child: ListTile(
+                                  title: Text(
+                                    'E-mail',
+                                    style: TextStyle(fontSize:15, fontWeight: FontWeight.bold),
+                                  ),
+                                  subtitle: Padding(
+                                    padding: EdgeInsets.only(top: 10, left: 10),
+                                    child: Text(
+                                      '${Get.find<UserController>().userData.value?.userEmail}', // DB 사용
+                                      style: TextStyle(fontSize: 14),
+                                    ),
+                                  ),
+                                  trailing: Icon(
+                                    Icons.close,
+                                    //Icons.arrow_forward_ios,
+                                    size: 18,
+                                  ),
+                                ),
                               ),
-                            ),
-                            trailing: Icon(
-                              Icons.close,
-                              size: 18,
-                            ),
-                          ),
-                        ),
-                        Divider(
-                          indent: 20,
-                          endIndent: 10,
-                          thickness: 1,
-                          color: Colors.black45,
-                        ),
-
-                         */
-
-
-                        //이메일
-                        GestureDetector(
-                          onTap: () {},
-                          child: ListTile(
-                            title: Text(
-                              'E-mail',
-                              style: TextStyle(fontSize:15, fontWeight: FontWeight.bold),
-                            ),
-                            subtitle: Padding(
-                              padding: EdgeInsets.only(top: 8, left: 10),
-                              child: Text(
-                                '${Get.find<UserController>().userData.value?.userEmail}', // DB 사용
-                                style: TextStyle(fontSize: 14),
+                              Divider(
+                                indent: 20,
+                                endIndent: 10,
+                                thickness: 1,
+                                color: Colors.black45,
                               ),
-                            ),
-                            trailing: Icon(
-                              Icons.close,
-                              //Icons.arrow_forward_ios,
-                              size: 18,
-                            ),
-                          ),
-                        ),
-                        Divider(
-                          indent: 20,
-                          endIndent: 10,
-                          thickness: 1,
-                          color: Colors.black45,
-                        ),
-
-
-                        //닉네임
-                        GestureDetector(
-                          onTap: () {
-                            //Get.toNamed('nicknameEdit');
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => NicknameEdit()),
-                            );
-                          },
-                          //behavior: HitTestBehavior.translucent, //opaque
-                          child: ListTile(
-                            title: Text(
-                              '닉네임',
-                              style: TextStyle(fontSize:15, fontWeight: FontWeight.bold),
-                            ),
-                            subtitle: Padding(
-                              padding: EdgeInsets.only(top: 8, left: 10),
-                              child: Text(
-                                '${Get.find<UserController>().userData.value?.userNickname}', //DB 사용
-                                style: TextStyle(fontSize: 14),
+                              //닉네임
+                              GestureDetector(
+                                onTap: () {
+                                  //Get.toNamed('nicknameEdit');
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(builder: (context) => NicknameEdit()),
+                                  );
+                                },
+                                //behavior: HitTestBehavior.translucent, //opaque
+                                child: ListTile(
+                                  title: Text(
+                                    '닉네임',
+                                    style: TextStyle(fontSize:15, fontWeight: FontWeight.bold),
+                                  ),
+                                  subtitle: Padding(
+                                    padding: EdgeInsets.only(top: 10, left: 10),
+                                    child: Text(
+                                      '${Get.find<UserController>().userData.value?.userNickname}', //DB 사용
+                                      style: TextStyle(fontSize: 14),
+                                    ),
+                                  ),
+                                  trailing: Icon(
+                                    Icons.arrow_forward_ios,
+                                    size: 14,
+                                  ),
+                                ),
                               ),
-                            ),
-                            trailing: Icon(
-                              Icons.arrow_forward_ios,
-                              size: 14,
-                            ),
-                          ),
-                        ),
-                        Divider(
-                          indent: 24,
-                          endIndent: 10,
-                          thickness: 1,
-                          color: Colors.black45,
-                        ),
+                              Divider(
+                                indent: 24,
+                                endIndent: 10,
+                                thickness: 1,
+                                color: Colors.black45,
+                              ),
 
-
-                        //비밀 번호
-                        GestureDetector(
-                          onTap: () {
-                            //수정 >>
-                            // Get.find<UserController>().userData.value?.userEmail
-                            if(notSocialLogin)
-                            {
-                              //Get.toNamed('pwEdit');
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context) => PasswordEdit()),
-                              );
-                            }
-                            else {
-                              showDialog(
-                                  context: context,
-                                  barrierDismissible: false,
-                                  builder: (BuildContext context) {
-                                    return impossiblePwChange();
+                              //비밀 번호
+                              GestureDetector(
+                                onTap: () {
+                                  //수정 >>
+                                  // Get.find<UserController>().userData.value?.userEmail
+                                  if(notSocialLogin) {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(builder: (context) => PasswordEdit()),
+                                    );
                                   }
-                              );
-                            }
+                                  else {
+                                    showDialog(
+                                        context: context,
+                                        barrierDismissible: false,
+                                        builder: (BuildContext context) {
+                                          return impossiblePwChange();
+                                        }
+                                    );
+                                  }
 
-                          },
-                          child: ListTile(
-                            title: Text(
-                              '비밀번호',
-                              style: TextStyle(fontSize:15, fontWeight: FontWeight.bold),
-                            ),
-                            subtitle: Padding(
-                              padding: EdgeInsets.only(top: 8, left: 10),
-                              child: Text(
-                                hidePassword(), //확인 해야 합니다.
-                                style: TextStyle(fontSize: 14),
+                                },
+                                child: ListTile(
+                                  title: Text(
+                                    '비밀번호',
+                                    style: TextStyle(fontSize:15, fontWeight: FontWeight.bold),
+                                  ),
+                                  subtitle: Padding(
+                                    padding: EdgeInsets.only(top: 10, left: 10),
+                                    child: Text(
+                                      hidePassword(), //확인
+                                      style: TextStyle(fontSize: 14),
+                                    ),
+                                  ),
+                                  trailing: Icon(
+                                    Icons.arrow_forward_ios,
+                                    size: 14,
+                                  ),
+                                ),
                               ),
-                            ),
-                            trailing: Icon(
-                              Icons.arrow_forward_ios,
-                              size: 14,
-                            ),
+                              Divider(
+                                indent: 20,
+                                endIndent: 10,
+                                thickness: 1,
+                                color: Colors.black45,
+                              ),
+                            ],
                           ),
                         ),
-                        Divider(
-                          indent: 20,
-                          endIndent: 10,
-                          thickness: 1,
-                          color: Colors.black45,
-                        ),
-
-
                       ],
                     ),
                   ),
@@ -220,16 +195,6 @@ class _ShowUserInfoState extends State<ShowUserInfo> {
 
         }
     );
-  }
-
-  //hide password
-  String hidePassword() {
-    var hiddenPassword = Get.find<UserController>().userData.value?.userPassword;
-    if (hiddenPassword == null || hiddenPassword.isEmpty) {
-      return '';
-    }
-
-    return '*' * hiddenPassword.length;
   }
 
 

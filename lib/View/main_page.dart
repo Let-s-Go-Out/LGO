@@ -171,7 +171,17 @@ class _MainPageState extends State<MainPage> {
     // 새 문서를 생성하고 데이터 저장
     DocumentReference userRouteDocRef = userRouteDataCollection.doc();
 
-    Map<String, dynamic> userRouteData = {
+    /*Map<String, dynamic> userRouteData = {
+      'picnicConcept': selectedConcept,
+      'departureTime': _timeOfDay.format(context),
+      'placeCount': _value.toStringAsFixed(0),
+      'startPlaceAddress': startPlaceAddress,
+      'startPlaceName': startPlaceName,
+      'startPlaceGeopoint': GeoPoint(startPlaceLatLng.latitude, startPlaceLatLng.longitude),
+    };*/
+
+    // -- 수정 추가
+    userRouteData = {
       'picnicConcept': selectedConcept,
       'departureTime': _timeOfDay.format(context),
       'placeCount': _value.toStringAsFixed(0),
@@ -179,6 +189,7 @@ class _MainPageState extends State<MainPage> {
       'startPlaceName': startPlaceName,
       'startPlaceGeopoint': GeoPoint(startPlaceLatLng.latitude, startPlaceLatLng.longitude),
     };
+    // -- 수정 끝
 
     try {
       await userRouteDocRef.set(userRouteData);
@@ -199,6 +210,7 @@ class _MainPageState extends State<MainPage> {
       return false;
     },
     child: MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primaryColor: Colors.black,
       ),
@@ -292,16 +304,26 @@ class _MainPageState extends State<MainPage> {
             Text('나들이 테마',
               style: mainPageSubTitleStyle),
             Spacer(flex: 1),
-            Wrap(
-              alignment: WrapAlignment.center,
-              spacing: 8.0,
+            Column(
               children: [
-                conceptButton('음식점'),
-                conceptButton('카페'),
-                conceptButton('쇼핑'),
-                conceptButton('문화'),
-                conceptButton('바'),
-                conceptButton('어트랙션'),
+                Wrap(
+                  alignment: WrapAlignment.center,
+                  spacing: 8.0,
+                  children: [
+                    conceptButton('음식점'),
+                    conceptButton('카페'),
+                    conceptButton('쇼핑'),
+                  ],
+                ),
+                Wrap(
+                  alignment: WrapAlignment.center,
+                  spacing: 8.0,
+                  children: [
+                    conceptButton('바'),
+                    conceptButton('어트랙션'),
+                    conceptButton('문화'),
+                  ],
+                ),
               ],
             ),
             Spacer(flex: 2),
