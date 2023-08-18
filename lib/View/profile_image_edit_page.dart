@@ -16,6 +16,7 @@ class _ProfileImgEditState extends State<ProfileImgEdit> {
 
   File? profileImg;
   String? uid;
+  String? imgUrl;
 
   Future<String?> getUid() async {
     var auth = await FirebaseAuth.instance;
@@ -78,6 +79,7 @@ class _ProfileImgEditState extends State<ProfileImgEdit> {
                           width: availableWidth * 0.8,
                           height: availableHeight * 0.8,
                           decoration: BoxDecoration(
+                            //shape: BoxShape.circle,
                             image: DecorationImage(
                               image: FileImage(File(profileImg!.path)),
                               fit: BoxFit.cover,
@@ -223,6 +225,8 @@ class _ProfileImgEditState extends State<ProfileImgEdit> {
 
     Reference storageRef = FirebaseStorage.instance.ref().child(path);
     await storageRef.putFile(file);
+
+    imgUrl = await storageRef.getDownloadURL();
   }
 
   //추가
@@ -231,11 +235,14 @@ class _ProfileImgEditState extends State<ProfileImgEdit> {
     Reference storageRef = FirebaseStorage.instance.ref().child(path);
 
     try {
-      String imgUrl = await storageRef.getDownloadURL();
+      imgUrl = await storageRef.getDownloadURL();
       setState(() {
-        profileImg = File(imgUrl);
+        profileImg = File(imgUrl!);
       });
-    } catch (e) { //프로필 사진 없음 }
+    } catch (e) {
+      setState(() {
+        profileImg = null;
+      });
     }
   }
 
@@ -256,5 +263,6 @@ class _ProfileImgEditState extends State<ProfileImgEdit> {
       print('Error while deleting profile image: $e');
     }
   }
+
 
 }
