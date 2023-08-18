@@ -13,8 +13,6 @@ class ShowUserInfo extends StatefulWidget {
 
 class _ShowUserInfoState extends State<ShowUserInfo> {
 
-  bool notSocialLogin = true;
-
   @override
   Widget build(BuildContext context) {
 
@@ -70,9 +68,18 @@ class _ShowUserInfoState extends State<ShowUserInfo> {
                         Expanded(
                           child: Column(
                             children: [
+
                               //이메일
                               GestureDetector(
-                                onTap: () {},
+                                onTap: () {
+                                  showDialog(
+                                      context: context,
+                                      barrierDismissible: false,
+                                      builder: (BuildContext context) {
+                                        return impossibleChange();
+                                      }
+                                  );
+                                },
                                 child: ListTile(
                                   title: Text(
                                     'E-mail',
@@ -98,6 +105,8 @@ class _ShowUserInfoState extends State<ShowUserInfo> {
                                 thickness: 1,
                                 color: Colors.black45,
                               ),
+
+
                               //닉네임
                               GestureDetector(
                                 onTap: () {
@@ -133,27 +142,14 @@ class _ShowUserInfoState extends State<ShowUserInfo> {
                                 color: Colors.black45,
                               ),
 
+
                               //비밀 번호
                               GestureDetector(
                                 onTap: () {
-                                  //수정 >>
-                                  // Get.find<UserController>().userData.value?.userEmail
-                                  if(notSocialLogin) {
                                     Navigator.push(
                                       context,
                                       MaterialPageRoute(builder: (context) => PasswordEdit()),
                                     );
-                                  }
-                                  else {
-                                    showDialog(
-                                        context: context,
-                                        barrierDismissible: false,
-                                        builder: (BuildContext context) {
-                                          return impossiblePwChange();
-                                        }
-                                    );
-                                  }
-
                                 },
                                 child: ListTile(
                                   title: Text(
@@ -194,15 +190,15 @@ class _ShowUserInfoState extends State<ShowUserInfo> {
   }
 
 
-  //pw 변경 불가 안내 팝업창
-  Widget impossiblePwChange() {
+  //email 변경 불가 안내 팝업창
+  Widget impossibleChange() {
     return Dialog(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20),
       ),
 
       child: SizedBox(
-          height: MediaQuery.of(context).size.height * 0.25,
+          height: MediaQuery.of(context).size.height * 0.35,
           width: MediaQuery.of(context).size.width * 0.5,
 
           child: Column(
@@ -224,7 +220,7 @@ class _ShowUserInfoState extends State<ShowUserInfo> {
                 padding: EdgeInsets.all(0),
 
                 child: Text(
-                  '소셜 로그인 시, \n비밀번호 변경이 불가합니다.',
+                  '이메일 변경은 불가능합니다. \n탈퇴 후 재가입 해주세요.',
                   style: TextStyle(
                     height: 1.5, //줄간격
                     fontSize: 15,
