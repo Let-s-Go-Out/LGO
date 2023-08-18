@@ -42,7 +42,7 @@ class _MapBrowseScreenState extends State<MapBrowseScreen> {
       controller.getMyAddress().then((myAddress) {
         setState(() {
           controller.model.address = myAddress;
-          controller.model.selectedPlaceAddress = myAddress;
+          controller.model.selectedPlaceAddress = myAddress!;
           textController.text = '';
         });
       }).catchError((error) {
@@ -128,17 +128,17 @@ class _MapBrowseScreenState extends State<MapBrowseScreen> {
       });
     }
   }
-
+// 사용자가 지도를 탭했을 때 호출되는 메서드
   Future<void> _onMapTapped(LatLng latLng) async {
     controller.model.selectedPlaceLatLng = latLng;
     controller.model.markers.clear();
-
+// 선택한 위치의 주소를 가져와서 검색 창에 표시
     String? LatLngAddress = await controller.getLatLngToAddress();
     setState(() {
       controller.model.address = LatLngAddress;
-      textController.text = controller.model.address ?? '';
+      textController.text = controller.model.address!;
     });
-
+// 선택한 위치를 지도에 표시하고 카메라 이동
     controller.model.markers.add(
       Marker(
           markerId: const MarkerId('선택된 장소'),
@@ -153,8 +153,8 @@ class _MapBrowseScreenState extends State<MapBrowseScreen> {
   void _onTapCallback() {
     if (!_isPlaceSelected) {
       Future.delayed(const Duration(milliseconds: 500), () {
-        _selectPlace(controller.model.selectedPlaceName!,
-            controller.model.selectedPlaceAddress!);
+        _selectPlace(controller.model.selectedPlaceName,
+            controller.model.selectedPlaceAddress);
       });
       _isPlaceSelected = true;
     }
@@ -278,7 +278,11 @@ class _MapBrowseScreenState extends State<MapBrowseScreen> {
                                   height: 40,
                                   child: FloatingActionButton.extended(
                                     onPressed: () {
-                                      Navigator.pop(context, controller.model.selectedPlaceAddress);
+                                      print(controller.model.selectedPlaceAddress+
+                                          controller.model.selectedPlaceName);
+                                      Navigator.pop(context, SelectedPlaceData(controller.model.selectedPlaceAddress,
+                                          controller.model.selectedPlaceName,
+                                          controller.model.selectedPlaceLatLng.latitude,controller.model.selectedPlaceLatLng.longitude));
                                     },
                                     label: const Text('이 위치에서 출발할래요!', style: TextStyle(fontSize: 10)),
                                     backgroundColor: Colors.white,
@@ -301,4 +305,13 @@ class _MapBrowseScreenState extends State<MapBrowseScreen> {
       ),
     );
   }
+}
+
+class SelectedPlaceData{
+  late String address;
+  late String name;
+  late double geoLat;
+  late double geoLng;
+
+  SelectedPlaceData(this.address, this.name, this.geoLat, this.geoLng);
 }

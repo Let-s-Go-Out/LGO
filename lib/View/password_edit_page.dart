@@ -12,7 +12,6 @@ class PasswordEdit extends StatefulWidget {
 }
 
 class _PasswordEditState extends State<PasswordEdit> {
-
   String? passwordFromDB;
   String? newPassword;
   String? confirmNew;

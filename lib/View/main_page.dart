@@ -1,12 +1,19 @@
 import 'dart:async';
 import 'dart:developer' show log;
 import 'package:flutter/material.dart';
+import 'package:latlng/latlng.dart';
+import 'package:nagaja_app/View/home.dart';
 import 'package:nagaja_app/View/map_browse_screen.dart';
 import 'package:http/http.dart' as http;
 import 'package:syncfusion_flutter_sliders/sliders.dart';
 import 'package:nagaja_app/View/main_page_loading.dart';
-import 'package:nagaja_app/Controller/user_route_data.dart'; // 사용자에게 입력받는 경로 정보 (출발지, 희망소요시간, 나들이 컨셉 등)
+import 'package:nagaja_app/Controller/user_route_data.dart';
 import 'package:nagaja_app/View/widgets/theme.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+import 'diary_page.dart';
+import 'my_page.dart';
 
 class MainPage extends StatefulWidget {
   const MainPage({super.key});
@@ -18,12 +25,60 @@ class MainPage extends StatefulWidget {
 class _MainPageState extends State<MainPage> {
   String selectedConcept = '';
   String selectedStartTime = '';
-  String selectedDuration = '';
+
   String text = '검색어를 입력하세요.';
+  String startPlaceAddress='';
+  String startPlaceName='';
+  LatLng startPlaceLatLng=LatLng(0, 0);
 
   // create TimeOfDay variable
   TimeOfDay _timeOfDay = TimeOfDay.now();
   //TimeOfDay _timeOfDay = TimeOfDay(hour: 8, minute: 30);
+
+  int _selectedIndex = 0;
+  Map<String, dynamic> userRouteData={};
+
+  final List<Widget> _navIndex = [
+    MainPage(),
+    DiaryPage(),
+    MyPage(),
+  ];
+
+  void _onNavTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+    switch (index) {
+      case 0:
+        Navigator.pushReplacement(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (_, __, ___) => MainPage(),
+            transitionDuration: Duration(seconds: 0), // 애니메이션 시간을 0으로 설정
+          ),
+        );
+        break;
+      case 1:
+        Navigator.pushReplacement(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (_, __, ___) => DiaryPage(),
+            transitionDuration: Duration(seconds: 0), // 애니메이션 시간을 0으로 설정
+          ),
+        );
+        break;
+      case 2:
+        Navigator.pushReplacement(
+          context,
+          PageRouteBuilder(
+            pageBuilder: (_, __, ___) => MyPage(),
+            transitionDuration: Duration(seconds: 0), // 애니메이션 시간을 0으로 설정
+          ),
+        );
+        break;
+    // 다른 인덱스에 대한 처리를 추가할 수 있습니다.
+    }
+  }
 
   // show time picker method
   void _showTimePicker() {
@@ -95,13 +150,93 @@ class _MainPageState extends State<MainPage> {
 
   double _value = 4.0;
 
+
+
+  // Firestore에 사용자에게 입력받은 경로 데이터를 저장하는 함수
+  void saveUserRouteData() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? user = auth.currentUser;
+
+    if (user == null) {
+      print('로그인이 필요합니다.');
+      return;
+    }
+
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+    // UserRouteData 컬렉션에 자동생성된 문서 추가
+    CollectionReference userRouteDataCollection =
+    firestore.collection('PicnicRecord').doc(user.uid).collection('UserRouteData');
+
+    // 새 문서를 생성하고 데이터 저장
+    DocumentReference userRouteDocRef = userRouteDataCollection.doc();
+
+    /*Map<String, dynamic> userRouteData = {
+      'picnicConcept': selectedConcept,
+      'departureTime': _timeOfDay.format(context),
+      'placeCount': _value.toStringAsFixed(0),
+      'startPlaceAddress': startPlaceAddress,
+      'startPlaceName': startPlaceName,
+      'startPlaceGeopoint': GeoPoint(startPlaceLatLng.latitude, startPlaceLatLng.longitude),
+    };*/
+
+    // -- 수정 추가
+    userRouteData = {
+      'picnicConcept': selectedConcept,
+      'departureTime': _timeOfDay.format(context),
+      'placeCount': _value.toStringAsFixed(0),
+      'startPlaceAddress': startPlaceAddress,
+      'startPlaceName': startPlaceName,
+      'startPlaceGeopoint': GeoPoint(startPlaceLatLng.latitude, startPlaceLatLng.longitude),
+    };
+    // -- 수정 끝
+
+    try {
+      await userRouteDocRef.set(userRouteData);
+      print('사용자 경로 정보 저장 성공');
+    } catch (e) {
+      print('사용자 경로 정보 저장 실패: $e');
+    }
+  }
+
+
+
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return WillPopScope(
+        onWillPop: () async {
+      // 뒤로가기 버튼 동작을 막음
+      return false;
+    },
+    child: MaterialApp(
+      debugShowCheckedModeBanner: false,
       theme: ThemeData(
         primaryColor: Colors.black,
       ),
     home: Scaffold(
+      bottomNavigationBar: BottomNavigationBar(
+        fixedColor: Colors.black,
+        unselectedItemColor: Colors.blueGrey,
+        showSelectedLabels: true,
+        type: BottomNavigationBarType.fixed,
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+            icon: Icon(Icons.home),
+            label: 'Home',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.book),
+            label: 'Diary',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.person),
+            label: 'Mypage',
+          ),
+        ],
+        currentIndex: _selectedIndex,
+        onTap: _onNavTapped,
+      ),
         appBar: null,
         body: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
@@ -118,7 +253,7 @@ class _MainPageState extends State<MainPage> {
             Padding(
               padding: EdgeInsets.symmetric(vertical: verticalSpacing),
               child: Text(
-                '나가자!(Let\'s Go Out!)',
+                '나가자!',
                 textAlign: TextAlign.center,
                 style: mainPageTitleStyle,
               ),
@@ -142,8 +277,11 @@ class _MainPageState extends State<MainPage> {
                   MaterialPageRoute(builder: (context) => MapBrowseScreen()),
                 );
                 if(returnData != null){
+                  startPlaceAddress = returnData.address;
+                  startPlaceName = returnData.name;
+                  startPlaceLatLng = LatLng(returnData.geoLat,returnData.geoLng);
                   setState(() {
-                    text = returnData;
+                    text = startPlaceAddress;
                   });
                 }
               },
@@ -163,18 +301,29 @@ class _MainPageState extends State<MainPage> {
             ),
             Spacer(flex: 2),
             // 나들이 컨셉
-            Text('나들이 컨셉',
+            Text('나들이 테마',
               style: mainPageSubTitleStyle),
             Spacer(flex: 1),
-            Wrap(
-              alignment: WrapAlignment.center,
-              spacing: 8.0,
+            Column(
               children: [
-                conceptButton('산책'),
-                conceptButton('액티비티'),
-                conceptButton('휴양'),
-                conceptButton('맛집탐방'),
-                conceptButton('체험'),
+                Wrap(
+                  alignment: WrapAlignment.center,
+                  spacing: 8.0,
+                  children: [
+                    conceptButton('음식점'),
+                    conceptButton('카페'),
+                    conceptButton('쇼핑'),
+                  ],
+                ),
+                Wrap(
+                  alignment: WrapAlignment.center,
+                  spacing: 8.0,
+                  children: [
+                    conceptButton('바'),
+                    conceptButton('어트랙션'),
+                    conceptButton('문화'),
+                  ],
+                ),
               ],
             ),
             Spacer(flex: 2),
@@ -271,10 +420,11 @@ class _MainPageState extends State<MainPage> {
             Spacer(flex: 2),
             ElevatedButton(
               onPressed: () {
+                saveUserRouteData(); // saveUserRouteData 함수 호출
                 // Add code to handle the "Let's Go out" button
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => const MainLoadingPage()),
+                  MaterialPageRoute(builder: (context) => MainLoadingPage(userRouteData: userRouteData)),
                 );
               },
               style: ElevatedButton.styleFrom(
@@ -292,6 +442,7 @@ class _MainPageState extends State<MainPage> {
       );
         },
         ),
+    ),
     ),
     );
   }
@@ -328,3 +479,7 @@ class _MainPageState extends State<MainPage> {
   }
 
 }
+
+
+
+

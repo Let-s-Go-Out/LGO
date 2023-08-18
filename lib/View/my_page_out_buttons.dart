@@ -16,8 +16,8 @@ class OutButtons extends StatelessWidget {
         final double availableWidth = constraints.maxWidth * 0.5;
         final double availableHeight = constraints.maxHeight * 0.3;
 
-        return Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+        return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
 
           children: [
 

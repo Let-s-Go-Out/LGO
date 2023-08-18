@@ -63,6 +63,9 @@ dependencies:
   file_picker: ^5.3.3
   flutter_spinkit: ^5.2.0
   flutter_rating_stars: ^1.0.3+4
+  simple_animations: ^5.0.2
+  decimal: ^2.3.3
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -86,8 +89,12 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
+  assets:
+   - assets/images/login_background.jpg
+   - assets/images/map_marker.png
+   - assets/images/background_1.png
+   - assets/images/lets_go_out.png
+   - assets/images/shall_we_go_out.png
 
   #   - assets/
   #   - images/a_dot_ham.jpeg
