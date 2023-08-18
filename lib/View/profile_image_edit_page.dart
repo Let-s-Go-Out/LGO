@@ -49,7 +49,7 @@ class _ProfileImgEditState extends State<ProfileImgEdit> {
   void initState() {
     super.initState();
     getUid();
-    loadProfileImg();
+    //loadProfileImg();
   }
 
   @override
