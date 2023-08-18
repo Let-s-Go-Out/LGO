@@ -12,6 +12,7 @@ class PasswordEdit extends StatefulWidget {
 }
 
 class _PasswordEditState extends State<PasswordEdit> {
+
   String? passwordFromDB;
   String? newPassword;
   String? confirmNew;
@@ -142,7 +143,7 @@ class _PasswordEditState extends State<PasswordEdit> {
 
         textInputAction: TextInputAction.next,
         onFieldSubmitted: (value) //value = 입력값
-         => FocusScope.of(context).requestFocus(newFocus),
+        => FocusScope.of(context).requestFocus(newFocus),
 
 
         validator: (value) {
@@ -171,7 +172,7 @@ class _PasswordEditState extends State<PasswordEdit> {
         focusNode: newFocus,
         textInputAction: TextInputAction.next,
         onFieldSubmitted: (value)
-          => FocusScope.of(context).requestFocus(confirmFocus),
+        => FocusScope.of(context).requestFocus(confirmFocus),
 
         onChanged: (value) {
           setState(() {
@@ -231,13 +232,13 @@ class _PasswordEditState extends State<PasswordEdit> {
         focusNode: confirmFocus,
         textInputAction: TextInputAction.done,
         onFieldSubmitted: (value)
-          => FocusScope.of(context).unfocus(),
+        => FocusScope.of(context).unfocus(),
 
         onChanged: (value) {
           setState(() {
             confirmNew = value;
           });
-          },
+        },
 
         validator: (value) {
           if(value!.isEmpty) {
