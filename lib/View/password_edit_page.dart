@@ -14,13 +14,13 @@ class PasswordEdit extends StatefulWidget {
 class _PasswordEditState extends State<PasswordEdit> {
 
   String? passwordFromDB;
-  String? newPassword;
-  String? confirmNew;
+  String? passwordChange;
+  String? passwordConfirm;
   bool visible = true;
 
   GlobalKey<FormState> pwFormkey = GlobalKey<FormState>();
 
-  FocusNode currentFocus = FocusNode();
+  //FocusNode currentFocus = FocusNode();
   FocusNode newFocus = FocusNode();
   FocusNode confirmFocus = FocusNode();
 
@@ -97,7 +97,7 @@ class _PasswordEditState extends State<PasswordEdit> {
                         ),
                       ),
                     ),
-                    passwordChange(),
+                    newPassword(),
 
 
                     //title: 새 비밀 번호 확인
@@ -139,10 +139,10 @@ class _PasswordEditState extends State<PasswordEdit> {
         autofocus: true,
         obscureText: true,
 
-        focusNode: currentFocus,
+        //focusNode: currentFocus,
 
         textInputAction: TextInputAction.next,
-        onFieldSubmitted: (value) //value = 입력값
+        onFieldSubmitted: (_)
         => FocusScope.of(context).requestFocus(newFocus),
 
 
@@ -162,7 +162,7 @@ class _PasswordEditState extends State<PasswordEdit> {
 
 
   //새 비밀 번호
-  Widget passwordChange() {
+  Widget newPassword() {
     return Padding(
       padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
 
@@ -176,7 +176,7 @@ class _PasswordEditState extends State<PasswordEdit> {
 
         onChanged: (value) {
           setState(() {
-            newPassword = value;
+            passwordChange = value;
           });
         },
 
@@ -194,7 +194,7 @@ class _PasswordEditState extends State<PasswordEdit> {
             else if (regExp.hasMatch(value)) {
               //
               setState(() {
-                newPassword = value;
+                passwordChange = value;
               });
               return null;
             }
@@ -236,7 +236,7 @@ class _PasswordEditState extends State<PasswordEdit> {
 
         onChanged: (value) {
           setState(() {
-            confirmNew = value;
+            passwordConfirm = value;
           });
         },
 
@@ -245,22 +245,24 @@ class _PasswordEditState extends State<PasswordEdit> {
             return '새 비밀번호를 입력해주세요.';
           }
           else {
-            if(newPassword != confirmNew) {
+            if(passwordChange != passwordConfirm) {
               // 변경한 pw 값과 비교
               return "새로운 비밀번호와 다릅니다.";
             }
             else {
+              //삭제
               setState(() {
-                confirmNew = newPassword;
+                passwordConfirm = value;
               });
               return null;
             }
           }
         },
 
+        //
         onSaved: (value) {
           setState(() {
-            passwordFromDB = confirmNew;
+            passwordConfirm = value;
           });
         },
 
@@ -322,7 +324,7 @@ class _PasswordEditState extends State<PasswordEdit> {
 
               //UserController userController = Get.find();
               //userController.updatePassword(passwordFromDB!);
-              Get.find<UserController>().updatePassword(passwordFromDB!);
+              Get.find<UserController>().updatePassword(passwordConfirm!);
 
               Navigator.push(
                 context,
